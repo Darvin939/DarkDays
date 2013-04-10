@@ -1,0 +1,8 @@
+name: DarkDays Beta
+main: darvin939.DarkDays.DarkDays
+version: 0.1
+description: DarkDays Mod Beta v0.1
+softdepend: [TagAPI, StackableItems]
+commands:
+    dd:
+        usage: /dd help
