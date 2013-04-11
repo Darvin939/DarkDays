@@ -27,8 +27,6 @@ import darvin939.DarkDays.Players.Item;
 import darvin939.DarkDays.Players.ItemManager;
 import darvin939.DarkDays.Utils.MetricsLite;
 
-//import org.bukkit.plugin.PluginManager;
-
 public class DarkDays extends JavaPlugin {
 	private Logger log = Logger.getLogger("Minecraft");
 	public PluginDescriptionFile des;
@@ -49,7 +47,10 @@ public class DarkDays extends JavaPlugin {
 
 	public void onDisable() {
 		log.info(prefix + "Plugin v." + des.getVersion() + " disabled");
-		Config.save(new File(datafolder, "Config.yml"));
+		
+		Config.getPC().saveAll();
+		
+		Config.save(new File(datafolder, "config.yml"));
 	}
 
 	public static String getPrefix() {
@@ -69,7 +70,6 @@ public class DarkDays extends JavaPlugin {
 		if (getServer().getPluginManager().isPluginEnabled("TagAPI")) {
 			log.info(prefix + "Successfully hooked with TagAPI!");
 			log.info(prefix + "Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
-			// PluginManager pm = getServer().getPluginManager();
 			datafolder = getDataFolder();
 			if (!datafolder.exists())
 				datafolder.mkdir();

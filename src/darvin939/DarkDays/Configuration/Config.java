@@ -14,6 +14,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Players.EffectManager;
 import darvin939.DarkDays.Players.ItemManager;
+import darvin939.DarkDays.Sql.Players.PlayerManager;
+import darvin939.DarkDays.Sql.Players.SQLPlayer;
 import darvin939.DarkDays.Utils.FGUtilCore;
 import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
@@ -168,8 +170,12 @@ public class Config extends FGUtilCore {
 			try {
 				db.open();
 			} catch (SQLException e) {
+				log.warning("Couldn't connect to Database");
 				e.printStackTrace();
 			}
+			SQLPlayer.createTables();
+			SQLPlayer.initPrep();
+			PlayerManager.init();
 		}
 
 		playerCfg = new PC(plugin);

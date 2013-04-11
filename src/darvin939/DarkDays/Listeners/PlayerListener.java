@@ -34,8 +34,8 @@ import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Loot;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config;
-import darvin939.DarkDays.Configuration.PC;
 import darvin939.DarkDays.Configuration.Config.Nodes;
+import darvin939.DarkDays.Configuration.PC;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Utils.Util;
@@ -82,6 +82,8 @@ public class PlayerListener implements Listener {
 			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PC.HUNGER));
 			Tasks.player_noise.put(p, 1);
 			PlayerInfo.addPlayer(p);
+			p.teleport(PC.fix(p));
+
 		}
 		for (Player op : plg.getServer().getOnlinePlayers()) {
 			if (!op.equals(p)) {
@@ -104,6 +106,7 @@ public class PlayerListener implements Listener {
 			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PC.HUNGER));
 			Tasks.player_noise.put(p, 1);
 			PlayerInfo.addPlayer(p);
+			event.setRespawnLocation(PC.fix(p));
 			return;
 		}
 		p.getInventory().clear();

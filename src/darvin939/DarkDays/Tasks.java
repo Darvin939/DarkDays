@@ -63,6 +63,12 @@ public class Tasks {
 			}
 		}, Nodes.chest_regen.getInteger() * 200, Nodes.chest_regen.getInteger() * 200);
 
+		plg.getServer().getScheduler().runTaskTimer(plg, new Runnable() {
+			public void run() {
+				Config.getPC().saveAll();
+			}
+		},  3 * 100, 3 * 100);
+
 	}
 
 	public static void zombieSpeedChange() {

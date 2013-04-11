@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import darvin939.DarkDays.Players.Memory.PlayerLoadData;
+
 public abstract class DDPlayer {
 	protected final String name;
 	protected Player player = null;
@@ -29,7 +31,7 @@ public abstract class DDPlayer {
 
 	public abstract Location getLoc();
 
-	public abstract SQLPlayerData getData();
+	public abstract PlayerLoadData getData();
 
 	public abstract String getEffects();
 
@@ -37,7 +39,7 @@ public abstract class DDPlayer {
 
 	public abstract void removePlayer();
 
-	public abstract void addData(String[] data);
+	public abstract void addData(PlayerLoadData data);
 	
 	public abstract void removeData();
 

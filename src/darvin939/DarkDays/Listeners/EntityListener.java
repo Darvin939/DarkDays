@@ -73,13 +73,14 @@ public class EntityListener implements Listener {
 				Tasks.zombie_damage.put(e, Nodes.zombie_health.getInteger() - event.getDamage());
 
 			if (Tasks.zombie_damage.get(e) <= 20)
-				((Zombie) e).setHealth(Tasks.zombie_damage.get(e));
+				if (Tasks.zombie_damage.get(e) <= 0) {
+					event.setDamage(0);
+					Tasks.zombie_damage.remove(e);
+				} else
+					((Zombie) e).setHealth(Tasks.zombie_damage.get(e));
 			else
 				((Zombie) e).setHealth(((Zombie) e).getMaxHealth());
-			if (Tasks.zombie_damage.get(e) <= 0) {
-				event.setDamage(0);
-				Tasks.zombie_damage.remove(e);
-			}
+
 		}
 	}
 }

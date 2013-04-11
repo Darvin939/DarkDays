@@ -2,116 +2,137 @@ package darvin939.DarkDays.Configuration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import darvin939.DarkDays.DarkDays;
+import darvin939.DarkDays.Players.Memory.PlayerLoadData;
 import darvin939.DarkDays.Sql.Players.DDPlayer;
 import darvin939.DarkDays.Sql.Players.PlayerManager;
 
 public class PC {
 	private FileConfiguration cfgPlayers;
 	private File cfgPlayersFile;
-	private Logger log = Logger.getLogger("Minecraft");
-	private PlayerManager pm;
 
+	private HashMap<Player, String> effects = new HashMap<Player, String>();
+	private HashMap<Player, PlayerLoadData> data = new HashMap<Player, PlayerLoadData>();
+	private static DarkDays plg;
 	// constants
 	public static final String DEATH = "death";
 	public static final String SPAWNED = "spawned";
 	public static final String NOVICE = "novice";
 	public static final String HUNGER = "hunger";
+	public static final String EFFECTS = "effects";
 
-	public PC(DarkDays plg) {
-		if (Config.isSqlWrapper()) {
-			pm = PlayerManager.getInstance();
-		} else {
-			cfgPlayersFile = new File(plg.getDataFolder() + "/players.yml");
-			cfgPlayers = YamlConfiguration.loadConfiguration(cfgPlayersFile);
-			saveConfig();
-		}
+	public PC(DarkDays plugin) {
+		plg = plugin;
+
+		cfgPlayersFile = new File(plg.getDataFolder() + "/players.yml");
+		cfgPlayers = YamlConfiguration.loadConfiguration(cfgPlayersFile);
+		saveConfig();
+
 	}
 
 	public void addEffect(Player p, String effect) {
 		if (Config.isSqlWrapper()) {
-			DDPlayer player = pm.getPlayer(p);
-			if (player.getEffects().isEmpty())
-				player.addEffects(effect);
+			if (effects.get(p).isEmpty())
+				effects.put(p, effect);
 			else {
-				player.addEffects(player.getEffects() + "," + effect);
+				effects.put(p, effects.get(p) + "," + effect);
 			}
 		} else {
-			setParam(p, "effects", !((String) getParam(p, "effects")).isEmpty() ? getParam(p, "effects") + ", " + effect : effect);
+			String e = effects.get(p);
+			effects.put(p, !e.isEmpty() ? e + ", " + effect : effect);
 		}
+	}
+
+	public static void fixLocation(Player p) {
+		p.teleport(fix(p));
+	}
+
+	public static void fixLocation(PlayerRespawnEvent event) {
+		event.setRespawnLocation(fix(event.getPlayer()));
+	}
+
+	public static Location fix(Player p) {
+		Location loc = p.getLocation();
+		if (Config.isSqlWrapper()) {
+			loc = PlayerManager.getInstance().getPlayer(p).getLoc();
+		}
+		Double x = loc.getX();
+		Double y = loc.getY();
+		Double z = loc.getZ();
+
+		if (new Location(p.getWorld(), x, y - 1, z).getBlock().getType() == Material.AIR) {
+			for (int i = y.intValue(); i > 0; i--) {
+				Material m = new Location(p.getWorld(), x, i, z).getBlock().getType();
+				if (m != Material.AIR) {
+					Material m1 = new Location(p.getWorld(), x, i + 1, z).getBlock().getType();
+					Material m2 = new Location(p.getWorld(), x, i + 2, z).getBlock().getType();
+					if (m1 == Material.AIR && m2 == Material.AIR) {
+						y = (double) i+1;
+					}
+				}
+			}
+		}
+
+		if (new Location(p.getWorld(), x, y + 1, z).getBlock().getType() != Material.AIR) {
+			for (int i = y.intValue(); i < p.getWorld().getMaxHeight(); i++) {
+				System.out.println("2) " + i);
+				Material m1 = new Location(p.getWorld(), x, i, z).getBlock().getType();
+				Material m2 = new Location(p.getWorld(), x, i + 1, z).getBlock().getType();
+				if (m1 == Material.AIR && m2 == Material.AIR) {
+					y = (double) i;
+				}
+			}
+		}
+		return new Location(p.getWorld(), x, y, z);
 	}
 
 	public void removeEffect(Player p, String effect) {
 		if (Config.isSqlWrapper()) {
-			DDPlayer player = pm.getPlayer(p);
-			String effects = player.getEffects();
-			if (effects.startsWith(effect))
-				if (effects.startsWith(effect + ","))
-					effects = effects.replace(effect + ",", "");
+			String e = effects.get(p);
+			if (e.startsWith(effect))
+				if (e.startsWith(effect + ","))
+					e = e.replace(effect + ",", "");
 				else
-					effects = effects.replace(effect, "");
+					e = e.replace(effect, "");
 			else
-				effects = effects.replace("," + effect, "");
-			player.addEffects(effects);
+				e = e.replace("," + effect, "");
+			effects.put(p, e);
 		} else {
-			setParam(p, "effects", effect);
+			effects.put(p, effect);
 		}
 	}
 
 	public String[] getEffects(Player p) {
-		if (Config.isSqlWrapper()) {
-			DDPlayer player = pm.getPlayer(p);
-			String effects = player.getEffects();
-			return effects.split("\\,");
-		} else {
-			return ((String) getParam(p, "effects")).split(", ");
-		}
+		return effects.get(p).split("\\,");
 	}
 
 	public Object getData(Player p, String param) {
-		if (Config.isSqlWrapper()) {
-			return pm.getPlayer(p).getData().get(param);
-		} else {
-			return getParam(p, param);
-		}
+		return data.get(p).get(param);
 	}
 
+	@SuppressWarnings("unused")
 	private Object getParam(Player p, String param) {
-		try {
-			cfgPlayers.load(cfgPlayersFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (cfgPlayers.isConfigurationSection(p.getName())) {
-			ConfigurationSection section = cfgPlayers.getConfigurationSection(p.getName());
-			return section.get(param);
-		}
-		log.severe(DarkDays.prefix + "Error of receiving parameter from players.yml");
-		return null;
+		return data.get(p).get(param);
 	}
 
 	public void setData(Player p, String param, Object value) {
-		if (Config.isSqlWrapper()) {
-			pm.getPlayer(p).getData().set(param, value);
-		} else {
-			setParam(p, param, value);
-		}
+		data.get(p).set(param, value);
 	}
 
+	@SuppressWarnings("unused")
 	private void setParam(Player p, String param, Object value) {
-		if (!cfgPlayers.isConfigurationSection(p.getName()))
-			cfgPlayers.createSection(p.getName());
-		ConfigurationSection section = cfgPlayers.getConfigurationSection(p.getName());
-		section.set(param, value);
-		saveConfig();
-
+		data.get(p).set(param, value);
 	}
 
 	public void saveConfig() {
@@ -122,18 +143,65 @@ public class PC {
 		}
 	}
 
-	public void initialize(Player p) {
+	public static Location getSpawnLoc(Player p) {
+		int x, y, z;
+		if (plg.getConfig().isConfigurationSection("Spawns.Lobby")) {
+			ConfigurationSection section = plg.getConfig().getConfigurationSection("Spawns.Lobby");
+			x = section.getInt("x");
+			y = section.getInt("y");
+			z = section.getInt("z");
+			Location loc = new Location(p.getWorld(), x, y, z);
+			return loc;
+		}
+		return p.getWorld().getSpawnLocation();
+	}
+
+	public void saveAll() {
 		if (Config.isSqlWrapper()) {
-			pm.addPlayer(p);
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				DDPlayer player = PlayerManager.getInstance().getPlayer(p);
+				player.addData(data.get(p));
+				player.addEffects(effects.get(p));
+				player.addPlayer();
+			}
 		} else {
-			if (!cfgPlayers.isConfigurationSection(p.getName())) {
-				ConfigurationSection section = cfgPlayers.createSection(p.getName());
-				section.set("death", false);
-				section.set("novice", true);
-				section.set("spawned", false);
-				section.set("hunger", 0);
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				if (!cfgPlayers.isConfigurationSection(p.getName()))
+					cfgPlayers.createSection(p.getName());
+				ConfigurationSection section = cfgPlayers.getConfigurationSection(p.getName());
+
+				PlayerLoadData PLD = data.get(p);
+
+				section.set(HUNGER, PLD.getHunger());
+				section.set(DEATH, PLD.isDeath());
+				section.set(NOVICE, PLD.isNovice());
+				section.set(SPAWNED, PLD.isSpawned());
+				section.set(EFFECTS, effects.get(p));
 				saveConfig();
 			}
+		}
+	}
+
+	public void initialize(Player p) {
+		if (Config.isSqlWrapper()) {
+			PlayerManager.getInstance().addPlayer(p);
+			DDPlayer player = PlayerManager.getInstance().getPlayer(p);
+			player.addPlayer();
+			effects.put(p, player.getEffects());
+			data.put(p, player.getData());
+		} else {
+			if (!cfgPlayers.isConfigurationSection(p.getName())) {
+				ConfigurationSection s = cfgPlayers.createSection(p.getName());
+				s.set(DEATH, false);
+				s.set(NOVICE, true);
+				s.set(SPAWNED, false);
+				s.set(HUNGER, 0);
+				s.set(EFFECTS, "");
+				saveConfig();
+			}
+			ConfigurationSection s = cfgPlayers.getConfigurationSection(p.getName());
+			data.put(p, new PlayerLoadData(s.getInt(HUNGER), s.getBoolean(DEATH), s.getBoolean(NOVICE), s.getBoolean(SPAWNED)));
+			effects.put(p, s.getString(EFFECTS));
 			// PlayerInfo.setNovice(p, true);}
 		}
 	}

@@ -3,19 +3,17 @@ package darvin939.DarkDays.Sql.Players;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 import org.bukkit.entity.Player;
-
-import com.google.common.collect.MapMaker;
 
 import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class PlayerManager {
 	private static final PlayerManager instance = new PlayerManager();
-	public final ConcurrentMap<String, DDPlayer> players = new MapMaker().concurrencyLevel(8).weakValues().makeMap();
-	public final Map<String, Long> playersID = new MapMaker().concurrencyLevel(6).makeMap();
+	public final Map<String, DDPlayer> players = new HashMap<String, DDPlayer>();
+	public final static Map<String, Long> playersID = new HashMap<String, Long>();
 	private final PreparedStatement insertPlayer;
 
 	public static PlayerManager getInstance() {
@@ -23,12 +21,11 @@ public class PlayerManager {
 	}
 
 	private PlayerManager() {
-		SQLPlayer.createTables();
-		SQLPlayer.initPrep();
-
 		insertPlayer = Database.DATABASE.prepare("INSERT INTO `players` (`username`) VALUES (?)");
-		final ResultSet rs = Database.DATABASE.query("SELECT `username`,`id` FROM `players`");
+	}
 
+	public static void init() {
+		final ResultSet rs = Database.DATABASE.query("SELECT `username`,`id` FROM `players`");
 		try {
 			while (rs.next()) {
 				playersID.put(rs.getString("username"), rs.getLong("id"));
@@ -38,20 +35,19 @@ public class PlayerManager {
 		}
 	}
 
-	public DDPlayer addPlayer(String player) {
+	public void addPlayer(String player) {
 		addExtPlayer(player);
 		final Long id = getPlayerID(player);
 		DDPlayer play = new SQLPlayer(player, id);
 		players.put(player, play);
-		return play;
 	}
 
-	public DDPlayer addPlayer(Player player) {
+	public void addPlayer(Player player) {
 		addExtPlayer(player.getName());
 		final Long id = getPlayerID(player);
 		DDPlayer play = new SQLPlayer(player, id);
 		players.put(player.getName(), play);
-		return play;
+
 	}
 
 	public DDPlayer getPlayer(String player) {

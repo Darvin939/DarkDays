@@ -137,7 +137,6 @@ public abstract class FGUtilCore extends CipherUtil {
 	}
 
 	private void startUpdateTick() {
-
 		chId = plg.getServer().getScheduler().runTaskTimer(plg, new Runnable() {
 			public void run() {
 				version_new = getNewVersion(version_current);
