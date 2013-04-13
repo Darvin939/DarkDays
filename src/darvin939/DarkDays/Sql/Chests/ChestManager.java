@@ -3,21 +3,19 @@ package darvin939.DarkDays.Sql.Chests;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.google.common.collect.MapMaker;
-
 import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class ChestManager {
 	private static final ChestManager instance = new ChestManager();
-	public final ConcurrentMap<Location, DDChest> chests = new MapMaker().concurrencyLevel(8).weakValues().makeMap();
-	public final Map<Location, Long> chestsID = new MapMaker().concurrencyLevel(6).makeMap();
+	public final Map<Location, DDChest> chests =  new HashMap<Location, DDChest>();
+	public final static Map<Location, Long> chestsID =  new HashMap<Location, Long>();
 	private final PreparedStatement insertChest;
 
 	public static ChestManager getInstance() {
@@ -25,12 +23,11 @@ public class ChestManager {
 	}
 
 	private ChestManager() {
-		SQLChest.createTables();
-		SQLChest.initPrep();
-
 		insertChest = Database.DATABASE.prepare("INSERT INTO `chests` (`x`,`y`,`z`,`world`) VALUES (?,?,?,?)");
-		final ResultSet rs = Database.DATABASE.query("SELECT `x`,`y`,`z`,`world`,`id` FROM `chests`");
+	}
 
+	public static void init() {
+		final ResultSet rs = Database.DATABASE.query("SELECT `x`,`y`,`z`,`world`,`id` FROM `chests`");
 		try {
 			while (rs.next()) {
 				final String worldName = rs.getString("world");
@@ -46,11 +43,12 @@ public class ChestManager {
 		}
 	}
 
-	public void addChest(Location loc) {
+	public DDChest addChest(Location loc) {
 		addExtChest(loc);
 		final Long id = getChestID(loc);
 		DDChest chest = new SQLChest(loc, id);
 		chests.put(loc, chest);
+		return chest;
 	}
 
 	public DDChest getChest(Location loc) {
@@ -59,6 +57,10 @@ public class ChestManager {
 
 	public Long getChestID(Location loc) {
 		return chestsID.get(loc);
+	}
+	
+	public Map<Location, Long> getChestsID() {
+		return chestsID;
 	}
 
 	private void addExtChest(Location loc) {
@@ -91,5 +93,4 @@ public class ChestManager {
 		}
 
 	}
-
 }

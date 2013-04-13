@@ -53,8 +53,8 @@ public class PlayerListener implements Listener {
 	public void onInventoryCloseEvent(InventoryCloseEvent event) {
 		Player p = (Player) event.getPlayer();
 		if (event.getInventory().getHolder() instanceof Chest && event.getPlayer() instanceof Player) {
-			if (Config.getCC().isChest(p) != null)
-				if (Nodes.chest_disappear.getBoolean() && Config.getCC().cfgChest.get(Config.getCC().isChest(p) + ".LootID") != null) {
+			if (Config.getCC().isChest(p))
+				if (Nodes.chest_disappear.getBoolean() && Config.getCC().getLoot(p.getTargetBlock(null, 10).getLocation()) != null) {
 					Chest chest = (Chest) event.getInventory().getHolder();
 					if (Loot.isChestEmpty(p.getTargetBlock(null, 10))) {
 						Block block = p.getTargetBlock(null, 10);

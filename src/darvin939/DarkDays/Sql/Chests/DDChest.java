@@ -21,6 +21,8 @@ public abstract class DDChest {
 
 	public abstract void addChest(String data);
 
+	public abstract void addChest();
+
 	public abstract void removeChest();
 
 	public abstract void addLoot(String data);

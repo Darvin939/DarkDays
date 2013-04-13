@@ -98,9 +98,7 @@ public class SQLPlayer extends DDPlayer {
 						final World world = Bukkit.getWorld(worldName);
 						if (world != null) {
 							playerloc = new Location(world, rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), rs.getFloat("yaw"), rs.getFloat("pitch"));
-						} else {
-
-						}
+						} 
 					}
 				}
 			} catch (final SQLException e) {

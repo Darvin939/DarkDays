@@ -66,8 +66,9 @@ public class Tasks {
 		plg.getServer().getScheduler().runTaskTimer(plg, new Runnable() {
 			public void run() {
 				Config.getPC().saveAll();
+				Config.getCC().saveAll();
 			}
-		},  3 * 100, 3 * 100);
+		}, 3 * 100, 3 * 100);
 
 	}
 

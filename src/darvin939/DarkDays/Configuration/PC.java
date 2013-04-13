@@ -34,10 +34,11 @@ public class PC {
 
 	public PC(DarkDays plugin) {
 		plg = plugin;
-
-		cfgPlayersFile = new File(plg.getDataFolder() + "/players.yml");
-		cfgPlayers = YamlConfiguration.loadConfiguration(cfgPlayersFile);
-		saveConfig();
+		if (!Config.isSqlWrapper()) {
+			cfgPlayersFile = new File(plg.getDataFolder() + "/players.yml");
+			cfgPlayers = YamlConfiguration.loadConfiguration(cfgPlayersFile);
+			saveConfig();
+		}
 
 	}
 
@@ -78,7 +79,7 @@ public class PC {
 					Material m1 = new Location(p.getWorld(), x, i + 1, z).getBlock().getType();
 					Material m2 = new Location(p.getWorld(), x, i + 2, z).getBlock().getType();
 					if (m1 == Material.AIR && m2 == Material.AIR) {
-						y = (double) i+1;
+						y = (double) i + 1;
 					}
 				}
 			}
@@ -184,8 +185,9 @@ public class PC {
 
 	public void initialize(Player p) {
 		if (Config.isSqlWrapper()) {
-			PlayerManager.getInstance().addPlayer(p);
-			DDPlayer player = PlayerManager.getInstance().getPlayer(p);
+			// PlayerManager.getInstance().addPlayer(p);
+			// DDPlayer player = PlayerManager.getInstance().getPlayer(p);
+			DDPlayer player = PlayerManager.getInstance().addPlayer(p);
 			player.addPlayer();
 			effects.put(p, player.getEffects());
 			data.put(p, player.getData());

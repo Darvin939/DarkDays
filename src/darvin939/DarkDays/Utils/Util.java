@@ -26,4 +26,7 @@ public class Util extends DarkDays {
 			Config.FGU.PrintMsg(p, message);
 	}
 
+	public static String FCTU(String s) {
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
+	}
 }

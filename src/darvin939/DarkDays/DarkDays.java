@@ -49,7 +49,7 @@ public class DarkDays extends JavaPlugin {
 		log.info(prefix + "Plugin v." + des.getVersion() + " disabled");
 		
 		Config.getPC().saveAll();
-		
+		Config.getCC().saveAll();
 		Config.save(new File(datafolder, "config.yml"));
 	}
 
@@ -78,6 +78,7 @@ public class DarkDays extends JavaPlugin {
 			Config cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString(), "darkdays", getPrefix());
 			cfg.initOtherConfigs();
 
+			Config.getCC().loadChests();
 			new Tasks(this);
 			
 			effects = new EffectManager(this);

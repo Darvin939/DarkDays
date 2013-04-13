@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +22,7 @@ import org.bukkit.potion.PotionType;
 
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
+import darvin939.DarkDays.Utils.Util;
 
 public class Loot {
 	private static FileConfiguration cfg = Config.getLC().getCfg();
@@ -90,7 +92,7 @@ public class Loot {
 			boolean skip = false;
 			for (ItemStack item : chest.getInventory().getContents()) {
 				if (item != null && item.getType() != null && !item.getType().equals(Material.AIR)) {
-					for (String list : getItemList((String) Config.getCC().getParam(block.getLocation(), "LootID"))) {
+					for (String list : getItemList(Config.getCC().getLoot(block.getLocation()))) {
 						if (list.matches("[1-9]+")) {
 							if (item.getType() == Material.getMaterial(Integer.valueOf(list))) {
 								ret = false;
@@ -117,9 +119,9 @@ public class Loot {
 	}
 
 	public static void fillTask() {
-		for (String list : Config.getCC().getCfg().getKeys(false)) {
-			Block block = Config.getCC().getChestLoc(list).getBlock();
-			if (block.getChunk().isLoaded() && Config.getCC().getCfg().get(list + ".LootID") != null) {
+		for (Entry<Location, String> set : Config.getCC().getChests().entrySet()) {
+			Block block = set.getKey().getBlock();
+			if (block.getChunk().isLoaded() && set.getValue() != null) {
 				Chest chest;
 				if (!(block.getState() instanceof Chest)) {
 					Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
@@ -128,7 +130,7 @@ public class Loot {
 				} else
 					chest = (Chest) block.getState();
 				if (isChestEmpty(block) && Nodes.chest_empty.getBoolean())
-					fillChest(chest, (String) Config.getCC().getParam(block.getLocation(), "LootID"));
+					fillChest(chest, Config.getCC().getLoot(block.getLocation()));
 			} else if (!(block.getState() instanceof Chest)) {
 				Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 				chestloc.getBlock().setType(Material.CHEST);
@@ -137,10 +139,11 @@ public class Loot {
 	}
 
 	public static void setLoot(Player p, String list) {
+		list = Util.FCTU(list);
 		if (cfg.isConfigurationSection(list)) {
 			Block block = p.getTargetBlock(null, 10);
 			if (block.getState() instanceof Chest) {
-				Config.getCC().setParam(block.getLocation(), "LootID", list);
+				Config.getCC().setLoot(block.getLocation(), list);
 				fillChest((Chest) block.getState(), list);
 				Config.FGU.PrintMSG(p, "loot_set", list);
 			}

@@ -35,19 +35,20 @@ public class PlayerManager {
 		}
 	}
 
-	public void addPlayer(String player) {
+	public DDPlayer addPlayer(String player) {
 		addExtPlayer(player);
 		final Long id = getPlayerID(player);
 		DDPlayer play = new SQLPlayer(player, id);
 		players.put(player, play);
+		return play;
 	}
 
-	public void addPlayer(Player player) {
+	public DDPlayer addPlayer(Player player) {
 		addExtPlayer(player.getName());
 		final Long id = getPlayerID(player);
 		DDPlayer play = new SQLPlayer(player, id);
 		players.put(player.getName(), play);
-
+		return play;
 	}
 
 	public DDPlayer getPlayer(String player) {

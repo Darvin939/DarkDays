@@ -14,6 +14,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Players.EffectManager;
 import darvin939.DarkDays.Players.ItemManager;
+import darvin939.DarkDays.Sql.Chests.ChestManager;
+import darvin939.DarkDays.Sql.Chests.SQLChest;
 import darvin939.DarkDays.Sql.Players.PlayerManager;
 import darvin939.DarkDays.Sql.Players.SQLPlayer;
 import darvin939.DarkDays.Utils.FGUtilCore;
@@ -175,7 +177,11 @@ public class Config extends FGUtilCore {
 			}
 			SQLPlayer.createTables();
 			SQLPlayer.initPrep();
+			SQLChest.createTables();
+			SQLChest.initPrep();
+			
 			PlayerManager.init();
+			ChestManager.init();
 		}
 
 		playerCfg = new PC(plugin);

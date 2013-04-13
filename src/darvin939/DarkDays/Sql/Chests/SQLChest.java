@@ -18,8 +18,8 @@ public class SQLChest extends DDChest {
 	private static PreparedStatement GET_CHEST;
 	private static PreparedStatement GET_LOOT;
 	private Long id;
-	private Location chestloc;
-	private String loot;
+	private Location chestloc = null;
+	private String loot = "";
 
 	public SQLChest(Location loc, Long id) {
 		super(loc);
@@ -82,7 +82,7 @@ public class SQLChest extends DDChest {
 				INSERT_CHEST.setDouble(1, loc.getX());
 				INSERT_CHEST.setDouble(2, loc.getY());
 				INSERT_CHEST.setDouble(3, loc.getZ());
-				INSERT_CHEST.setString(4, data);
+				INSERT_CHEST.setString(4, data.isEmpty() ? "" : data);
 				INSERT_CHEST.setString(5, loc.getWorld().getName());
 				synchronized (INSERT_CHEST.getConnection()) {
 					INSERT_CHEST.executeUpdate();
@@ -91,6 +91,10 @@ public class SQLChest extends DDChest {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void addChest() {
+		addChest("");
 	}
 
 	public void removeChest() {
@@ -123,8 +127,6 @@ public class SQLChest extends DDChest {
 						final World world = Bukkit.getWorld(worldName);
 						if (world != null) {
 							chestloc = new Location(world, rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
-						} else {
-
 						}
 					}
 				}
