@@ -14,8 +14,8 @@ import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class ChestManager {
 	private static final ChestManager instance = new ChestManager();
-	public final Map<Location, DDChest> chests =  new HashMap<Location, DDChest>();
-	public final static Map<Location, Long> chestsID =  new HashMap<Location, Long>();
+	public final Map<Location, DDChest> chests = new HashMap<Location, DDChest>();
+	public final static Map<Location, Long> chestsID = new HashMap<Location, Long>();
 	private final PreparedStatement insertChest;
 
 	public static ChestManager getInstance() {
@@ -51,6 +51,12 @@ public class ChestManager {
 		return chest;
 	}
 
+	public void removeChest(Location loc) {
+		chests.get(loc).removeChest();
+		chests.remove(loc);
+		chestsID.remove(loc);
+	}
+
 	public DDChest getChest(Location loc) {
 		return chests.get(loc);
 	}
@@ -58,7 +64,7 @@ public class ChestManager {
 	public Long getChestID(Location loc) {
 		return chestsID.get(loc);
 	}
-	
+
 	public Map<Location, Long> getChestsID() {
 		return chestsID;
 	}

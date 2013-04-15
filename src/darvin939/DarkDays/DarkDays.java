@@ -24,13 +24,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Commands.Parser;
+import darvin939.DarkDays.Commands.Handlers.Chests;
+import darvin939.DarkDays.Commands.Handlers.Help;
 import darvin939.DarkDays.Commands.Handlers.Spawn;
 import darvin939.DarkDays.Commands.Handlers.Status;
+import darvin939.DarkDays.Commands.Handlers.Tag;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.BlockListener;
 import darvin939.DarkDays.Listeners.EntityListener;
 import darvin939.DarkDays.Listeners.PlayerListener;
+import darvin939.DarkDays.Listeners.Wand;
 import darvin939.DarkDays.Listeners.ZombieListener;
 import darvin939.DarkDays.Players.Effect;
 import darvin939.DarkDays.Players.EffectManager;
@@ -48,7 +52,7 @@ public class DarkDays extends JavaPlugin {
 	private PlayerListener plis = new PlayerListener(this);
 	private EntityListener elis = new EntityListener(this);
 	private BlockListener blis = new BlockListener(this);
-	// private Wand wlis = new Wand(this);
+	private Wand wlis = new Wand(this);
 	private ZombieListener zlis = new ZombieListener(this);
 
 	public Parser Commands = new Parser();
@@ -56,7 +60,7 @@ public class DarkDays extends JavaPlugin {
 	private EffectManager effects;
 	private ItemManager items;
 
-	public static String prefix = "&b[DarkDays Beta]&f ";
+	public static String prefix = "&b[DarkDays]&f ";
 	public static final String premPrefix = "darkdays.";
 	public static final String cmdPrefix = "/dd ";
 
@@ -133,24 +137,43 @@ public class DarkDays extends JavaPlugin {
 	}
 
 	private void registerCommands() {
+		// spawn
 		Commands.add("/dd spawn", new Spawn(this));
 		Commands.setPermission("spawn", "darkdays.spawn");
 		Commands.setPermission("spawn.list", "darkdays.spawn.list");
 		Commands.setPermission("spawn.set", "darkdays.spawn.set");
 		Commands.setHelp("spawn", Config.FGU.MSG("hlp_cmd_spawn"));
-		Commands.setHelp("list", Config.FGU.MSG("hlp_cmd_spawn_list"));
-		Commands.setHelp("set", Config.FGU.MSG("hlp_cmd_spawn_set"));
-		
+		Commands.setHelp("spawn.list", Config.FGU.MSG("hlp_cmd_spawn_list"));
+		Commands.setHelp("spawn.set", Config.FGU.MSG("hlp_cmd_spawn_set"));
+		// status
 		Commands.add("/dd status", new Status(this));
 		Commands.setPermission("status", "darkdays.status");
 		Commands.setHelp("status", Config.FGU.MSG("hlp_cmd_status"));
+		// help
+		Commands.add("/dd help", new Help(this));
+		Commands.setPermission("help", "darkdays.help");
+		Commands.setHelp("help", Config.FGU.MSG("hlp_cmd_help"));
+		// tag
+		Commands.add("/dd tag", new Tag(this));
+		Commands.setPermission("tag", "darkdays.tag");
+		Commands.setHelp("tag", Config.FGU.MSG("hlp_cmd_tag"));
+		// chest
+		Commands.add("/dd chest", new Chests(this));
+		Commands.setPermission("chest", "darkdays.chest");
+		Commands.setPermission("chest.add", "darkdays.chest.add");
+		Commands.setPermission("chest.remove", "darkdays.chest.remove");
+		Commands.setPermission("chest.loot", "darkdays.chest.loot");
+		Commands.setHelp("chest", Config.FGU.MSG("hlp_cmd_chest"));
+		Commands.setHelp("chest.add", Config.FGU.MSG("hlp_cmd_chest_add"));
+		Commands.setHelp("chest.remove", Config.FGU.MSG("hlp_cmd_chest_remove"));
+		Commands.setHelp("chest.loot", Config.FGU.MSG("hlp_cmd_chest_loot"));
 	}
 
 	public void registerEvents(PluginManager pm) {
 		pm.registerEvents(plis, this);
 		pm.registerEvents(elis, this);
 		pm.registerEvents(blis, this);
-		// pm.registerEvents(wlis, this);
+		pm.registerEvents(wlis, this);
 		pm.registerEvents(zlis, this);
 	}
 
@@ -285,9 +308,13 @@ public class DarkDays extends JavaPlugin {
 		return false;
 	}
 
+	public boolean hasPermissions(Player p, String perm) {
+		return p.hasPermission(DarkDays.premPrefix + perm);
+	}
+
 	public void getHelp(Player p, String command) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b================ &2DarkDays Help &b=================="));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Command:&6 " + DarkDays.cmdPrefix + command));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b================= &2DarkDays Help &b================="));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Command:&6 " + DarkDays.cmdPrefix + command.replaceAll("\\.", " ")));
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', Commands.getHelp(command)));
 	}
 }

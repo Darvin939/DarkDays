@@ -121,7 +121,7 @@ public class Loot {
 	public static void fillTask() {
 		for (Entry<Location, String> set : Config.getCC().getChests().entrySet()) {
 			Block block = set.getKey().getBlock();
-			if (block.getChunk().isLoaded() && set.getValue() != null) {
+			if (block.getChunk().isLoaded() && !set.getValue().isEmpty()) {
 				Chest chest;
 				if (!(block.getState() instanceof Chest)) {
 					Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
@@ -130,7 +130,7 @@ public class Loot {
 				} else
 					chest = (Chest) block.getState();
 				if (isChestEmpty(block) && Nodes.chest_empty.getBoolean())
-					fillChest(chest, Config.getCC().getLoot(block.getLocation()));
+					fillChest(chest, Config.getCC().getLoot(set.getKey()));
 			} else if (!(block.getState() instanceof Chest)) {
 				Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 				chestloc.getBlock().setType(Material.CHEST);

@@ -91,7 +91,7 @@ public class CC {
 
 	public void addChest(Location loc, String loot_id) {
 		if (Config.isSqlWrapper()) {
-			ChestManager.getInstance().addChest(loc).addChest(loot_id);
+			ChestManager.getInstance().addChest(loc).addLoot(loot_id);
 		} else {
 			ConfigurationSection s;
 			if (!cfgChest.isConfigurationSection("Chest-" + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ()))
@@ -106,8 +106,17 @@ public class CC {
 		chests.put(loc, loot_id);
 	}
 
+	public void removeChest(Location loc) {
+		if (Config.isSqlWrapper()) {
+			ChestManager.getInstance().removeChest(loc);
+		} else {
+			cfgChest.set("Chest-" + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ(), null);
+		}
+		chests.remove(loc);
+	}
+
 	public String getLoot(Location loc) {
-		return Util.FCTU(chests.get(loc));
+		return (chests.get(loc) != null && !chests.get(loc).isEmpty()) ? Util.FCTU(chests.get(loc)) : null;
 	}
 
 	public void setLoot(Location loc, String loot) {
@@ -130,9 +139,8 @@ public class CC {
 	public boolean getChestInfo(Player p, Location l) {
 		if (chests.containsKey(l)) {
 			Util.msg(p, "&b===== &2Chest Info&b =====", '/');
-			Util.msg(p, "LootID: &a" + getLoot(l), '/');
-			Util.msg(p, "Location: &ax:" + l.getBlockX() + " y:" + l.getBlockY() + " z:" + l.getBlockZ(), '/');
-			Util.msg(p, "&b===== &2Chest Info&b =====", '/');
+			Util.msg(p, "&7LootID:&6 " + getLoot(l), '/');
+			Util.msg(p, "&7Location:&6 x:" + l.getBlockX() + " y:" + l.getBlockY() + " z:" + l.getBlockZ(), '/');
 			return true;
 		}
 		return false;

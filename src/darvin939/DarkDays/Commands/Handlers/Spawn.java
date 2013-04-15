@@ -83,7 +83,7 @@ public class Spawn extends Handler {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length == 2) {
 			if (nargs[1].equalsIgnoreCase("help"))
-				getHelp(p, "set");
+				getHelp(p, "spawn.set");
 			if (nargs[1].equalsIgnoreCase("lobby"))
 				if (plugin.setLocation(p, "Lobby"))
 					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_lobby_new"));
@@ -101,7 +101,7 @@ public class Spawn extends Handler {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
 			if (nargs[1].equalsIgnoreCase("help"))
-				getHelp(p, "list");
+				getHelp(p, "spawn.list");
 		} else {
 			FileConfiguration cfg = plugin.getConfig();
 			Util.msg(p, "&b================ &2DarkDays Spawns&b ===============", '/');

@@ -150,8 +150,8 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_status", "Show your progress");
 		addMSG("hlp_cmd_help", "Show this help topic");
 		addMSG("hlp_cmd_chest", "Show information about the chest (look at the chest)");
-		addMSG("hlp_cmd_chest_create", "Create new looted chest. Type &2..create &7[name] &fto create chest with lootID");
-		addMSG("hlp_cmd_chest_delete", "Remove looted chest");
+		addMSG("hlp_cmd_chest_add", "Create new looted chest. Type &2..create &7[name] &fto create chest with lootID");
+		addMSG("hlp_cmd_chest_remove", "Remove looted chest");
 		addMSG("hlp_cmd_chest_loot", "Type &2..loot set &fto set the lootID for looked chest");
 		addMSG("hlp_cmd_spawn", "Start playing");
 		addMSG("hlp_cmd_spawn_set", "Add new spawn point. Type &2..set lobby &fto add new lobby location");

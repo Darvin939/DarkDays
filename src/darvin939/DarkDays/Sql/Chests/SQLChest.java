@@ -32,7 +32,7 @@ public class SQLChest extends DDChest {
 	}
 
 	public static void initPrep() {
-		INSERT_CHEST = Database.DATABASE.prepare("REPLACE INTO `chests` (`x`, `y`, `z`, `loot_id`, `world`) VALUES (?,?,?,?,?,?)");
+		INSERT_CHEST = Database.DATABASE.prepare("REPLACE INTO `chests` (`x`, `y`, `z`, `loot_id`, `world`) VALUES (?,?,?,?,?)");
 		DELETE_CHEST = Database.DATABASE.prepare("DELETE FROM `chests` WHERE `id`=?");
 
 		UPDATE_LOOT = Database.DATABASE.prepare("UPDATE `chests` SET `loot_id` = ? WHERE `chests`.`id` = ?;");
