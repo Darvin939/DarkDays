@@ -40,7 +40,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,7 +50,7 @@ import darvin939.DarkDays.DarkDays;
 
 public abstract class FGUtilCore extends CipherUtil {
 
-	JavaPlugin plg;
+	protected DarkDays plg;
 	public String px = "";
 	private String permprefix = DarkDays.premPrefix + "fgutilcore.";
 	private boolean version_check = false;
@@ -78,7 +77,7 @@ public abstract class FGUtilCore extends CipherUtil {
 		this.version_current = Double.parseDouble(des.getVersion());
 		this.px = px;
 		this.version_check = vcheck;
-		this.language = lng;
+		this.language = lng.toLowerCase();
 		InitMsgFile();
 		initStdMsg();
 
@@ -91,6 +90,10 @@ public abstract class FGUtilCore extends CipherUtil {
 			version_new = getNewVersion(version_current);
 			UpdateMsg();
 		}
+	}
+	
+	public DarkDays getPugin() {
+		return plg;
 	}
 
 	private void initStdMsg() {
@@ -189,7 +192,7 @@ public abstract class FGUtilCore extends CipherUtil {
 			if (map.isEmpty())
 				plg.getLogger().info("Language file not found. Making new...");
 			else
-				plg.getLogger().info("Initialize language file");	
+				plg.getLogger().info("Initialize language file..");	
 			for (Entry<String, String> e : map.entrySet()) {
 				lng.set(e.getKey(), e.getValue());
 			}

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,10 +21,7 @@ import darvin939.DarkDays.Utils.FGUtilCore;
 import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class Config extends FGUtilCore {
-	private static Logger log = Logger.getLogger("Minecraft");
 	public static FGUtilCore FGU;
-
-	private static DarkDays plugin;
 	private static PC playerCfg;
 	private static EffectManager effects;
 	private static ItemManager items;
@@ -35,7 +31,6 @@ public class Config extends FGUtilCore {
 
 	public Config(DarkDays plg, boolean vcheck, String lng, String devbukkitname, String px) {
 		super(plg, vcheck, lng, devbukkitname, px);
-		plugin = plg;
 		setupMessages();
 		SaveMSG();
 		effects = new EffectManager(plg);
@@ -172,7 +167,7 @@ public class Config extends FGUtilCore {
 			try {
 				db.open();
 			} catch (SQLException e) {
-				log.warning("Couldn't connect to Database");
+				plg.getLogger().warning("Couldn't connect to Database");
 				e.printStackTrace();
 			}
 			SQLPlayer.createTables();
@@ -184,27 +179,10 @@ public class Config extends FGUtilCore {
 			ChestManager.init();
 		}
 
-		playerCfg = new PC(plugin);
-		chestCfg = new CC(plugin);
-		lootCfg = new LC(plugin);
-		regionCfg = new RC(plugin);
-	}
-
-	public static void init() {
-		extract(new String[] { "config.yml" });
-		load(new File(DarkDays.getDataPath(), "config.yml"));
-
-		if (!Nodes.prefix.getString().toLowerCase().equalsIgnoreCase("darkdays")) {
-			String px = "[" + Nodes.prefix.getString() + "] ";
-			log.info(DarkDays.prefix + "Found custom prefix " + px + ". Use it");
-			DarkDays.setPrefix(px);
-		}
-		if (Nodes.zombie_smoothness.getInteger() > 19)
-			Nodes.zombie_smoothness.setValue(19);
-		else if (Nodes.zombie_smoothness.getInteger() < 1) {
-			Nodes.zombie_smoothness.setValue(1);
-		}
-		Nodes.zombie_smoothness.setValue(20 - Nodes.zombie_smoothness.getInteger());
+		playerCfg = new PC(plg);
+		chestCfg = new CC(plg);
+		lootCfg = new LC(plg);
+		regionCfg = new RC(plg);
 	}
 
 	public static LC getLC() {

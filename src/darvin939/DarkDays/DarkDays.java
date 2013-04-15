@@ -81,14 +81,14 @@ public class DarkDays extends JavaPlugin {
 	public void onEnable() {
 		des = getDescription();
 		if (getServer().getPluginManager().isPluginEnabled("TagAPI")) {
-			log.info(prefix + "Successfully hooked with TagAPI!");
-			log.info(prefix + "Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
+			getLogger().info("Successfully hooked with TagAPI!");
+			getLogger().info("Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
 			datafolder = getDataFolder();
 			if (!datafolder.exists())
 				datafolder.mkdir();
 			config = getConfig();
 			PluginManager pm = getServer().getPluginManager();
-			Config.init();
+			init();
 			Config cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString(), "darkdays", getPrefix());
 			cfg.initOtherConfigs();
 
@@ -111,6 +111,23 @@ public class DarkDays extends JavaPlugin {
 		} else {
 			log.severe(prefix + "TagAPI not found on the server! Shutting down DarkDays...");
 		}
+	}
+
+	public void init() {
+		Config.extract(new String[] { "config.yml" });
+		Config.load(new File(getDataPath(), "config.yml"));
+
+		if (!Nodes.prefix.getString().toLowerCase().equalsIgnoreCase("darkdays")) {
+			String px = "&b[" + Nodes.prefix.getString() + "]&f ";
+			getLogger().info("Found custom prefix [" + Nodes.prefix.getString() + "]. Use it");
+			setPrefix(px);
+		}
+		if (Nodes.zombie_smoothness.getInteger() > 19)
+			Nodes.zombie_smoothness.setValue(19);
+		else if (Nodes.zombie_smoothness.getInteger() < 1) {
+			Nodes.zombie_smoothness.setValue(1);
+		}
+		Nodes.zombie_smoothness.setValue(20 - Nodes.zombie_smoothness.getInteger());
 	}
 
 	private void registerCommands() {
@@ -137,9 +154,9 @@ public class DarkDays extends JavaPlugin {
 			for (Entry<String, Item> set : items.getItems().entrySet())
 				eff = eff + set.getKey() + ", ";
 			eff = eff.substring(0, eff.length() - 2);
-			log.info(prefix + "Loaded items: " + eff);
+			getLogger().info("Loaded items: " + eff);
 		} else
-			log.info(prefix + "No extra items was't found");
+			getLogger().info("No extra items was't found");
 	}
 
 	public void printEffects(EffectManager effect) {
@@ -148,15 +165,15 @@ public class DarkDays extends JavaPlugin {
 			for (Entry<String, Effect> set : effect.getEffects().entrySet())
 				eff = eff + set.getKey() + ", ";
 			eff = eff.substring(0, eff.length() - 2);
-			log.info(prefix + "Loaded effects: " + eff);
+			getLogger().info("Loaded effects: " + eff);
 		} else
-			log.info(prefix + "No effects was't found");
+			getLogger().info("No effects was't found");
 	}
 
 	public StackableItems getStackableItems() {
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("StackableItems");
 		if (plugin == null || !(plugin instanceof StackableItems)) {
-			log.warning(prefix + "StackableItems not found on the server");
+			getLogger().warning("StackableItems not found on the server");
 			return null;
 		}
 		return (StackableItems) plugin;
@@ -219,30 +236,40 @@ public class DarkDays extends JavaPlugin {
 		return false;
 	}
 
+	/* Util.unknownCmd() */
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		Handler handler = Commands.getHandler(command.getName());
-		if (handler == null)
-			return false;
-		System.out.println(command.getName());
-		if (args.length == 0) {
-			sender.sendMessage("YEPPI");
-			return true;
-		} else {
-			try {
-				return handler.perform(sender, args);
-			} catch (InvalidUsage ex) {
-				return false;
+		String split = "/" + command.getName().toLowerCase();
+		if (args.length > 0)
+			split = split + " " + args[0];
+		Handler handler = Commands.getHandler(split);
+		if (sender instanceof Player) {
+			Player p = (Player) sender;
+			if (split.equalsIgnoreCase("/dd") || args.length == 0) {
+				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("hlp_topic", DarkDays.cmdPrefix + "help"));
+				return true;
+			} else {
+
+				if (handler == null) {
+					Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + args[0]));
+					Util.msg(p, Config.FGU.MSG("hlp_commands") + " &2" + DarkDays.cmdPrefix + "&7<" + Commands.getCommandsString() + "&7>", '/');
+					return true;
+				}
+				try {
+					return handler.perform(p, args);
+				} catch (InvalidUsage ex) {
+					return false;
+				}
 			}
+
 		}
+		Config.FGU.SC("You must be a Player");
+		return true;
 	}
 
-	public boolean hasPermissions(CommandSender sender, String command) {
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			if (Commands.hasPermission(command)) {
-				if (player.hasPermission(Commands.getPermission(command)))
-					return true;
-			}
+	public boolean hasPermissions(Player p, String command) {
+		if (Commands.hasPermission(command)) {
+			if (p.hasPermission(Commands.getPermission(command)))
+				return true;
 		}
 		return false;
 	}

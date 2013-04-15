@@ -1,6 +1,7 @@
 package darvin939.DarkDays.Commands;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class Parser {
@@ -22,15 +23,30 @@ public class Parser {
 		return command_list.toArray(new String[] {});
 	}
 
+	public String getCommandsString() {
+		String split = "";
+		Iterator<String> iter = command_list.iterator();
+		while (iter.hasNext()) {
+
+			split = split.isEmpty() ? iter.next() : split + ", " + iter.next();
+			
+			//if (split.isEmpty())
+			//	split = iter.next();
+			//else
+			//	split = split + ", " + iter.next();
+		}
+		return split;
+	}
+
 	public void add(String Command, Handler Handler) {
-		String base = Command.split(" ")[0];
+		// String base = Command.split(" ")[0];
 		this.commands.put(Command, Command.split(" "));
 
-		if (!this.handlers.containsKey(base.substring(1, base.length())))
-			this.handlers.put(base.substring(1, base.length()), Handler);
+		// if (!this.handlers.containsKey(base.substring(1, base.length())))
+		// this.handlers.put(base.substring(1, base.length()), Handler);
 
 		this.handlers.put(Command, Handler);
-		this.command_list.add(base.substring(1, base.length()).toLowerCase());
+		this.command_list.add(Command.split(" ")[1].toLowerCase());
 	}
 
 	public void setHelp(String command, String[] help) {

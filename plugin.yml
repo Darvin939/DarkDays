@@ -1,7 +1,7 @@
 name: DarkDays Beta
 main: darvin939.DarkDays.DarkDays
-version: 0.1
-description: DarkDays Mod Beta v0.1
+version: 0.45
+description: DarkDays Mod Beta v0.45
 softdepend: [TagAPI, StackableItems]
 commands:
     dd:
