@@ -63,6 +63,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
+	// Баг: когда зомби в лаве, он исчезает или не дохнет
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamage(EntityDamageEvent event) {
 		Entity e = event.getEntity();
@@ -71,14 +72,13 @@ public class EntityListener implements Listener {
 				Tasks.zombie_damage.put(e, (Tasks.zombie_damage.get(e) - event.getDamage()));
 			else
 				Tasks.zombie_damage.put(e, Nodes.zombie_health.getInteger() - event.getDamage());
-
-			if (Tasks.zombie_damage.get(e) <= 20)
+			if (Tasks.zombie_damage.get(e) <= 20) {
 				if (Tasks.zombie_damage.get(e) <= 0) {
-					event.setDamage(0);
+					((Zombie) e).setHealth(0);
 					Tasks.zombie_damage.remove(e);
 				} else
 					((Zombie) e).setHealth(Tasks.zombie_damage.get(e));
-			else
+			} else
 				((Zombie) e).setHealth(((Zombie) e).getMaxHealth());
 
 		}

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -24,6 +25,7 @@ import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Commands.Parser;
 import darvin939.DarkDays.Commands.Handlers.Spawn;
+import darvin939.DarkDays.Commands.Handlers.Status;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.BlockListener;
@@ -133,11 +135,15 @@ public class DarkDays extends JavaPlugin {
 	private void registerCommands() {
 		Commands.add("/dd spawn", new Spawn(this));
 		Commands.setPermission("spawn", "darkdays.spawn");
-		Commands.setPermission("list", "darkdays.spawn.list");
-		Commands.setPermission("set", "darkdays.spawn.set");
-		Commands.setHelp("spawn", new String[] { "Help for Spawn command" });
-		Commands.setHelp("list", new String[] { "Help for Spawn.List command" });
-		Commands.setHelp("set", new String[] { "Help for Spawn.Set command" });
+		Commands.setPermission("spawn.list", "darkdays.spawn.list");
+		Commands.setPermission("spawn.set", "darkdays.spawn.set");
+		Commands.setHelp("spawn", Config.FGU.MSG("hlp_cmd_spawn"));
+		Commands.setHelp("list", Config.FGU.MSG("hlp_cmd_spawn_list"));
+		Commands.setHelp("set", Config.FGU.MSG("hlp_cmd_spawn_set"));
+		
+		Commands.add("/dd status", new Status(this));
+		Commands.setPermission("status", "darkdays.status");
+		Commands.setHelp("status", Config.FGU.MSG("hlp_cmd_status"));
 	}
 
 	public void registerEvents(PluginManager pm) {
@@ -266,11 +272,22 @@ public class DarkDays extends JavaPlugin {
 		return true;
 	}
 
-	public boolean hasPermissions(Player p, String command) {
+	public boolean hasPermissions(Player p, String command, Boolean mess) {
 		if (Commands.hasPermission(command)) {
 			if (p.hasPermission(Commands.getPermission(command)))
 				return true;
+			else {
+				if (mess)
+					Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_noperm", Commands.getPermission(command), 'f', '7'));
+				return false;
+			}
 		}
 		return false;
+	}
+
+	public void getHelp(Player p, String command) {
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b================ &2DarkDays Help &b=================="));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Command:&6 " + DarkDays.cmdPrefix + command));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', Commands.getHelp(command)));
 	}
 }

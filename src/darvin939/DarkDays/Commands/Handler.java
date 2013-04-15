@@ -14,7 +14,11 @@ public abstract class Handler {
 
 	public abstract boolean perform(Player p, String[] args) throws InvalidUsage;
 
-	protected boolean hasPermissions(Player p, String command) {
-		return plugin.hasPermissions(p, command);
+	protected boolean hasPermissions(Player p, String command, Boolean mess) {
+		return plugin.hasPermissions(p, command, mess);
+	}
+	
+	protected void getHelp(Player p, String command){
+		plugin.getHelp(p, command);
 	}
 }

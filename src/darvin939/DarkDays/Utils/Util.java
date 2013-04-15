@@ -35,4 +35,14 @@ public class Util {
 		System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 		return newArgs;
 	}
+
+	public static void unknownCmd(Player p, Class<?> c, String[] commands) {
+		String handlerName = c.getSimpleName().toLowerCase() + " ";
+		String list = "";
+		for (int i = 1; i < commands.length; i++) {
+			list = list.isEmpty() ? "..." + handlerName + "&7<" + commands[i] : list + ", " + commands[i];
+		}
+		Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + handlerName + commands[0]));
+		msg(p, Config.FGU.MSG("hlp_commands") + " &2" + list + "&7>", '/');
+	}
 }

@@ -95,7 +95,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
-		Config.getPC().initialize(p);
+		//Config.getPC().initialize(p);
 		boolean novice = (boolean) Config.getPC().getData(p, PC.DEATH);
 		boolean death = (boolean) Config.getPC().getData(p, PC.NOVICE);
 		if (novice || death) {
@@ -131,6 +131,8 @@ public class PlayerListener implements Listener {
 		return p.getWorld().getSpawnLocation();
 	}
 
+	
+	// This method doesn't work with the plugin AdminCmd!
 	private void resetPlayer(Player p) {
 		Tasks.resetHashMaps(p);
 		Config.getPC().setData(p, PC.DEATH, false);
@@ -230,7 +232,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onEntityDeath(PlayerDeathEvent event) {
+	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player p = event.getEntity();
 		Config.getPC().setData(p, PC.DEATH, true);
 		if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {

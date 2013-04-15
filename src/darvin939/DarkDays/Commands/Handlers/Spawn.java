@@ -30,18 +30,23 @@ public class Spawn extends Handler {
 		this.p = p;
 		if (args.length > 1) {
 			if (args[1].equalsIgnoreCase("help")) {
-				p.sendMessage(plugin.Commands.getHelp("spawn"));
+				getHelp(p, "spawn");
 				return true;
 			}
 			if (args[1].equalsIgnoreCase("set")) {
-				set();
-				return true;
-			} else if (args[1].equalsIgnoreCase("list")) {
-				list();
+				if (hasPermissions(p, "spawn.set", true))
+					set();
 				return true;
 			}
+			if (args[1].equalsIgnoreCase("list")) {
+				if (hasPermissions(p, "spawn.list", true))
+					list();
+				return true;
+			}
+			Util.unknownCmd(p, getClass(), new String[] { args[1], "set", "list", "help" });
+			return true;
 		} else {
-			if (hasPermissions(p, "spawn"))
+			if (hasPermissions(p, "spawn", true))
 				if (!(boolean) Config.getPC().getData(p, PC.SPAWNED)) {
 					int spawnid = 0;
 					FileConfiguration cfg = plugin.getConfig();
@@ -72,15 +77,13 @@ public class Spawn extends Handler {
 					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("game_alrady"));
 			return true;
 		}
-
-		return false;
 	}
 
 	public void set() {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length == 2) {
 			if (nargs[1].equalsIgnoreCase("help"))
-				p.sendMessage(plugin.Commands.getHelp("set"));
+				getHelp(p, "set");
 			if (nargs[1].equalsIgnoreCase("lobby"))
 				if (plugin.setLocation(p, "Lobby"))
 					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_lobby_new"));
@@ -98,7 +101,7 @@ public class Spawn extends Handler {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
 			if (nargs[1].equalsIgnoreCase("help"))
-				p.sendMessage(plugin.Commands.getHelp("list"));
+				getHelp(p, "list");
 		} else {
 			FileConfiguration cfg = plugin.getConfig();
 			Util.msg(p, "&b================ &2DarkDays Spawns&b ===============", '/');

@@ -7,14 +7,14 @@ import java.util.LinkedHashMap;
 public class Parser {
 	private LinkedHashMap<String, String[]> commands;
 	private LinkedHashMap<String, Handler> handlers;
-	private LinkedHashMap<String, String[]> help;
+	private LinkedHashMap<String, String> help;
 	private LinkedHashMap<String, String> permissions;
 	private ArrayList<String> command_list;
 
 	public Parser() {
 		this.commands = new LinkedHashMap<String, String[]>();
 		this.handlers = new LinkedHashMap<String, Handler>();
-		this.help = new LinkedHashMap<String, String[]>();
+		this.help = new LinkedHashMap<String, String>();
 		this.permissions = new LinkedHashMap<String, String>();
 		this.command_list = new ArrayList<String>();
 	}
@@ -49,7 +49,7 @@ public class Parser {
 		this.command_list.add(Command.split(" ")[1].toLowerCase());
 	}
 
-	public void setHelp(String command, String[] help) {
+	public void setHelp(String command, String help) {
 		this.help.put(command, help);
 	}
 
@@ -57,11 +57,11 @@ public class Parser {
 		return this.help.containsKey(command);
 	}
 
-	public LinkedHashMap<String, String[]> getHelp() {
+	public LinkedHashMap<String, String> getHelp() {
 		return this.help;
 	}
 
-	public String[] getHelp(String command) {
+	public String getHelp(String command) {
 		return this.help.get(command);
 	}
 
