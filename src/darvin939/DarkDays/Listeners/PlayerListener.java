@@ -2,7 +2,10 @@ package darvin939.DarkDays.Listeners;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,6 +39,8 @@ import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Configuration.PC;
+import darvin939.DarkDays.Loadable.Effect;
+import darvin939.DarkDays.Loadable.EffectManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Utils.Util;
@@ -84,6 +89,7 @@ public class PlayerListener implements Listener {
 			PlayerInfo.addPlayer(p);
 			p.teleport(PC.fix(p));
 
+			setupEffects(p);
 		}
 		for (Player op : plg.getServer().getOnlinePlayers()) {
 			if (!op.equals(p)) {
@@ -92,10 +98,28 @@ public class PlayerListener implements Listener {
 		}
 	}
 
+	public void setupEffects(Player p) {
+		for (Entry<Method, Object> set : DarkDays.getEffectManager().getRunMethods().entrySet()) {
+			for (String effect : Config.getPC().getEffects(p)) {
+				if (((Effect) set.getValue()).getName().equalsIgnoreCase(effect)) {
+					try {
+						EffectManager.addTaskID(p, effect, Integer.parseInt(String.valueOf(set.getKey().invoke(set.getValue(), p))));
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
-		//Config.getPC().initialize(p);
+		// Config.getPC().initialize(p);
 		boolean novice = (boolean) Config.getPC().getData(p, PC.DEATH);
 		boolean death = (boolean) Config.getPC().getData(p, PC.NOVICE);
 		if (novice || death) {
@@ -131,7 +155,6 @@ public class PlayerListener implements Listener {
 		return p.getWorld().getSpawnLocation();
 	}
 
-	
 	// This method doesn't work with the plugin AdminCmd!
 	private void resetPlayer(Player p) {
 		Tasks.resetHashMaps(p);

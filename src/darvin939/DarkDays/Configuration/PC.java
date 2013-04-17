@@ -15,8 +15,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Players.Memory.PlayerLoadData;
-import darvin939.DarkDays.Sql.Players.DDPlayer;
-import darvin939.DarkDays.Sql.Players.PlayerManager;
+import darvin939.DarkDays.Players.Sql.DDPlayer;
+import darvin939.DarkDays.Players.Sql.PlayerManager;
 
 public class PC {
 	private FileConfiguration cfgPlayers;
@@ -43,15 +43,15 @@ public class PC {
 	}
 
 	public void addEffect(Player p, String effect) {
+		String SE = effects.get(p) != null ? effects.get(p) : "";
 		if (Config.isSqlWrapper()) {
-			if (effects.get(p).isEmpty())
+			if (SE.isEmpty())
 				effects.put(p, effect);
 			else {
 				effects.put(p, effects.get(p) + "," + effect);
 			}
 		} else {
-			String e = effects.get(p);
-			effects.put(p, !e.isEmpty() ? e + ", " + effect : effect);
+			effects.put(p, !SE.isEmpty() ? SE + ", " + effect : effect);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class PC {
 	}
 
 	public void removeEffect(Player p, String effect) {
-		if (Config.isSqlWrapper()) {
+		if (effects.get(p) != null || !effects.get(p).isEmpty()) {
 			String e = effects.get(p);
 			if (e.startsWith(effect))
 				if (e.startsWith(effect + ","))
@@ -109,13 +109,11 @@ public class PC {
 			else
 				e = e.replace("," + effect, "");
 			effects.put(p, e);
-		} else {
-			effects.put(p, effect);
 		}
 	}
 
 	public String[] getEffects(Player p) {
-		return effects.get(p).split("\\,");
+		return effects.get(p) != null ? effects.get(p).split("\\,") : null;
 	}
 
 	public Object getData(Player p, String param) {

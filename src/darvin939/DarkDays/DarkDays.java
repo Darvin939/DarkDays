@@ -25,6 +25,7 @@ import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Commands.Parser;
 import darvin939.DarkDays.Commands.Handlers.Chests;
+import darvin939.DarkDays.Commands.Handlers.Debug;
 import darvin939.DarkDays.Commands.Handlers.Help;
 import darvin939.DarkDays.Commands.Handlers.Spawn;
 import darvin939.DarkDays.Commands.Handlers.Status;
@@ -36,10 +37,10 @@ import darvin939.DarkDays.Listeners.EntityListener;
 import darvin939.DarkDays.Listeners.PlayerListener;
 import darvin939.DarkDays.Listeners.Wand;
 import darvin939.DarkDays.Listeners.ZombieListener;
-import darvin939.DarkDays.Players.Effect;
-import darvin939.DarkDays.Players.EffectManager;
-import darvin939.DarkDays.Players.Item;
-import darvin939.DarkDays.Players.ItemManager;
+import darvin939.DarkDays.Loadable.Effect;
+import darvin939.DarkDays.Loadable.EffectManager;
+import darvin939.DarkDays.Loadable.Item;
+import darvin939.DarkDays.Loadable.ItemManager;
 import darvin939.DarkDays.Utils.MetricsLite;
 import darvin939.DarkDays.Utils.Util;
 
@@ -57,8 +58,8 @@ public class DarkDays extends JavaPlugin {
 
 	public Parser Commands = new Parser();
 
-	private EffectManager effects;
-	private ItemManager items;
+	private static EffectManager effects;
+	private static ItemManager items;
 
 	public static String prefix = "&b[DarkDays]&f ";
 	public static final String premPrefix = "darkdays.";
@@ -82,6 +83,14 @@ public class DarkDays extends JavaPlugin {
 
 	public static void setPrefix(String pfx) {
 		prefix = pfx;
+	}
+	
+	public static EffectManager getEffectManager() {
+		return effects;
+	}
+
+	public static ItemManager getItemManager() {
+		return items;
 	}
 
 	public void onEnable() {
@@ -167,6 +176,10 @@ public class DarkDays extends JavaPlugin {
 		Commands.setHelp("chest.add", Config.FGU.MSG("hlp_cmd_chest_add"));
 		Commands.setHelp("chest.remove", Config.FGU.MSG("hlp_cmd_chest_remove"));
 		Commands.setHelp("chest.loot", Config.FGU.MSG("hlp_cmd_chest_loot"));
+		// debug
+		Commands.add("/dd d", new Debug(this));
+		Commands.setPermission("debug", "darkdays.debug");
+		Commands.setHelp("debug", "");
 	}
 
 	public void registerEvents(PluginManager pm) {

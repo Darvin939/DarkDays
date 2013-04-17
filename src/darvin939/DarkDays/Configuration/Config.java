@@ -11,20 +11,18 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Players.EffectManager;
-import darvin939.DarkDays.Players.ItemManager;
-import darvin939.DarkDays.Sql.Chests.ChestManager;
-import darvin939.DarkDays.Sql.Chests.SQLChest;
-import darvin939.DarkDays.Sql.Players.PlayerManager;
-import darvin939.DarkDays.Sql.Players.SQLPlayer;
+import darvin939.DarkDays.Chests.Sql.ChestManager;
+import darvin939.DarkDays.Chests.Sql.SQLChest;
+import darvin939.DarkDays.Players.Sql.PlayerManager;
+import darvin939.DarkDays.Players.Sql.SQLPlayer;
 import darvin939.DarkDays.Utils.FGUtilCore;
 import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class Config extends FGUtilCore {
 	public static FGUtilCore FGU;
 	private static PC playerCfg;
-	private static EffectManager effects;
-	private static ItemManager items;
+	//private static EffectManager effects;
+	//private static ItemManager items;
 	private static CC chestCfg;
 	private static RC regionCfg;
 	private static LC lootCfg;
@@ -33,17 +31,9 @@ public class Config extends FGUtilCore {
 		super(plg, vcheck, lng, devbukkitname, px);
 		setupMessages();
 		SaveMSG();
-		effects = new EffectManager(plg);
-		items = new ItemManager(plg);
+		//effects = new EffectManager(plg);
+		//items = new ItemManager(plg);
 		FGU = this;
-	}
-
-	public static EffectManager getEffectManager() {
-		return effects;
-	}
-
-	public static ItemManager getItemManager() {
-		return items;
 	}
 
 	public static enum Nodes {
