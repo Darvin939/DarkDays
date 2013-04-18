@@ -1,8 +1,12 @@
 package darvin939.DarkDays.Listeners;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -22,6 +26,7 @@ import darvin939.DarkDays.Players.Memory.PlayerInfo;
 
 public class EntityListener implements Listener {
 	DarkDays plg;
+	public HashMap<Entity, Integer> zombie_damage = new HashMap<Entity, Integer>();
 
 	public EntityListener(DarkDays plugin) {
 		plg = plugin;
@@ -40,11 +45,6 @@ public class EntityListener implements Listener {
 						event.setCancelled(true);
 					}
 				}
-				if (event.getEntityType().equals(EntityType.ZOMBIE))
-					if (Tasks.alphas.isEmpty()) {
-						Tasks.alphas.put(e, null);
-					} else if (!Tasks.findPack(e))
-						Tasks.alphas.put(e, null);
 			}
 		} else
 			event.setCancelled(true);
@@ -61,6 +61,9 @@ public class EntityListener implements Listener {
 				PlayerInfo.addZombieKill(killer);
 			}
 		}
+		UUID id = ((LivingEntity) entity).getUniqueId();
+		if (Tasks.speedZombies.contains(id))
+			Tasks.speedZombies.remove(id);
 	}
 
 	// Баг: когда зомби в лаве, он исчезает или не дохнет
@@ -68,16 +71,16 @@ public class EntityListener implements Listener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		Entity e = event.getEntity();
 		if ((e instanceof Zombie)) {
-			if (Tasks.zombie_damage.containsKey(e))
-				Tasks.zombie_damage.put(e, (Tasks.zombie_damage.get(e) - event.getDamage()));
+			if (zombie_damage.containsKey(e))
+				zombie_damage.put(e, (zombie_damage.get(e) - event.getDamage()));
 			else
-				Tasks.zombie_damage.put(e, Nodes.zombie_health.getInteger() - event.getDamage());
-			if (Tasks.zombie_damage.get(e) <= 20) {
-				if (Tasks.zombie_damage.get(e) <= 0) {
+				zombie_damage.put(e, Nodes.zombie_health.getInteger() - event.getDamage());
+			if (zombie_damage.get(e) <= 20) {
+				if (zombie_damage.get(e) <= 0) {
 					((Zombie) e).setHealth(0);
-					Tasks.zombie_damage.remove(e);
+					zombie_damage.remove(e);
 				} else
-					((Zombie) e).setHealth(Tasks.zombie_damage.get(e));
+					((Zombie) e).setHealth(zombie_damage.get(e));
 			} else
 				((Zombie) e).setHealth(((Zombie) e).getMaxHealth());
 

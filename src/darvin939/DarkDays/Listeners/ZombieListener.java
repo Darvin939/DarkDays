@@ -39,7 +39,7 @@ public class ZombieListener implements Listener {
 		if (event.getEntity().getType() == EntityType.ZOMBIE) {
 			Entity entity = event.getEntity();
 			LivingEntity datZombie = (LivingEntity) entity;
-			for (Entry<UUID, ArrayList<ItemStack>> set : PlayerZombie.getPZ().entrySet()) {
+			for (Entry<UUID, ArrayList<ItemStack>> set : PlayerZombie.get().entrySet()) {
 				if (datZombie.getUniqueId() == set.getKey()) {
 					event.getDrops().addAll(set.getValue());
 					PlayerZombie.kill(datZombie);

@@ -23,7 +23,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -171,36 +170,6 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onHeal(PlayerInteractEntityEvent event) {
-		if ((boolean) Config.getPC().getData(event.getPlayer(), PC.SPAWNED)) {
-			if (((event.getRightClicked() instanceof Player)) && (event.getPlayer().getItemInHand().getTypeId() == Nodes.bandage_id.getInteger())) {
-				Player e = (Player) event.getRightClicked();
-				Player p = event.getPlayer();
-				if (PlayerInfo.isPlaying(p) && PlayerInfo.isPlaying(e)) {
-					if (e.getHealth() < 20) {
-						if (e.getHealth() <= 20 - Nodes.bandage_health.getInteger())
-							e.setHealth(e.getHealth() + Nodes.bandage_health.getInteger());
-						else {
-							e.setHealth(20);
-						}
-						if (p.getItemInHand().getAmount() > 1)
-							p.setItemInHand(new ItemStack(Material.getMaterial(Nodes.bandage_id.getInteger()), p.getItemInHand().getAmount() - 1));
-						else {
-							p.setItemInHand(new ItemStack(Material.AIR, 0));
-						}
-						PlayerInfo.addPlayerHeal(p);
-						if (Nodes.coloured_tegs.getBoolean()) {
-							TagAPI.refreshPlayer(p);
-						}
-					} else {
-						// msg (health of event.getRightClicked() is full)
-					}
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
 	public void onNameTag(PlayerReceiveNameTagEvent event) {
 		if (Nodes.coloured_tegs.getBoolean()) {
 			Player p = event.getNamedPlayer();
@@ -224,7 +193,11 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
-		Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
+		if (Tasks.player_hunger.containsKey(p))
+			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
+		else
+			Config.getPC().setData(p, PC.HUNGER, 209999);
+		Config.getPC().saveAll();
 		Tasks.removeFromHashMaps(event.getPlayer());
 	}
 
@@ -235,6 +208,7 @@ public class PlayerListener implements Listener {
 			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
 		else
 			Config.getPC().setData(p, PC.HUNGER, 209999);
+		Config.getPC().saveAll();
 		Tasks.removeFromHashMaps(event.getPlayer());
 	}
 

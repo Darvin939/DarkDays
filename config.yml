@@ -3,12 +3,12 @@ General:
   Version-check: false
   Zombie:
     OnlyZombies: true
-    Speed: 3
+    Speed: 4
     Smoothness: 5
     AttackStrength: 4
-    Health: 24
+    Health: 100
   Thirst:
-    Speed: 2
+    Speed: 10
   Bandages:
     Id: 339
     Restore: 8
@@ -21,6 +21,18 @@ General:
   ColouredTags: true
   EnableRegions: false
   Prefix: DarkDays
+Kit:
+  Start:
+    '268': 1
+    '373': 1
+    '299': 1
+MySQL:
+  Username: root
+  Password: root
+  Hostname: localhost
+  Port: 3306
+  Database: darkdays
+  DataWrapper: none
 Spawns:
   Spawn0:
     x: -4.5
@@ -42,15 +54,3 @@ Spawns:
     x: -3.5
     y: 4.0
     z: 9.5
-Kit:
-  Start:
-    '268': 1
-    '373': 1
-    '299': 1
-MySQL:
-  Username: root
-  Password: root
-  Hostname: localhost
-  Port: 3306
-  Database: darkdays
-  DataWrapper: none

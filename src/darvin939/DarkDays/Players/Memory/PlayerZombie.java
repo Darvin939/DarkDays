@@ -23,7 +23,7 @@ public class PlayerZombie {
 		pz.remove(zombie.getUniqueId());
 	}
 
-	public static HashMap<UUID, ArrayList<ItemStack>> getPZ() {
+	public static HashMap<UUID, ArrayList<ItemStack>> get() {
 		return pz;
 	}
 }

@@ -37,7 +37,7 @@ public class Config extends FGUtilCore {
 	}
 
 	public static enum Nodes {
-		language("General.Language", "english"), verCheck("General.Version-check", true), prefix("General.Prefix", "DarkDays"), only_zombies("General.Zombie.OnlyZombies", true), zombie_speed("General.Zombie.Speed", 3), zombie_smoothness("General.Zombie.Smoothness", 15), attack_strength(
+		language("General.Language", "english"), verCheck("General.Version-check", true), prefix("General.Prefix", "DarkDays"), only_zombies("General.Zombie.OnlyZombies", true), zombie_speed("General.Zombie.Speed", 0.4), zombie_smoothness("General.Zombie.Smoothness", 15), attack_strength(
 				"General.Zombie.AttackStrength", 4), zombie_health("General.Zombie.Health", 24), thirst_speed("General.Thirst.Speed", 2), bandage_id("General.Bandages.Id", 339), bandage_health("General.Bandages.Restore", 8), chest_empty("General.Chest.IfOnlyEmpty", true), chest_regen(
 				"General.Chest.RegenTime", 2), chest_disappear("General.Chest.Disappear", true), wand_item("General.WandItem", 369), control_sitemst("General.ControlSItems", true), coloured_tegs("General.ColouredTags", true), enable_regions("General.EnableRegions", false), MYSQL_USER(
 				"MySQL.Username", "root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname", "localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none");

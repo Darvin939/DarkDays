@@ -67,7 +67,6 @@ public class DarkDays extends JavaPlugin {
 
 	public void onDisable() {
 		log.info(prefix + "Plugin v." + des.getVersion() + " disabled");
-
 		Config.getPC().saveAll();
 		Config.getCC().saveAll();
 		Config.save(new File(datafolder, "config.yml"));
@@ -84,7 +83,7 @@ public class DarkDays extends JavaPlugin {
 	public static void setPrefix(String pfx) {
 		prefix = pfx;
 	}
-	
+
 	public static EffectManager getEffectManager() {
 		return effects;
 	}
@@ -137,6 +136,8 @@ public class DarkDays extends JavaPlugin {
 			getLogger().info("Found custom prefix [" + Nodes.prefix.getString() + "]. Use it");
 			setPrefix(px);
 		}
+		//Nodes.zombie_speed.setValue(Nodes.zombie_speed.getDouble() / 10 + 1);
+
 		if (Nodes.zombie_smoothness.getInteger() > 19)
 			Nodes.zombie_smoothness.setValue(19);
 		else if (Nodes.zombie_smoothness.getInteger() < 1) {

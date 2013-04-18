@@ -116,24 +116,22 @@ public class PC {
 		return effects.get(p) != null ? effects.get(p).split("\\,") : null;
 	}
 
-	public Object getData(Player p, String param) {
-		return data.get(p).get(param);
+	public String getEffect(Player p, String effect) {
+		for (String e : getEffects(p)) {
+			if (e.equalsIgnoreCase(effect))
+				return e;
+		}
+		return "";
 	}
 
-	@SuppressWarnings("unused")
-	private Object getParam(Player p, String param) {
+	public Object getData(Player p, String param) {
 		return data.get(p).get(param);
 	}
 
 	public void setData(Player p, String param, Object value) {
 		data.get(p).set(param, value);
 	}
-
-	@SuppressWarnings("unused")
-	private void setParam(Player p, String param, Object value) {
-		data.get(p).set(param, value);
-	}
-
+	
 	public void saveConfig() {
 		try {
 			cfgPlayers.save(cfgPlayersFile);
@@ -168,9 +166,7 @@ public class PC {
 				if (!cfgPlayers.isConfigurationSection(p.getName()))
 					cfgPlayers.createSection(p.getName());
 				ConfigurationSection section = cfgPlayers.getConfigurationSection(p.getName());
-
 				PlayerLoadData PLD = data.get(p);
-
 				section.set(HUNGER, PLD.getHunger());
 				section.set(DEATH, PLD.isDeath());
 				section.set(NOVICE, PLD.isNovice());
