@@ -274,19 +274,19 @@ public class PlayerListener implements Listener {
 				int movZ = event.getFrom().getBlockZ() - event.getTo().getBlockZ();
 				if (Math.abs(movX) > 0 || Math.abs(movZ) > 0) {
 					if (p.isSprinting() && p.getLocation().getY() > (int) p.getLocation().getY()) {
-						Tasks.depleteThirst(p, 6);
+						Tasks.depleteThirst(p, 13);
 						Tasks.player_noise.put(p, 6);
 					} else if (p.getLocation().getY() > (int) p.getLocation().getY()) {
-						Tasks.depleteThirst(p, 5);
+						Tasks.depleteThirst(p, 9);
 						Tasks.player_noise.put(p, 5);
 					} else if (p.isSprinting()) {
-						Tasks.depleteThirst(p, 4);
+						Tasks.depleteThirst(p, 6);
 						Tasks.player_noise.put(p, 4);
 					} else if (p.isSneaking()) {
 						Tasks.depleteThirst(p, 2);
 						Tasks.player_noise.put(p, 2);
 					} else if (Math.abs(movX) > 0 || Math.abs(movZ) > 0) {
-						Tasks.depleteThirst(p, 3);
+						Tasks.depleteThirst(p, 4);
 						Tasks.player_noise.put(p, 3);
 					}
 					float lnew = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * Tasks.maxExp);

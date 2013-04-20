@@ -37,7 +37,8 @@ import darvin939.DarkDays.Players.Memory.PlayerInfo;
 
 public class Tasks {
 
-	public static double maxExp = 0.20;
+	public static final double maxExp = 0.20;
+	private static final Integer fixConst = 6;
 
 	public static HashMap<Player, Integer> player_hunger = new HashMap<Player, Integer>();
 	public static HashMap<Player, Integer> player_noise = new HashMap<Player, Integer>();
@@ -79,7 +80,7 @@ public class Tasks {
 			if (player_hunger.containsKey(p)) {
 				if (!p.isDead() && PlayerInfo.isPlaying(p)) {
 					depleteThirst(p, 1);
-					p.setLevel(player_hunger.get(p).intValue() / 10000);
+					p.setLevel(player_hunger.get(p) / 10000);
 					float original = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * maxExp);
 					if (player_loc.get(p) != null)
 						if ((int) player_loc.get(p).getX() == (int) p.getLocation().getX() && (int) player_loc.get(p).getZ() == (int) p.getLocation().getZ() && (int) player_loc.get(p).getY() == (int) p.getLocation().getY()) {
@@ -89,10 +90,11 @@ public class Tasks {
 							Tasks.player_noise.put(p, 1);
 						}
 					player_loc.put(p, p.getLocation());
-					if (p.getLevel() <= 1) {
-						Config.FGU.PrintPxMsg(p, "game_need_water");
+
+					if (player_hunger.get(p) <= 0) {
+						Config.FGU.PrintPxMsg(p, Config.FGU.MSG("game_need_water"));
 						p.damage(1);
-						player_hunger.put(p, 5000);
+						player_hunger.put(p, 10 * Nodes.thirst_speed.getInteger());
 					}
 					double pvr = Math.pow(player_noise.get(p), 2);
 					for (Entity e : p.getNearbyEntities(pvr, pvr, pvr)) {
@@ -102,10 +104,6 @@ public class Tasks {
 							((Zombie) e).setTarget(null);
 							Location pl = p.getLocation();
 							Location el = e.getLocation();
-
-							// System.out.println("Distanse: " +
-							// Math.round(pl.distance(el)));
-							// System.out.println("PVR: " + pvr);
 
 							if (pl.distance(el) > pvr) {
 								((Zombie) e).setTarget(null);
@@ -117,13 +115,19 @@ public class Tasks {
 								double ny = (pl.getY() + el.getY()) / 2.0;
 								double nz = (pl.getZ() + el.getZ()) / 2.0;
 								walkTo((LivingEntity) e, nx, ny, nz, (float) (Nodes.zombie_speed.getDouble() / 4.0));
-							} //else
-								//walkTo((LivingEntity) e, pl.getX(), pl.getY(), pl.getZ(), (float) (Nodes.zombie_speed.getDouble() / 4.0));
+							}
 							setSpeed(e);
 						}
 					}
+					if (player_hunger.get(p) < 0)
+						player_hunger.put(p, 0);
 				}
 			}
+	}
+
+	public static void depleteThirst(Player player, int thirst) {
+		int nt = (player_hunger.get(player)).intValue() - fixConst * thirst * Nodes.thirst_speed.getInteger();
+		player_hunger.put(player, nt);
 	}
 
 	private static void setSpeed(Entity entity) {
@@ -160,11 +164,6 @@ public class Tasks {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static void depleteThirst(Player player, int thirst) {
-		int nt = (player_hunger.get(player)).intValue() - 4 * thirst * Nodes.thirst_speed.getInteger();
-		player_hunger.put(player, nt);
 	}
 
 	public static boolean walkTo(LivingEntity livingEntity, double x, double y, double z, float speed) {

@@ -87,7 +87,6 @@ public class PC {
 
 		if (new Location(p.getWorld(), x, y + 1, z).getBlock().getType() != Material.AIR) {
 			for (int i = y.intValue(); i < p.getWorld().getMaxHeight(); i++) {
-				System.out.println("2) " + i);
 				Material m1 = new Location(p.getWorld(), x, i, z).getBlock().getType();
 				Material m2 = new Location(p.getWorld(), x, i + 1, z).getBlock().getType();
 				if (m1 == Material.AIR && m2 == Material.AIR) {
