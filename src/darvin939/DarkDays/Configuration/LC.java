@@ -27,6 +27,6 @@ public class LC {
 	}
 
 	public FileConfiguration getCfg() {
-		return cfgLoot;
+		return cfgLoot = YamlConfiguration.loadConfiguration(cfgLootFile);
 	}
 }

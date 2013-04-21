@@ -16,11 +16,11 @@ public class Help extends Handler {
 	@Override
 	public boolean perform(Player p, String[] args) throws InvalidUsage {
 		String[] cmds = plugin.Commands.getCommands();
-		Util.msg(p, "&b=================== &2DarkDays &b===================", '/');
+		Util.Print(p, "&b=================== &2DarkDays &b===================");
 		for (String cmd : cmds) {
-			Util.msg(p, "&6/dd " + cmd + " &f: " + plugin.Commands.getHelp(cmd), '/');
+			Util.Print(p, "&6/dd " + cmd + " &f: " + plugin.Commands.getHelp(cmd));
 		}
-		Util.msg(p, "&7For more help of command type &6/dd &4<command> &6help", '/');
+		Util.Print(p, "&7For more help of command type &6/dd &4<command> &6help");
 		return true;
 	}
 

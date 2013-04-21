@@ -21,17 +21,17 @@ public class Status extends Handler {
 		if (hasPermissions(p, "status", true))
 			if (PlayerInfo.isPlaying(p)) {
 				PlayerData pd = PlayerInfo.getPlayers().get(p.getUniqueId());
-				Util.msg(p, "&b================= &2Your Progress &b=================", '/');
-				Util.msg(p, "Current session:", '/');
-				Util.msg(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals(), '/');
-				Util.msg(p, "  &7Killed players:&6 " + pd.getPlayerKills(), '/');
-				Util.msg(p, "  &7Killed zombies:&6 " + pd.getZombieKills(), '/');
-				Util.msg(p, "Total:", '/');
-				Util.msg(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals(), '/');
-				Util.msg(p, "  &7Killed players:&6 " + pd.getPlayerKills(), '/');
-				Util.msg(p, "  &7Killed zombies:&6 " + pd.getZombieKills(), '/');
+				Util.Print(p, "&b================= &2Your Progress &b=================");
+				Util.Print(p, "Current session:");
+				Util.Print(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals());
+				Util.Print(p, "  &7Killed players:&6 " + pd.getPlayerKills());
+				Util.Print(p, "  &7Killed zombies:&6 " + pd.getZombieKills());
+				Util.Print(p, "Total:");
+				Util.Print(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals());
+				Util.Print(p, "  &7Killed players:&6 " + pd.getPlayerKills());
+				Util.Print(p, "  &7Killed zombies:&6 " + pd.getZombieKills());
 			} else
-				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("game_noplay", "/dd spawn"));
+				Util.Print(p, Config.FGU.MSG("game_noplay", "/dd spawn"));
 		return true;
 	}
 

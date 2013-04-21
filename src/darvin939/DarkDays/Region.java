@@ -194,9 +194,9 @@ public class Region {
 			if (getWorldEdit().getSelection(p) != null) {
 				return pointsFormatter(getWorldEdit().getSelection(p).getRegionSelector().getIncompleteRegion().toString(), height);
 			} else
-				Util.msg(p, "Region not selected!", 'e');
+				Util.Print(p, "Region not selected!");
 		else
-			Util.msg(p, "WorldEdit was not found!", 'e');
+			Util.Print(p, "WorldEdit was not found!");
 		return null;
 	}
 }

@@ -27,6 +27,7 @@ import darvin939.DarkDays.Commands.Parser;
 import darvin939.DarkDays.Commands.Handlers.Chests;
 import darvin939.DarkDays.Commands.Handlers.Debug;
 import darvin939.DarkDays.Commands.Handlers.Help;
+import darvin939.DarkDays.Commands.Handlers.Loot;
 import darvin939.DarkDays.Commands.Handlers.Spawn;
 import darvin939.DarkDays.Commands.Handlers.Status;
 import darvin939.DarkDays.Commands.Handlers.Tag;
@@ -61,6 +62,7 @@ public class DarkDays extends JavaPlugin {
 	private static EffectManager effects;
 	private static ItemManager items;
 
+	public static final String sysPrefix = "&b[DarkDays]&f ";
 	public static String prefix = "&b[DarkDays]&f ";
 	public static final String premPrefix = "darkdays.";
 	public static final String cmdPrefix = "/dd ";
@@ -104,7 +106,7 @@ public class DarkDays extends JavaPlugin {
 			PluginManager pm = getServer().getPluginManager();
 			init();
 			Config cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString(), "darkdays", getPrefix());
-			cfg.initOtherConfigs();
+			cfg.init();
 
 			Config.getCC().loadChests();
 			new Tasks(this);
@@ -133,11 +135,11 @@ public class DarkDays extends JavaPlugin {
 
 		if (!Nodes.prefix.getString().toLowerCase().equalsIgnoreCase("darkdays")) {
 			String px = "&b[" + Nodes.prefix.getString() + "]&f ";
+			if (Nodes.prefix.getString().toLowerCase().equalsIgnoreCase("none"))
+				px = "";
 			getLogger().info("Found custom prefix [" + Nodes.prefix.getString() + "]. Use it");
 			setPrefix(px);
 		}
-		//Nodes.zombie_speed.setValue(Nodes.zombie_speed.getDouble() / 10 + 1);
-
 		if (Nodes.zombie_smoothness.getInteger() > 19)
 			Nodes.zombie_smoothness.setValue(19);
 		else if (Nodes.zombie_smoothness.getInteger() < 1) {
@@ -172,15 +174,31 @@ public class DarkDays extends JavaPlugin {
 		Commands.setPermission("chest", "darkdays.chest");
 		Commands.setPermission("chest.add", "darkdays.chest.add");
 		Commands.setPermission("chest.remove", "darkdays.chest.remove");
-		Commands.setPermission("chest.loot", "darkdays.chest.loot");
+		Commands.setPermission("chest.set", "darkdays.chest.set");
 		Commands.setHelp("chest", Config.FGU.MSG("hlp_cmd_chest"));
 		Commands.setHelp("chest.add", Config.FGU.MSG("hlp_cmd_chest_add"));
 		Commands.setHelp("chest.remove", Config.FGU.MSG("hlp_cmd_chest_remove"));
-		Commands.setHelp("chest.loot", Config.FGU.MSG("hlp_cmd_chest_loot"));
+		Commands.setHelp("chest.set", "none");
+		// loot
+		Commands.add("/dd loot", new Loot(this));
+		Commands.setPermission("loot", "darkdays.loot");
+		Commands.setPermission("loot.new", "darkdays.loot.new");
+		Commands.setPermission("loot.remove", "darkdays.loot.remove");
+		Commands.setPermission("loot.list", "darkdays.loot.list");
+		Commands.setPermission("loot.item", "darkdays.loot.item");
+		Commands.setPermission("loot.falg", "darkdays.loot.flag");
+		Commands.setPermission("loot.save", "darkdays.loot.save");
+		Commands.setHelp("loot", "none");
+		Commands.setHelp("loot.new", "none");
+		Commands.setHelp("loot.remove", "none");
+		Commands.setHelp("loot.list", "none");
+		Commands.setHelp("loot.item", "none");
+		Commands.setHelp("loot.flag", "none");
+		Commands.setHelp("loot.save", "none");
 		// debug
 		Commands.add("/dd d", new Debug(this));
 		Commands.setPermission("debug", "darkdays.debug");
-		Commands.setHelp("debug", "");
+		Commands.setHelp("debug", "Simple debug command. Only for the developer");
 	}
 
 	public void registerEvents(PluginManager pm) {
@@ -288,24 +306,26 @@ public class DarkDays extends JavaPlugin {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (split.equalsIgnoreCase("/dd") || args.length == 0) {
-				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("hlp_topic", DarkDays.cmdPrefix + "help"));
+				Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", DarkDays.cmdPrefix + "help"));
 				return true;
 			} else {
 
 				if (handler == null) {
-					Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + args[0]));
-					Util.msg(p, Config.FGU.MSG("hlp_commands") + " &2" + DarkDays.cmdPrefix + "&7<" + Commands.getCommandsString() + "&7>", '/');
+					Util.Print(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + args[0]));
+					Util.Print(p, Config.FGU.MSG("hlp_commands") + " &2" + DarkDays.cmdPrefix + "&7<" + Commands.getCommandsString() + "&7>");
 					return true;
 				}
 				try {
-					return handler.perform(p, args);
+					if (!handler.perform(p, args))
+						Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", DarkDays.cmdPrefix + "help"));
+					return true;
 				} catch (InvalidUsage ex) {
 					return false;
 				}
 			}
 
 		}
-		Config.FGU.SC("You must be a Player");
+		sender.sendMessage("You must be a Player to do this");
 		return true;
 	}
 

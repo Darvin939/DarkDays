@@ -34,6 +34,7 @@ import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.PlayerListener;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Utils.Util;
 
 public class Tasks {
 
@@ -44,8 +45,8 @@ public class Tasks {
 	public static HashMap<Player, Integer> player_noise = new HashMap<Player, Integer>();
 	public static HashMap<Player, Location> player_loc = new HashMap<Player, Location>();
 	public static List<UUID> speedZombies = new ArrayList<UUID>();
-	private static DarkDays plg;
-	private static Server server;
+	private DarkDays plg;
+	private Server server;
 
 	public Tasks(DarkDays plugin) {
 		plg = plugin;
@@ -56,13 +57,13 @@ public class Tasks {
 	public void run() {
 		server.getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
 			public void run() {
-				makeThirst();
+				mainTask();
 			}
 		}, 20, 20);
 
 		server.getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
 			public void run() {
-				Loot.fillTask();
+				LootManager.fillTask();
 			}
 		}, Nodes.chest_regen.getInteger() * 200, Nodes.chest_regen.getInteger() * 200);
 
@@ -75,11 +76,11 @@ public class Tasks {
 
 	}
 
-	public static void makeThirst() {
+	public void mainTask() {
 		for (Player p : server.getOnlinePlayers())
 			if (player_hunger.containsKey(p)) {
 				if (!p.isDead() && PlayerInfo.isPlaying(p)) {
-					depleteThirst(p, 1);
+					updateThirst(p, 1);
 					p.setLevel(player_hunger.get(p) / 10000);
 					float original = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * maxExp);
 					if (player_loc.get(p) != null)
@@ -92,32 +93,32 @@ public class Tasks {
 					player_loc.put(p, p.getLocation());
 
 					if (player_hunger.get(p) <= 0) {
-						Config.FGU.PrintPxMsg(p, Config.FGU.MSG("game_need_water"));
+						Util.PrintPxMSG(p, "game_need_water");
 						p.damage(1);
 						player_hunger.put(p, 10 * Nodes.thirst_speed.getInteger());
 					}
 					double pvr = Math.pow(player_noise.get(p), 2);
 					for (Entity e : p.getNearbyEntities(pvr, pvr, pvr)) {
 
-						if ((e instanceof Zombie)) {
-							// continue;
+						if (!(e instanceof Zombie))
+							continue;
+						((Zombie) e).setTarget(null);
+						Location pl = p.getLocation();
+						Location el = e.getLocation();
+
+						if (pl.distance(el) > pvr) {
 							((Zombie) e).setTarget(null);
-							Location pl = p.getLocation();
-							Location el = e.getLocation();
+						} else
+							((Zombie) e).setTarget(p);
 
-							if (pl.distance(el) > pvr) {
-								((Zombie) e).setTarget(null);
-							} else
-								((Zombie) e).setTarget(p);
-
-							if (pl.distance(el) > 16.0) {
-								double nx = (pl.getX() + el.getX()) / 2.0;
-								double ny = (pl.getY() + el.getY()) / 2.0;
-								double nz = (pl.getZ() + el.getZ()) / 2.0;
-								walkTo((LivingEntity) e, nx, ny, nz, (float) (Nodes.zombie_speed.getDouble() / 4.0));
-							}
-							setSpeed(e);
+						if (pl.distance(el) > 16.0) {
+							double nx = (pl.getX() + el.getX()) / 2.0;
+							double ny = (pl.getY() + el.getY()) / 2.0;
+							double nz = (pl.getZ() + el.getZ()) / 2.0;
+							((CraftLivingEntity) e).getHandle().getNavigation().a(nx, ny, nz, new Float(Nodes.zombie_speed.getDouble() / 4));
 						}
+						setSpeed(e);
+
 					}
 					if (player_hunger.get(p) < 0)
 						player_hunger.put(p, 0);
@@ -125,12 +126,12 @@ public class Tasks {
 			}
 	}
 
-	public static void depleteThirst(Player player, int thirst) {
+	public static void updateThirst(Player player, int thirst) {
 		int nt = (player_hunger.get(player)).intValue() - fixConst * thirst * Nodes.thirst_speed.getInteger();
 		player_hunger.put(player, nt);
 	}
 
-	private static void setSpeed(Entity entity) {
+	private void setSpeed(Entity entity) {
 		UUID id = ((LivingEntity) entity).getUniqueId();
 		if (speedZombies.contains(id))
 			return;
@@ -166,10 +167,6 @@ public class Tasks {
 		}
 	}
 
-	public static boolean walkTo(LivingEntity livingEntity, double x, double y, double z, float speed) {
-		return ((CraftLivingEntity) livingEntity).getHandle().getNavigation().a(x, y, z, speed);
-	}
-
 	public static void removeFromHashMaps(Player p) {
 		if (player_hunger.containsKey(p))
 			player_hunger.remove(p);
@@ -180,7 +177,6 @@ public class Tasks {
 	}
 
 	public static void resetHashMaps(Player p) {
-		// player_hunger.put(p, (Integer) Config.getParam(p, "hunger"));
 		player_noise.put(p, 1);
 		if (player_loc.containsKey(p))
 			player_loc.remove(p);

@@ -47,7 +47,7 @@ public class CC {
 		if (Config.isSqlWrapper()) {
 			ChestManager cm = ChestManager.getInstance();
 			for (Entry<Location, String> set : chests.entrySet())
-				cm.getChest(set.getKey()).addLoot(set.getValue());
+				cm.getChest(set.getKey()).addLoot(Config.getLC().getCfg().contains(Util.FCTU(set.getValue())) ? set.getValue() : "");
 		} else {
 			ConfigurationSection s;
 			for (Entry<Location, String> set : chests.entrySet()) {
@@ -57,7 +57,7 @@ public class CC {
 					s = cfgChest.getConfigurationSection("Chest-" + set.getKey().getWorld().getName() + "," + set.getKey().getBlockX() + "," + set.getKey().getBlockY() + "," + set.getKey().getBlockZ());
 				s.set("Location", set.getKey().getBlockX() + "," + set.getKey().getBlockY() + "," + set.getKey().getBlockZ());
 				s.set("World", set.getKey().getWorld().getName());
-				s.set("LootID", set.getValue());
+				s.set("LootID", Config.getLC().getCfg().contains(Util.FCTU(set.getValue())) ? set.getValue() : "");
 			}
 			saveConfig();
 		}
@@ -138,9 +138,9 @@ public class CC {
 
 	public boolean getChestInfo(Player p, Location l) {
 		if (chests.containsKey(l)) {
-			Util.msg(p, "&b===== &2Chest Info&b =====", '/');
-			Util.msg(p, "&7LootID:&6 " + getLoot(l), '/');
-			Util.msg(p, "&7Location:&6 x:" + l.getBlockX() + " y:" + l.getBlockY() + " z:" + l.getBlockZ(), '/');
+			Util.Print(p, "&b===== &2Chest Info&b =====");
+			Util.Print(p, "&7LootID:&6 " + getLoot(l));
+			Util.Print(p, "&7Location:&6 x:" + l.getBlockX() + " y:" + l.getBlockY() + " z:" + l.getBlockZ());
 			return true;
 		}
 		return false;

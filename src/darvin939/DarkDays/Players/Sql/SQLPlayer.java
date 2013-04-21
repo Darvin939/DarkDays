@@ -45,7 +45,7 @@ public class SQLPlayer extends DDPlayer {
 
 	public static void createTables() {
 		Database.DATABASE
-				.query("CREATE TABLE IF NOT EXISTS `players_data` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`hunger` INT NOT NULL DEFAULT 209999 ,`death` VARCHAR(10) NOT NULL DEFAULT 0 ,`novice` VARCHAR(10) NOT NULL DEFAULT 1 ,`spawned` VARCHAR(10) NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`) );");
+				.query("CREATE TABLE IF NOT EXISTS `players_data` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`hunger` INT NOT NULL DEFAULT 309999 ,`death` VARCHAR(10) NOT NULL DEFAULT 0 ,`novice` VARCHAR(10) NOT NULL DEFAULT 1 ,`spawned` VARCHAR(10) NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`) );");
 		Database.DATABASE
 				.query("CREATE TABLE IF NOT EXISTS `players` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`x` DOUBLE DEFAULT NULL ,`y` DOUBLE DEFAULT NULL ,`z` DOUBLE DEFAULT NULL ,`yaw` FLOAT DEFAULT NULL ,`pitch` FLOAT DEFAULT NULL ,`world` VARCHAR(45) DEFAULT NULL ,PRIMARY KEY (`id`) );");
 		Database.DATABASE.query("CREATE TABLE IF NOT EXISTS `players_effects` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`key` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
@@ -116,7 +116,7 @@ public class SQLPlayer extends DDPlayer {
 				if (rs.next()) {
 					data = new PlayerLoadData(rs.getInt("hunger"), Boolean.parseBoolean(rs.getString("death")), Boolean.parseBoolean(rs.getString("novice")), Boolean.parseBoolean(rs.getString("spawned")));
 				} else
-					data = new PlayerLoadData(209999, false, true, false);
+					data = new PlayerLoadData(309999, false, true, false);
 			} catch (final SQLException e) {
 
 			}

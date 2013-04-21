@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -21,8 +20,6 @@ import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 public class Config extends FGUtilCore {
 	public static FGUtilCore FGU;
 	private static PC playerCfg;
-	//private static EffectManager effects;
-	//private static ItemManager items;
 	private static CC chestCfg;
 	private static RC regionCfg;
 	private static LC lootCfg;
@@ -31,8 +28,6 @@ public class Config extends FGUtilCore {
 		super(plg, vcheck, lng, devbukkitname, px);
 		setupMessages();
 		SaveMSG();
-		//effects = new EffectManager(plg);
-		//items = new ItemManager(plg);
 		FGU = this;
 	}
 
@@ -85,11 +80,6 @@ public class Config extends FGUtilCore {
 				return ((Integer) value).longValue();
 
 			return (Long) value;
-		}
-
-		@SuppressWarnings("unchecked")
-		public List<String> getStringList() {
-			return (List<String>) value;
 		}
 
 		public void setValue(Object value) {
@@ -150,7 +140,7 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_region", "Make a region of zombie spawn locations. Select region with WorldEdit Wand. Then type &2..region save &7[name] [parametrs]&f. Parametrs: &2s=&7[true/false]&f - can spawn, &2h=&7[true/false]&f - top-to-bottom");
 	}
 
-	public void initOtherConfigs() {
+	public void init() {
 		if (isSqlWrapper()) {
 			Database.initDb();
 			Database db = Database.DATABASE;
@@ -164,14 +154,14 @@ public class Config extends FGUtilCore {
 			SQLPlayer.initPrep();
 			SQLChest.createTables();
 			SQLChest.initPrep();
-			
+
 			PlayerManager.init();
 			ChestManager.init();
 		}
 
 		playerCfg = new PC(plg);
-		chestCfg = new CC(plg);
 		lootCfg = new LC(plg);
+		chestCfg = new CC(plg);
 		regionCfg = new RC(plg);
 	}
 

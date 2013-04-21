@@ -10,6 +10,7 @@ import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Listeners.PlayerListener;
+import darvin939.DarkDays.Utils.Util;
 
 public class Tag extends Handler {
 
@@ -23,7 +24,7 @@ public class Tag extends Handler {
 		if (args.length > 1) {
 			if (hasPermissions(p, "tag", true)) {
 				if (args[1].equalsIgnoreCase("enable")) {
-					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("tag_ends", "enabled"));
+					Util.Print(p, Config.FGU.MSG("tag_ends", "enabled"));
 					ptag.remove(p);
 					for (Player op : plugin.getServer().getOnlinePlayers()) {
 						if (!op.equals(p)) {
@@ -32,7 +33,7 @@ public class Tag extends Handler {
 					}
 				}
 				if (args[1].equalsIgnoreCase("disable")) {
-					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("tag_ends", "disabled"));
+					Util.Print(p, Config.FGU.MSG("tag_ends", "disabled"));
 					ptag.add(p);
 					for (Player op : plugin.getServer().getOnlinePlayers()) {
 						if (!op.equals(p)) {

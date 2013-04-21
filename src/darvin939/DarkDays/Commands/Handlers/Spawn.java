@@ -61,12 +61,12 @@ public class Spawn extends Handler {
 							double y = cfg.getDouble("Spawns.Spawn" + spawn + ".y");
 							double z = cfg.getDouble("Spawns.Spawn" + spawn + ".z");
 							Location loc = new Location(p.getWorld(), x, y, z);
-							Config.FGU.PrintPxMsg(p, Config.FGU.MSG("game_start"));
+							Util.PrintPxMSG(p, "game_start");
 							Config.getPC().setData(p, PC.SPAWNED, true);
 							Config.getPC().setData(p, PC.NOVICE, false);
 							p.teleport(loc);
-							Config.getPC().setData(p, PC.HUNGER, 209999);
-							Tasks.player_hunger.put(p, 209999);
+							Config.getPC().setData(p, PC.HUNGER, 309999);
+							Tasks.player_hunger.put(p, 309999);
 							Tasks.player_noise.put(p, 1);
 							PlayerInfo.addPlayer(p);
 							p.getInventory().clear();
@@ -74,44 +74,44 @@ public class Spawn extends Handler {
 						}
 					}
 				} else
-					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("game_alrady"));
+					Util.PrintPxMSG(p,"game_alrady");
 			return true;
 		}
 	}
 
-	public void set() {
+	private void set() {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length == 2) {
 			if (nargs[1].equalsIgnoreCase("help"))
 				getHelp(p, "spawn.set");
 			if (nargs[1].equalsIgnoreCase("lobby"))
 				if (plugin.setLocation(p, "Lobby"))
-					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_lobby_new"));
+					Util.PrintPxMSG(p, "spawn_lobby_new");
 				else
-					Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_lobby_error"));
+					Util.PrintPxMSG(p, "spawn_lobby_error");
 		} else if (nargs.length == 1)
 			if (plugin.setLocation(p, "Spawn"))
-				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_new"));
+				Util.PrintPxMSG(p, "spawn_new");
 			else
-				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_error"));
+				Util.PrintPxMSG(p, "spawn_error");
 
 	}
 
-	public void list() {
+	private void list() {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
 			if (nargs[1].equalsIgnoreCase("help"))
 				getHelp(p, "spawn.list");
 		} else {
 			FileConfiguration cfg = plugin.getConfig();
-			Util.msg(p, "&b================ &2DarkDays Spawns&b ===============", '/');
+			Util.Print(p, "&b================ &2DarkDays Spawns&b ===============");
 			if (cfg.isConfigurationSection("Spawns.Lobby")) {
 				double x = cfg.getDouble("Spawns.Lobby.x", 0);
 				double y = cfg.getDouble("Spawns.Lobby.y", 60);
 				double z = cfg.getDouble("Spawns.Lobby.z", 0);
-				Util.msg(p, "&6Lobby &7(" + x + " , " + y + " , " + z + ")", '/');
+				Util.Print(p, "&6Lobby &7(" + x + " , " + y + " , " + z + ")");
 			} else
-				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_lobby_nf"));
+				Util.PrintPxMSG(p, "spawn_lobby_nf");
 
 			int spawnid = 0;
 			boolean spawnsfound = false;
@@ -120,11 +120,11 @@ public class Spawn extends Handler {
 				double x = cfg.getDouble("Spawns.Spawn" + spawnid + ".x", 0);
 				double y = cfg.getDouble("Spawns.Spawn" + spawnid + ".y", 60);
 				double z = cfg.getDouble("Spawns.Spawn" + spawnid + ".z", 0);
-				Util.msg(p, "&6Spawn" + spawnid + " &7(" + x + " , " + y + " , " + z + ")", '/');
+				Util.Print(p, "&6Spawn" + spawnid + " &7(" + x + " , " + y + " , " + z + ")");
 				spawnid++;
 			}
 			if (!spawnsfound)
-				Config.FGU.PrintPxMsg(p, Config.FGU.MSG("spawn_nf"));
+				Util.PrintPxMSG(p, "spawn_nf");
 		}
 
 	}

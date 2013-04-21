@@ -33,7 +33,7 @@ import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.kitteh.tag.TagAPI;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Loot;
+import darvin939.DarkDays.LootManager;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
@@ -60,7 +60,7 @@ public class PlayerListener implements Listener {
 			if (Config.getCC().isChest(p))
 				if (Nodes.chest_disappear.getBoolean() && Config.getCC().getLoot(p.getTargetBlock(null, 10).getLocation()) != null) {
 					Chest chest = (Chest) event.getInventory().getHolder();
-					if (Loot.isChestEmpty(p.getTargetBlock(null, 10))) {
+					if (LootManager.isChestEmpty(p.getTargetBlock(null, 10))) {
 						Block block = p.getTargetBlock(null, 10);
 						chest.getInventory().clear();
 						Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
@@ -196,7 +196,7 @@ public class PlayerListener implements Listener {
 		if (Tasks.player_hunger.containsKey(p))
 			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
 		else
-			Config.getPC().setData(p, PC.HUNGER, 209999);
+			Config.getPC().setData(p, PC.HUNGER, 309999);
 		Config.getPC().saveAll();
 		Tasks.removeFromHashMaps(event.getPlayer());
 	}
@@ -207,7 +207,7 @@ public class PlayerListener implements Listener {
 		if (Tasks.player_hunger.containsKey(p))
 			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
 		else
-			Config.getPC().setData(p, PC.HUNGER, 209999);
+			Config.getPC().setData(p, PC.HUNGER, 309999);
 		Config.getPC().saveAll();
 		Tasks.removeFromHashMaps(event.getPlayer());
 	}
@@ -222,7 +222,7 @@ public class PlayerListener implements Listener {
 					if (event.getDamage() > h.getHealth()) {
 						PlayerInfo.addPlayerKill(d);
 						TagAPI.refreshPlayer(d);
-						Util.msg(d, "You killed " + h.getName() + "!", 'p');
+						Util.Print(d, "You killed " + h.getName() + "!");
 					}
 				}
 			}
@@ -239,7 +239,7 @@ public class PlayerListener implements Listener {
 				Player d = (Player) dEvent.getDamager();
 				PlayerInfo.addPlayerKill(d);
 				TagAPI.refreshPlayer(d);
-				Util.msg(d, "You killed " + p.getName() + "!", 'p');
+				Util.Print(d, "You killed " + p.getName() + "!");
 			}
 			if (dEvent.getDamager() instanceof Zombie) {
 				Location loc = p.getLocation();
@@ -274,19 +274,19 @@ public class PlayerListener implements Listener {
 				int movZ = event.getFrom().getBlockZ() - event.getTo().getBlockZ();
 				if (Math.abs(movX) > 0 || Math.abs(movZ) > 0) {
 					if (p.isSprinting() && p.getLocation().getY() > (int) p.getLocation().getY()) {
-						Tasks.depleteThirst(p, 13);
+						Tasks.updateThirst(p, 13);
 						Tasks.player_noise.put(p, 6);
 					} else if (p.getLocation().getY() > (int) p.getLocation().getY()) {
-						Tasks.depleteThirst(p, 9);
+						Tasks.updateThirst(p, 9);
 						Tasks.player_noise.put(p, 5);
 					} else if (p.isSprinting()) {
-						Tasks.depleteThirst(p, 6);
+						Tasks.updateThirst(p, 6);
 						Tasks.player_noise.put(p, 4);
 					} else if (p.isSneaking()) {
-						Tasks.depleteThirst(p, 2);
+						Tasks.updateThirst(p, 2);
 						Tasks.player_noise.put(p, 2);
 					} else if (Math.abs(movX) > 0 || Math.abs(movZ) > 0) {
-						Tasks.depleteThirst(p, 4);
+						Tasks.updateThirst(p, 4);
 						Tasks.player_noise.put(p, 3);
 					}
 					float lnew = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * Tasks.maxExp);

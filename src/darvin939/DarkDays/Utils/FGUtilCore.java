@@ -91,7 +91,7 @@ public abstract class FGUtilCore extends CipherUtil {
 			UpdateMsg();
 		}
 	}
-	
+
 	public DarkDays getPugin() {
 		return plg;
 	}
@@ -174,7 +174,7 @@ public abstract class FGUtilCore extends CipherUtil {
 	}
 
 	public void PrintPxMsg(Player p, String msg) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', px + " " + msg));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', px + msg));
 	}
 
 	public void addMSG(String key, String txt) {
@@ -192,7 +192,7 @@ public abstract class FGUtilCore extends CipherUtil {
 			if (map.isEmpty())
 				plg.getLogger().info("Language file not found. Making new...");
 			else
-				plg.getLogger().info("Initialize language file..");	
+				plg.getLogger().info("Initialize language file..");
 			for (Entry<String, String> e : map.entrySet()) {
 				lng.set(e.getKey(), e.getValue());
 			}
