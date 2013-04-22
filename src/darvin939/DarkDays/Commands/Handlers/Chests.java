@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.block.Chest;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.LootManager;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Configuration.Config;
+import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Utils.Util;
 
 public class Chests extends Handler {

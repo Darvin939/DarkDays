@@ -33,6 +33,7 @@ import org.bukkit.entity.Zombie;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.PlayerListener;
+import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Utils.Util;
 

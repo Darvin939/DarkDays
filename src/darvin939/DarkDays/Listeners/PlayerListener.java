@@ -33,13 +33,13 @@ import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.kitteh.tag.TagAPI;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.LootManager;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Configuration.PC;
 import darvin939.DarkDays.Loadable.Effect;
 import darvin939.DarkDays.Loadable.EffectManager;
+import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Utils.Util;

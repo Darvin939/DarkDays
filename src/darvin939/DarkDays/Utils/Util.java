@@ -49,4 +49,13 @@ public class Util {
 		Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + handlerName + commands[0]));
 		Print(p, Config.FGU.MSG("hlp_commands") + " &2" + list + "&7>");
 	}
+	
+	public static boolean isInteger(String string) {
+		try {
+			Integer.parseInt(string);
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
 }

@@ -1,8 +1,10 @@
 package darvin939.DarkDays.Configuration;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,6 +29,15 @@ public class LC {
 	}
 
 	public FileConfiguration getCfg() {
-		return cfgLoot = YamlConfiguration.loadConfiguration(cfgLootFile);
+		try {
+			cfgLoot.load(cfgLootFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		return cfgLoot;
 	}
 }

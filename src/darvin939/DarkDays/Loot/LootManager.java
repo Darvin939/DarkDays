@@ -1,4 +1,4 @@
-package darvin939.DarkDays;
+package darvin939.DarkDays.Loot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +24,12 @@ import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Utils.Util;
 
-public class Loot {
+public class LootManager {
 	private static FileConfiguration cfg = Config.getLC().getCfg();
+
+	{
+		cfg = Config.getLC().getCfg();
+	}
 
 	public static List<String> getEffects(String list, String item) {
 		return cfg.getStringList(list + ".items." + item + ".effects");
@@ -37,26 +41,10 @@ public class Loot {
 	}
 
 	public static Material getMaterial(String stringMaterial) {
-		if (isInteger(stringMaterial)) {
+		if (Util.isInteger(stringMaterial)) {
 			return Material.getMaterial(Integer.parseInt(stringMaterial));
 		}
 		return Material.getMaterial(stringMaterial.toUpperCase());
-	}
-
-	private static boolean isInteger(String string) {
-		try {
-			Integer.parseInt(string);
-			return true;
-		} catch (Exception e) {
-		}
-		return false;
-	}
-
-	private static short getData(String[] itemData) {
-		if (itemData.length > 1) {
-			return Short.parseShort(itemData[1]);
-		}
-		return 127;
 	}
 
 	private static ItemStack[] shuffleItems(Chest chest, ItemStack[] items) {
@@ -93,7 +81,7 @@ public class Loot {
 			for (ItemStack item : chest.getInventory().getContents()) {
 				if (item != null && item.getType() != null && !item.getType().equals(Material.AIR)) {
 					for (String list : getItemList(Config.getCC().getLoot(block.getLocation()))) {
-						if (list.matches("[1-9]+")) {
+						if (Util.isInteger(list)) {
 							if (item.getType() == Material.getMaterial(Integer.valueOf(list))) {
 								ret = false;
 								skip = true;
@@ -112,10 +100,7 @@ public class Loot {
 				}
 			}
 		}
-		if (ret)
-			return true;
-		else
-			return false;
+		return ret;
 	}
 
 	public static void fillTask() {
@@ -129,8 +114,9 @@ public class Loot {
 					chest = (Chest) chestloc.getBlock().getState();
 				} else
 					chest = (Chest) block.getState();
-				if (isChestEmpty(block) && Nodes.chest_empty.getBoolean())
-					fillChest(chest, Config.getCC().getLoot(set.getKey()));
+				if (cfg.contains(Util.FCTU(Config.getCC().getLoot(set.getKey()))))
+					if (isChestEmpty(block) && Nodes.chest_empty.getBoolean())
+						fillChest(chest, Config.getCC().getLoot(set.getKey()));
 			} else if (!(block.getState() instanceof Chest)) {
 				Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 				chestloc.getBlock().setType(Material.CHEST);
@@ -148,7 +134,7 @@ public class Loot {
 				Config.FGU.PrintMSG(p, "loot_set", list);
 			}
 		} else
-			Config.FGU.PrintPxMsg(p, "loot_error");
+			Util.PrintPxMSG(p, "loot_error");
 	}
 
 	private static void fillChest(Chest chest, String list) {
@@ -170,15 +156,17 @@ public class Loot {
 		return Integer.parseInt(properties[0]);
 	}
 
+	public static short getDurability(String list, String item) {
+		return (short) cfg.getInt(list + ".items." + item + ".durability");
+	}
+
 	public static ItemStack[] getContents(String list) {
 		List<String> itemList = getItemList(list);
 		Random random = new Random();
 		ItemStack[] items = new ItemStack[itemList.size()];
 		for (int i = 0; i < itemList.size(); i++) {
 			String item = itemList.get(i);
-			String[] itemData = item.split("\\|");
-
-			Material material = getMaterial(itemData[0]);
+			Material material = getMaterial(item);
 
 			int[] amountRange = getItemAmount(list, item);
 			int min = amountRange[0];
@@ -197,7 +185,7 @@ public class Loot {
 				continue;
 			try {
 				items[i] = new ItemStack(material, amount);
-				items[i].setDurability(getData(itemData));
+				items[i].setDurability(getDurability(list, item));
 
 				if (material.equals(Material.POTION))
 					applyEffect(items[i], new ArrayList<String>(getEffects(list, item)));
@@ -222,10 +210,11 @@ public class Loot {
 				String[] range = properties[1].split("-");
 				int minLvl = Integer.parseInt(range[0]);
 				int maxLvl = Integer.parseInt(range[1]);
-				int chance = Integer.parseInt(properties[2]);
-				boolean splash = Boolean.parseBoolean(properties[3]);
-				boolean extend = Boolean.parseBoolean(properties[4]);
-				Object[] potion = { effect, Integer.valueOf(minLvl), Integer.valueOf(maxLvl), Integer.valueOf(chance), Boolean.valueOf(splash), Boolean.valueOf(extend) };
+				// int chance = Integer.parseInt(properties[2]);
+				boolean splash = Boolean.parseBoolean(properties[2]);
+				boolean extend = Boolean.parseBoolean(properties[3]);
+				Object[] potion = { effect, Integer.valueOf(minLvl), Integer.valueOf(maxLvl), Boolean.valueOf(splash), Boolean.valueOf(extend) };
+				//Object[] potion = { effect, Integer.valueOf(minLvl), Integer.valueOf(maxLvl), Integer.valueOf(chance), Boolean.valueOf(splash), Boolean.valueOf(extend) };
 				effects.add(potion);
 			}
 		}
@@ -237,9 +226,10 @@ public class Loot {
 		int minLvl = ((Integer) ((Object[]) effects.get(index))[1]).intValue();
 		int maxLvl = ((Integer) ((Object[]) effects.get(index))[2]).intValue();
 		int lvl = minLvl;
-		int chance = ((Integer) ((Object[]) effects.get(index))[3]).intValue();
-		boolean splash = ((Boolean) ((Object[]) effects.get(index))[4]).booleanValue();
-		boolean extend = ((Boolean) ((Object[]) effects.get(index))[5]).booleanValue();
+		// int chance = ((Integer) ((Object[])
+		// effects.get(index))[3]).intValue();
+		boolean splash = ((Boolean) ((Object[]) effects.get(index))[3]).booleanValue();
+		boolean extend = ((Boolean) ((Object[]) effects.get(index))[4]).booleanValue();
 
 		if (minLvl != maxLvl) {
 			lvl = minLvl + random.nextInt(maxLvl - minLvl);
@@ -249,16 +239,16 @@ public class Loot {
 		else if (lvl < 1) {
 			lvl = 1;
 		}
-		if (random.nextInt(100) <= chance) {
-			Potion potion = new Potion(effect, lvl);
-			if (splash) {
-				potion.splash();
-			}
-			if (extend) {
-				potion.extend();
-			}
-			potion.apply(item);
+		// if (random.nextInt(100) <= chance) {
+		Potion potion = new Potion(effect, lvl);
+		if (splash) {
+			potion.splash();
 		}
+		if (extend) {
+			potion.extend();
+		}
+		potion.apply(item);
+		// }
 	}
 
 	private static List<Enchantment> availableEnchantments(ItemStack item) {
