@@ -96,6 +96,12 @@ public class Config extends FGUtilCore {
 		addMSG("loot_set", "LootID is set to %1%");
 		addMSG("loot_error", "Error occurred with assigning LootID");
 		addMSG("loot_nf", "LootID not found!");
+		addMSG("loot_flag_potion_isEmpty","Usage: &2..flag potion &7<spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,splash,extend]>");
+		addMSG("loot_flag_item_isEmpty","Usage: &2..flag &7[id] <spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,%]>");
+		addMSG("loot_save","Loot %1% successfully saved");
+		addMSG("loot_remove","Loot %1% successfully removed");
+		addMSG("loot_new","A new loot &7%1%&f created. Type &2/dd loot save %2%&f to save this loot");
+		addMSG("loot_new_isempty","First add the new loot! Type &2/dd loot new &7[name]&f to create new loot");
 		// chest_
 		addMSG("chest_normal", "This is a normal chest");
 		addMSG("chest_newWithID", "Created new looted chest with LootID");

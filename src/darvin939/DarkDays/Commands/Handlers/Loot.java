@@ -74,6 +74,9 @@ public class Loot extends Handler {
 					debug();
 					return true;
 				}
+			} else {
+				Util.PrintMSG(p, "loot_new_isempty");
+				return true;
 			}
 		} else {
 			getHelp(p, "loot");
@@ -97,7 +100,7 @@ public class Loot extends Handler {
 			sec.set("spawn", potion.getSpawn());
 			sec.set("effects", Arrays.asList(potion.getEffect().split(";")));
 		}
-
+		Util.Print(p, Config.FGU.MSG("loot_save", Util.FCTU(data.getName())));
 		Config.getLC().saveConfig();
 	}
 
@@ -122,7 +125,8 @@ public class Loot extends Handler {
 							effects = potionEffectParser(nargs[i]);
 					}
 				}
-				Util.Print(p, "Potion " + spawn + " " + effects);
+				if (spawn.isEmpty() && effects.isEmpty())
+					Util.PrintMSG(p, "loot_flag_potion_isEmpty");
 				if (!spawn.isEmpty())
 					data.setPotion("spawn", spawn);
 				if (!effects.isEmpty())
@@ -144,7 +148,8 @@ public class Loot extends Handler {
 							effects = itemEffectParser(nargs[i]);
 					}
 				}
-				Util.Print(p, LootManager.getMaterial(nargs[1]).name() + " " + spawn + " " + effects);
+				if (spawn.isEmpty() && effects.isEmpty())
+					Util.PrintMSG(p, "loot_flag_item_isEmpty");
 				if (data.getItem(LootManager.getMaterial(nargs[1])) != null) {
 					if (!spawn.isEmpty())
 						data.getItem(LootManager.getMaterial(nargs[1])).setSpawn(spawn);
@@ -153,7 +158,8 @@ public class Loot extends Handler {
 				}
 				return;
 			}
-		}
+		} else
+			getHelp(p, "loot.flag");
 	}
 
 	public void debug() {
@@ -170,7 +176,6 @@ public class Loot extends Handler {
 		for (String effect : effects) {
 			String[] args = effect.split(",");
 			if (args.length == 4) {
-				p.sendMessage(effect);
 				if (PotionType.valueOf(args[0].toUpperCase()) != null)
 					b1 = true;
 				String[] range = args[1].split("-");
@@ -188,6 +193,7 @@ public class Loot extends Handler {
 		}
 		if (b1 && b2 && b3)
 			return e;
+		Util.PrintSysPx(p, "Effect Syntax error: check the entered data");
 		return "";
 	}
 
@@ -218,6 +224,7 @@ public class Loot extends Handler {
 		}
 		if (b1 && b2 && b3)
 			return e;
+		Util.PrintSysPx(p, "Item Syntax error: check the entered data");
 		return "";
 	}
 
@@ -243,6 +250,7 @@ public class Loot extends Handler {
 		}
 		if (b1 && b2)
 			return s;
+		Util.PrintSysPx(p, "Spawn Syntax error: check the entered data");
 		return "";
 	}
 
@@ -255,7 +263,8 @@ public class Loot extends Handler {
 					nameOfLoot.get(p).addItem(LootManager.getMaterial(item), new ItemData("", ""));
 				Util.Print(p, item + " added");
 			}
-		}
+		} else
+			getHelp(p, "loot.item");
 	}
 
 	private void list() {
@@ -297,7 +306,7 @@ public class Loot extends Handler {
 				if (list.equalsIgnoreCase(nargs[1])) {
 					Config.getLC().getCfg().set(Util.FCTU(nargs[1].toLowerCase()), null);
 					Config.getLC().saveConfig();
-					Util.Print(p, "Loot " + Util.FCTU(nargs[1].toLowerCase()) + " successfully removed");
+					Util.Print(p, Config.FGU.MSG("loot_remove", Util.FCTU(nargs[1].toLowerCase())));
 				}
 			}
 		} else
@@ -308,7 +317,11 @@ public class Loot extends Handler {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
 			nameOfLoot.put(p, new Data(nargs[1].toLowerCase()));
-			Util.Print(p, "A New loot " + Util.FCTU(nargs[1].toLowerCase()) + " created. Type /dd loot save " + nargs[1].toLowerCase() + " to save this loot");
+			Util.Print(p, Config.FGU.MSG("loot_new", Util.FCTU(nargs[1].toLowerCase()) + ";" + nargs[1].toLowerCase()));
+			// Util.Print(p, "A New loot " + Util.FCTU(nargs[1].toLowerCase()) +
+			// " created. Type /dd loot save " + nargs[1].toLowerCase() +
+			// " to save this loot");
+
 		} else
 			getHelp(p, "loot.new");
 	}
