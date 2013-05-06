@@ -20,8 +20,9 @@ public class Item extends LoadUtils implements AbsItem {
 	}
 
 	@Override
-	public void setMessage(String msg) {
-		this.message = msg;
+	public void setMessage(String key, String msg) {
+		this.message = key;
+		plugin.getConfiguration().addMSG(key, msg);
 	}
 
 	@Override

@@ -58,6 +58,7 @@ public class DarkDays extends JavaPlugin {
 	private ZombieListener zlis = new ZombieListener(this);
 
 	public Parser Commands = new Parser();
+	private Config cfg;
 
 	private static EffectManager effects;
 	private static ItemManager items;
@@ -93,6 +94,10 @@ public class DarkDays extends JavaPlugin {
 	public static ItemManager getItemManager() {
 		return items;
 	}
+	
+	public Config getConfiguration() {
+		return cfg;
+	}
 
 	public void onEnable() {
 		des = getDescription();
@@ -105,7 +110,7 @@ public class DarkDays extends JavaPlugin {
 			config = getConfig();
 			PluginManager pm = getServer().getPluginManager();
 			init();
-			Config cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString(), "darkdays", getPrefix());
+			cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString(), "darkdays", getPrefix());
 			cfg.init();
 
 			Config.getCC().loadChests();
@@ -178,7 +183,7 @@ public class DarkDays extends JavaPlugin {
 		Commands.setHelp("chest", Config.FGU.MSG("hlp_cmd_chest"));
 		Commands.setHelp("chest.add", Config.FGU.MSG("hlp_cmd_chest_add"));
 		Commands.setHelp("chest.remove", Config.FGU.MSG("hlp_cmd_chest_remove"));
-		Commands.setHelp("chest.set", "none");
+		Commands.setHelp("chest.set", Config.FGU.MSG("hlp_cmd_chest_set"));
 		// loot
 		Commands.add("/dd loot", new Loot(this));
 		Commands.setPermission("loot", "darkdays.loot");
@@ -188,17 +193,17 @@ public class DarkDays extends JavaPlugin {
 		Commands.setPermission("loot.item", "darkdays.loot.item");
 		Commands.setPermission("loot.falg", "darkdays.loot.flag");
 		Commands.setPermission("loot.save", "darkdays.loot.save");
-		Commands.setHelp("loot", "none");
-		Commands.setHelp("loot.new", "none");
-		Commands.setHelp("loot.remove", "none");
-		Commands.setHelp("loot.list", "none");
-		Commands.setHelp("loot.item", "none");
-		Commands.setHelp("loot.flag", "none");
-		Commands.setHelp("loot.save", "none");
+		Commands.setHelp("loot", Config.FGU.MSG("hlp_cmd_loot"));
+		Commands.setHelp("loot.new", Config.FGU.MSG("hlp_cmd_loot_new"));
+		Commands.setHelp("loot.remove", Config.FGU.MSG("hlp_cmd_loot_remove"));
+		Commands.setHelp("loot.list", Config.FGU.MSG("hlp_cmd_loot_list"));
+		Commands.setHelp("loot.item", Config.FGU.MSG("hlp_cmd_loot_item"));
+		Commands.setHelp("loot.flag", Config.FGU.MSG("hlp_cmd_loot_flag"));
+		Commands.setHelp("loot.save", Config.FGU.MSG("hlp_cmd_loot_save"));
 		// debug
-		Commands.add("/dd d", new Debug(this));
+		Commands.add("/dd debug", new Debug(this));
 		Commands.setPermission("debug", "darkdays.debug");
-		Commands.setHelp("debug", "Simple debug command. Only for the developer");
+		Commands.setHelp("debug", Config.FGU.MSG("hlp_cmd_debug"));
 	}
 
 	public void registerEvents(PluginManager pm) {

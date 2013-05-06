@@ -193,23 +193,23 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
-		if (Tasks.player_hunger.containsKey(p))
-			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
-		else
-			Config.getPC().setData(p, PC.HUNGER, 309999);
-		Config.getPC().saveAll();
-		Tasks.removeFromHashMaps(event.getPlayer());
+		onPlayerExit(p);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
+		onPlayerExit(p);
+	}
+
+	private void onPlayerExit(Player p) {
 		if (Tasks.player_hunger.containsKey(p))
 			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
 		else
 			Config.getPC().setData(p, PC.HUNGER, 309999);
 		Config.getPC().saveAll();
-		Tasks.removeFromHashMaps(event.getPlayer());
+		Tasks.removeFromHashMaps(p);
+		DarkDays.getEffectManager().pauseEffects(p);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

@@ -96,12 +96,12 @@ public class Config extends FGUtilCore {
 		addMSG("loot_set", "LootID is set to %1%");
 		addMSG("loot_error", "Error occurred with assigning LootID");
 		addMSG("loot_nf", "LootID not found!");
-		addMSG("loot_flag_potion_isEmpty","Usage: &2..flag potion &7<spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,splash,extend]>");
-		addMSG("loot_flag_item_isEmpty","Usage: &2..flag &7[id] <spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,%]>");
-		addMSG("loot_save","Loot %1% successfully saved");
-		addMSG("loot_remove","Loot %1% successfully removed");
-		addMSG("loot_new","A new loot &7%1%&f created. Type &2/dd loot save %2%&f to save this loot");
-		addMSG("loot_new_isempty","First add the new loot! Type &2/dd loot new &7[name]&f to create new loot");
+		addMSG("loot_flag_potion_isEmpty", "Usage: &2..flag potion &7<spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,splash,extend]>");
+		addMSG("loot_flag_item_isEmpty", "Usage: &2..flag &7[id] <spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,%]>");
+		addMSG("loot_save", "Loot %1% successfully saved");
+		addMSG("loot_remove", "Loot %1% successfully removed");
+		addMSG("loot_new", "A new loot &7%1%&f created. Type &2/dd loot save %2%&f to save this loot");
+		addMSG("loot_new_isempty", "First add the new loot! Type &2/dd loot new &7[name]&f to create new loot");
 		// chest_
 		addMSG("chest_normal", "This is a normal chest");
 		addMSG("chest_newWithID", "Created new looted chest with LootID");
@@ -125,8 +125,7 @@ public class Config extends FGUtilCore {
 		addMSG("spawn_lobby_nf", "Lobby not found");
 		addMSG("spawn_nf", "Spawns not found");
 		// item_
-		addMSG("item_drinkmilk", "You drink a bucket of milk");
-		addMSG("item_drink_water", "You drink some water");
+		//addMSG("item_drink_water", "You drink some water");
 		// tags_
 		addMSG("tag_ends", "TAG's %1%");
 		// hlp_
@@ -138,12 +137,20 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_chest", "Show information about the chest (look at the chest)");
 		addMSG("hlp_cmd_chest_add", "Create new looted chest. Type &2..create &7[name] &fto create chest with lootID");
 		addMSG("hlp_cmd_chest_remove", "Remove looted chest");
-		addMSG("hlp_cmd_chest_loot", "Type &2..loot set &fto set the lootID for looked chest");
+		addMSG("hlp_cmd_chest_set", "Set the lootID for chest");
 		addMSG("hlp_cmd_spawn", "Start playing");
 		addMSG("hlp_cmd_spawn_set", "Add new spawn point. Type &2..set lobby &fto add new lobby location");
 		addMSG("hlp_cmd_spawn_list", "Show list of all spawns and lobby locations");
 		addMSG("hlp_cmd_tag", "Type&2 ..tag enable/disable &fto enable/disable colored names");
 		addMSG("hlp_cmd_region", "Make a region of zombie spawn locations. Select region with WorldEdit Wand. Then type &2..region save &7[name] [parametrs]&f. Parametrs: &2s=&7[true/false]&f - can spawn, &2h=&7[true/false]&f - top-to-bottom");
+		addMSG("hlp_cmd_loot", "Create, delete, assigning flags for loot");
+		addMSG("hlp_cmd_loot_new", "Type &2/dd loot new &7[name]&f to create new loot in server memory. Type &2/dd loot save&f to save your loot");
+		addMSG("hlp_cmd_loot_remove", "Remove the loot for the specified name");
+		addMSG("hlp_cmd_loot_list", "Show list of existing loot");
+		addMSG("hlp_cmd_loot_item", "Add items to your loot");
+		addMSG("hlp_cmd_loot_flag", "Set the flags for the items in your loot");
+		addMSG("hlp_cmd_loot_save", "Save your loot");
+		addMSG("hlp_cmd_debug", "&4Simple debug command. Only for the developers!");
 	}
 
 	public void init() {

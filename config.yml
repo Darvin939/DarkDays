@@ -21,11 +21,6 @@ General:
   ColouredTags: true
   EnableRegions: false
   Prefix: DarkDays
-Kit:
-  Start:
-    '268': 1
-    '373': 1
-    '299': 1
 MySQL:
   Username: root
   Password: root

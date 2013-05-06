@@ -257,12 +257,15 @@ public class Loot extends Handler {
 	private void item() {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
+			String items = "";
 			String[] i = nargs[1].split(",");
 			for (String item : i) {
-				if (LootManager.getMaterial(item) != null)
+				if (LootManager.getMaterial(item) != null) {
 					nameOfLoot.get(p).addItem(LootManager.getMaterial(item), new ItemData("", ""));
-				Util.Print(p, item + " added");
+					items = items.isEmpty() ? "&2" + item + "&f" : items + ", &2" + item + "&f";
+				}
 			}
+			Util.Print(p, "Items " + items + " added to your loot");
 		} else
 			getHelp(p, "loot.item");
 	}

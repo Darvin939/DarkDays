@@ -130,6 +130,12 @@ public class EffectManager {
 		addTaskID(p, effect, id);
 	}
 
+	public void pauseEffects(Player p) {
+		for (Entry<String, Integer> s : tasksID.get(p).entrySet()) {
+			plugin.getServer().getScheduler().cancelTask(s.getValue());
+		}
+	}
+
 	public void cancelEffect(Player p, String effect) {
 		if (isEffect(p, effect) != null)
 			Config.getPC().removeEffect(p, effect);

@@ -3,6 +3,7 @@ package darvin939.DarkDays.Listeners;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -78,6 +79,8 @@ public class EntityListener implements Listener {
 			if (zombie_damage.get(e) <= 20) {
 				if (zombie_damage.get(e) <= 0) {
 					((Zombie) e).setHealth(0);
+					net.minecraft.server.v1_4_R1.Entity entity = ((CraftLivingEntity) e).getHandle();
+					entity.die();
 					zombie_damage.remove(e);
 				} else
 					((Zombie) e).setHealth(zombie_damage.get(e));
