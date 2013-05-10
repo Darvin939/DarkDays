@@ -40,8 +40,8 @@ public class Util {
 		return newArgs;
 	}
 
-	public static void unknownCmd(Player p, Class<?> c, String[] commands) {
-		String handlerName = c.getSimpleName().toLowerCase() + " ";
+	public static void unknownCmd(Player p, String s, String[] commands) {
+		String handlerName = s.toLowerCase() + " ";
 		String list = "";
 		for (int i = 1; i < commands.length; i++) {
 			list = list.isEmpty() ? "..." + handlerName + "&7<" + commands[i] : list + ", " + commands[i];
@@ -49,7 +49,11 @@ public class Util {
 		Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + handlerName + commands[0]));
 		Print(p, Config.FGU.MSG("hlp_commands") + " &2" + list + "&7>");
 	}
-	
+
+	public static void unknownCmd(Player p, Class<?> c, String[] commands) {
+		unknownCmd(p, c.getSimpleName(), commands);
+	}
+
 	public static boolean isInteger(String string) {
 		try {
 			Integer.parseInt(string);

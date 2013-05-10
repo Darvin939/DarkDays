@@ -1,6 +1,6 @@
 package darvin939.DarkDays.Players.Memory;
 
-import darvin939.DarkDays.Configuration.PC;
+import darvin939.DarkDays.Configuration.PlayerConfig;
 
 public class PlayerLoadData {
 	private Integer hunger;
@@ -49,13 +49,13 @@ public class PlayerLoadData {
 
 	public Object get(String data) {
 		switch (data) {
-		case PC.DEATH:
+		case PlayerConfig.DEATH:
 			return death;
-		case PC.SPAWNED:
+		case PlayerConfig.SPAWNED:
 			return spawned;
-		case PC.NOVICE:
+		case PlayerConfig.NOVICE:
 			return novice;
-		case PC.HUNGER:
+		case PlayerConfig.HUNGER:
 			return hunger;
 		}
 		return null;
@@ -63,19 +63,19 @@ public class PlayerLoadData {
 
 	public void set(String data, Object value) {
 		switch (data) {
-		case PC.DEATH: {
+		case PlayerConfig.DEATH: {
 			this.death = (Boolean) value;
 			break;
 		}
-		case PC.SPAWNED: {
+		case PlayerConfig.SPAWNED: {
 			this.spawned = (Boolean) value;
 			break;
 		}
-		case PC.NOVICE: {
+		case PlayerConfig.NOVICE: {
 			this.novice = (Boolean) value;
 			break;
 		}
-		case PC.HUNGER: {
+		case PlayerConfig.HUNGER: {
 			this.hunger = (Integer) value;
 			break;
 		}

@@ -24,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Commands.Parser;
+import darvin939.DarkDays.Commands.Handlers.About;
 import darvin939.DarkDays.Commands.Handlers.Chests;
 import darvin939.DarkDays.Commands.Handlers.Debug;
 import darvin939.DarkDays.Commands.Handlers.Help;
@@ -72,6 +73,7 @@ public class DarkDays extends JavaPlugin {
 		log.info(prefix + "Plugin v." + des.getVersion() + " disabled");
 		Config.getPC().saveAll();
 		Config.getCC().saveAll();
+		Config.FGU.SaveMSG();
 		Config.save(new File(datafolder, "config.yml"));
 	}
 
@@ -94,7 +96,7 @@ public class DarkDays extends JavaPlugin {
 	public static ItemManager getItemManager() {
 		return items;
 	}
-	
+
 	public Config getConfiguration() {
 		return cfg;
 	}
@@ -159,9 +161,11 @@ public class DarkDays extends JavaPlugin {
 		Commands.setPermission("spawn", "darkdays.spawn");
 		Commands.setPermission("spawn.list", "darkdays.spawn.list");
 		Commands.setPermission("spawn.set", "darkdays.spawn.set");
+		Commands.setPermission("spawn.remove", "darkdays.spawn.remove");
 		Commands.setHelp("spawn", Config.FGU.MSG("hlp_cmd_spawn"));
 		Commands.setHelp("spawn.list", Config.FGU.MSG("hlp_cmd_spawn_list"));
 		Commands.setHelp("spawn.set", Config.FGU.MSG("hlp_cmd_spawn_set"));
+		Commands.setHelp("spawn.remove", Config.FGU.MSG("hlp_cmd_spawn_remove"));
 		// status
 		Commands.add("/dd status", new Status(this));
 		Commands.setPermission("status", "darkdays.status");
@@ -200,6 +204,9 @@ public class DarkDays extends JavaPlugin {
 		Commands.setHelp("loot.item", Config.FGU.MSG("hlp_cmd_loot_item"));
 		Commands.setHelp("loot.flag", Config.FGU.MSG("hlp_cmd_loot_flag"));
 		Commands.setHelp("loot.save", Config.FGU.MSG("hlp_cmd_loot_save"));
+		// about
+		Commands.add("/dd about", new About(this));
+		Commands.setHelp("about", Config.FGU.MSG("hlp_cmd_about"));
 		// debug
 		Commands.add("/dd debug", new Debug(this));
 		Commands.setPermission("debug", "darkdays.debug");

@@ -1,0 +1,60 @@
+msg_outdated: '%1% is outdated!'
+msg_pleasedownload: 'Please download new version (%1%) from '
+hlp_commands: 'Command list:'
+cmd_unknown: 'Unknown command: %1%'
+loot_set: LootID is set to %1%
+loot_error: Error occurred with assigning LootID
+loot_nf: LootID not found!
+loot_flag_potion_isEmpty: 'Usage: §2..flag potion §7<spawn=[%,minCount-maxCount]>
+  <effect=[type,minlvl-maxlvl,splash,extend]>'
+loot_flag_item_isEmpty: 'Usage: §2..flag §7[id] <spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,%]>'
+loot_save: Loot %1% successfully saved
+loot_remove: Loot %1% successfully removed
+loot_new: A new loot §7%1%§f created. Type §2/dd loot save %2%§f to save this loot
+loot_new_isempty: First add the new loot! Type §2/dd loot new §7[name]§f to create new loot
+chest_normal: This is a normal chest
+chest_newWithID: Created new looted chest with LootID
+chest_new: Created new looted chest
+chest_remove: Deleted loot chest
+chest_cantDestroy: You can't destroy the loot chest!
+cmd_indev: This command in the process of developing
+cmd_occurred: Error occurred when trying the command /%1%
+cmd_noperm: You don't have the Permission(%1%) to do that!
+game_start: You are in the world. Good luck!
+game_alrady: You alrady spawned!
+game_need_water: Need more water
+game_noplay: You are not in the world. Type the %1% to start playing
+spawn_lobby_new: New lobby location created
+spawn_lobby_error: Failed to create location of lobby
+spawn_new: Added new spawn point
+spawn_error: Failed to added new spawn point
+spawn_lobby_nf: Lobby not found
+spawn_nf: Spawns not found
+spawn_remove_success: Spawn %1% successfully removed
+spawn_remove_fail: An error occurred while removing spawn %1%
+tag_ends: TAG's %1%
+hlp_topic: Type %1% to show help topic
+hlp_nf: Help for %1% command not found
+hlp_cmd_status: Show your progress
+hlp_cmd_help: Show this help topic
+hlp_cmd_chest: Show information about the chest (look at the chest)
+hlp_cmd_chest_add: Create new looted chest. Type §2..create §7[name] §fto create chest with lootID
+hlp_cmd_chest_remove: Remove looted chest
+hlp_cmd_chest_set: Set the lootID for chest
+hlp_cmd_spawn: Start playing
+hlp_cmd_spawn_set: Add new spawn point. Type §2..set lobby §fto add new lobby location
+hlp_cmd_spawn_list: Show list of all spawns and lobby locations
+hlp_cmd_spawn_remove: Type §2..remove §7[name] §fto remove the spawn point by name
+hlp_cmd_tag: Type§2 ..tag enable/disable §fto enable/disable colored names
+hlp_cmd_region: 'Make a region of zombie spawn locations. Select region with WorldEdit
+  Wand. Then type §2..region save §7[name] [parametrs]§f. Parametrs: §2s=§7[true/false]§f
+  - can spawn, §2h=§7[true/false]§f - top-to-bottom'
+hlp_cmd_loot: Create, delete, assigning flags for loot
+hlp_cmd_loot_new: Type §2/dd loot new §7[name]§f to create new loot in server memory. Type §2/dd loot save§f to save your loot
+hlp_cmd_loot_remove: Remove the loot for the specified name
+hlp_cmd_loot_list: Show list of existing loot
+hlp_cmd_loot_item: Add items to your loot
+hlp_cmd_loot_flag: Set the flags for the items in your loot
+hlp_cmd_loot_save: Save your loot
+hlp_cmd_about: Show information about the plugin
+hlp_cmd_debug: §4Simple debug command. Only for the developers!

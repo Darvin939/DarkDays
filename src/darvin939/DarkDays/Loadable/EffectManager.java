@@ -131,9 +131,19 @@ public class EffectManager {
 	}
 
 	public void pauseEffects(Player p) {
-		for (Entry<String, Integer> s : tasksID.get(p).entrySet()) {
-			plugin.getServer().getScheduler().cancelTask(s.getValue());
-		}
+		if (tasksID.containsKey(p))
+			for (Entry<String, Integer> s : tasksID.get(p).entrySet()) {
+				plugin.getServer().getScheduler().cancelTask(s.getValue());
+			}
+	}
+
+	public void cancelEffects(Player p) {
+		if (tasksID.containsKey(p))
+			for (Entry<String, Integer> s : tasksID.get(p).entrySet()) {
+				plugin.getServer().getScheduler().cancelTask(s.getValue());
+				if (isEffect(p, s.getKey()) != null)
+					Config.getPC().removeEffect(p, s.getKey());
+			}
 	}
 
 	public void cancelEffect(Player p, String effect) {

@@ -11,12 +11,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import darvin939.DarkDays.DarkDays;
 
-public class RC {
+public class RegionConfig {
 	private FileConfiguration cfgRegions;
 	private File cfgRegionsFile;
 	private Logger log = Logger.getLogger("Minecraft");
 
-	public RC(DarkDays plg) {
+	public RegionConfig(DarkDays plg) {
 		cfgRegionsFile = new File(plg.getDataFolder() + "/regions.yml");
 		cfgRegions = YamlConfiguration.loadConfiguration(cfgRegionsFile);
 		saveConfig();

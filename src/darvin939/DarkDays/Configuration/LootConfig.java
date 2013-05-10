@@ -10,11 +10,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import darvin939.DarkDays.DarkDays;
 
-public class LC {
+public class LootConfig {
 	private FileConfiguration cfgLoot;
 	private File cfgLootFile;
 
-	public LC(DarkDays plg) {
+	public LootConfig(DarkDays plg) {
 		cfgLootFile = new File(plg.getDataFolder() + "/loot.yml");
 		cfgLoot = YamlConfiguration.loadConfiguration(cfgLootFile);
 		saveConfig();

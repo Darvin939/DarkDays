@@ -45,6 +45,8 @@ public class Chests extends Handler {
 					remove();
 				return true;
 			}
+			Util.unknownCmd(p, "chest", new String[] { args[1], "add", "set", "remove", "help" });
+			return true;
 		} else {
 			if (p.getTargetBlock(null, 10).getType() == Material.CHEST && hasPermissions(p, "chest", false))
 				if (Config.getCC().getChestInfo(p, p.getTargetBlock(null, 10).getLocation())) {
@@ -52,7 +54,6 @@ public class Chests extends Handler {
 					Util.PrintPxMSG(p, "chest_normal");
 			return true;
 		}
-		return false;
 	}
 
 	private void remove() {

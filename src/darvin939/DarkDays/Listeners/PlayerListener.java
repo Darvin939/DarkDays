@@ -13,6 +13,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -21,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -36,7 +39,7 @@ import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
-import darvin939.DarkDays.Configuration.PC;
+import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Loadable.Effect;
 import darvin939.DarkDays.Loadable.EffectManager;
 import darvin939.DarkDays.Loot.LootManager;
@@ -71,22 +74,29 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerQuit(EntityRegainHealthEvent event) {
+		if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED)
+			event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
+
 		Config.FGU.UpdateMsg(p);
 		Config.getPC().initialize(p);
 
-		boolean novice = (boolean) Config.getPC().getData(p, PC.DEATH);
-		boolean death = (boolean) Config.getPC().getData(p, PC.NOVICE);
+		boolean novice = (boolean) Config.getPC().getData(p, PlayerConfig.DEATH);
+		boolean death = (boolean) Config.getPC().getData(p, PlayerConfig.NOVICE);
 		if (novice || death) {
 			resetPlayer(p);
 			toSpawn(p);
 		}
-		if ((boolean) Config.getPC().getData(p, PC.SPAWNED)) {
-			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PC.HUNGER));
+		if ((boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
+			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
 			Tasks.player_noise.put(p, 1);
 			PlayerInfo.addPlayer(p);
-			p.teleport(PC.fix(p));
+			p.teleport(PlayerConfig.fix(p));
 
 			setupEffects(p);
 		}
@@ -119,17 +129,17 @@ public class PlayerListener implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
 		// Config.getPC().initialize(p);
-		boolean novice = (boolean) Config.getPC().getData(p, PC.DEATH);
-		boolean death = (boolean) Config.getPC().getData(p, PC.NOVICE);
+		boolean novice = (boolean) Config.getPC().getData(p, PlayerConfig.DEATH);
+		boolean death = (boolean) Config.getPC().getData(p, PlayerConfig.NOVICE);
 		if (novice || death) {
 			resetPlayer(p);
 			event.setRespawnLocation(toSpawn(p));
 		}
-		if ((boolean) Config.getPC().getData(p, PC.SPAWNED)) {
-			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PC.HUNGER));
+		if ((boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
+			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
 			Tasks.player_noise.put(p, 1);
 			PlayerInfo.addPlayer(p);
-			event.setRespawnLocation(PC.fix(p));
+			event.setRespawnLocation(PlayerConfig.fix(p));
 			return;
 		}
 		p.getInventory().clear();
@@ -157,9 +167,9 @@ public class PlayerListener implements Listener {
 	// This method doesn't work with the plugin AdminCmd!
 	private void resetPlayer(Player p) {
 		Tasks.resetHashMaps(p);
-		Config.getPC().setData(p, PC.DEATH, false);
-		Config.getPC().setData(p, PC.SPAWNED, false);
-		Config.getPC().setData(p, PC.NOVICE, true);
+		Config.getPC().setData(p, PlayerConfig.DEATH, false);
+		Config.getPC().setData(p, PlayerConfig.SPAWNED, false);
+		Config.getPC().setData(p, PlayerConfig.NOVICE, true);
 		p.getInventory().clear();
 		p.getInventory().setHelmet(null);
 		p.getInventory().setChestplate(null);
@@ -204,9 +214,9 @@ public class PlayerListener implements Listener {
 
 	private void onPlayerExit(Player p) {
 		if (Tasks.player_hunger.containsKey(p))
-			Config.getPC().setData(p, PC.HUNGER, Tasks.player_hunger.get(p));
+			Config.getPC().setData(p, PlayerConfig.HUNGER, Tasks.player_hunger.get(p));
 		else
-			Config.getPC().setData(p, PC.HUNGER, 309999);
+			Config.getPC().setData(p, PlayerConfig.HUNGER, 309999);
 		Config.getPC().saveAll();
 		Tasks.removeFromHashMaps(p);
 		DarkDays.getEffectManager().pauseEffects(p);
@@ -231,7 +241,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player p = event.getEntity();
-		Config.getPC().setData(p, PC.DEATH, true);
+		Config.getPC().setData(p, PlayerConfig.DEATH, true);
 		if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent dEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
@@ -244,7 +254,29 @@ public class PlayerListener implements Listener {
 			if (dEvent.getDamager() instanceof Zombie) {
 				Location loc = p.getLocation();
 				ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+
+				boolean kill = true;
+				for (Entity e : p.getNearbyEntities(50, 50, 50))
+					if (e instanceof Player)
+						kill = false;
+				if (kill) {
+					for (Entity e : p.getNearbyEntities(50, 50, 50)) {
+						if (e instanceof Zombie) {
+							net.minecraft.server.v1_5_R3.Entity entity = ((CraftLivingEntity) e).getHandle();
+							entity.die();
+						}
+					}
+				}
+
 				LivingEntity datZombie = (LivingEntity) loc.getWorld().spawnEntity(loc, EntityType.ZOMBIE);
+
+				if (Nodes.zombie_pickup.getBoolean()) {
+					datZombie.getEquipment().setHelmet(p.getEquipment().getHelmet());
+					datZombie.getEquipment().setChestplate(p.getEquipment().getChestplate());
+					datZombie.getEquipment().setBoots(p.getEquipment().getBoots());
+					datZombie.getEquipment().setLeggings(p.getEquipment().getLeggings());
+				}
+
 				ItemStack item[] = p.getInventory().getContents();
 				for (int i = 0; i < item.length; i++) {
 					items.add(item[i]);
@@ -262,11 +294,12 @@ public class PlayerListener implements Listener {
 		}
 		PlayerInfo.removePlayer(p);
 		event.getDrops().clear();
+		DarkDays.getEffectManager().cancelEffects(p);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if ((boolean) Config.getPC().getData(event.getPlayer(), PC.SPAWNED)) {
+		if ((boolean) Config.getPC().getData(event.getPlayer(), PlayerConfig.SPAWNED)) {
 			Player p = event.getPlayer();
 			if (!event.getFrom().toVector().equals(event.getTo().toVector())) {
 				float lold = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * Tasks.maxExp);

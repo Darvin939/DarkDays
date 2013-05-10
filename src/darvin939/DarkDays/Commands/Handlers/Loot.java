@@ -54,35 +54,33 @@ public class Loot extends Handler {
 					list();
 				return true;
 			}
-			if (nameOfLoot.containsKey(p)) {
-				if (args[1].equalsIgnoreCase("item")) {
-					if (hasPermissions(p, "chest.remove", true))
-						item();
+			if (args[1].equalsIgnoreCase("item") || args[1].equalsIgnoreCase("flag") || args[1].equalsIgnoreCase("save"))
+				if (nameOfLoot.containsKey(p)) {
+					if (args[1].equalsIgnoreCase("item")) {
+						if (hasPermissions(p, "chest.remove", true))
+							item();
+						return true;
+					}
+					if (args[1].equalsIgnoreCase("flag")) {
+						if (hasPermissions(p, "chest.remove", true))
+							flag();
+						return true;
+					}
+					if (args[1].equalsIgnoreCase("save")) {
+						if (hasPermissions(p, "chest.remove", true))
+							save();
+						return true;
+					}
+				} else {
+					Util.PrintMSG(p, "loot_new_isempty");
 					return true;
 				}
-				if (args[1].equalsIgnoreCase("flag")) {
-					if (hasPermissions(p, "chest.remove", true))
-						flag();
-					return true;
-				}
-				if (args[1].equalsIgnoreCase("save")) {
-					if (hasPermissions(p, "chest.remove", true))
-						save();
-					return true;
-				}
-				if (args[1].equalsIgnoreCase("d")) {
-					debug();
-					return true;
-				}
-			} else {
-				Util.PrintMSG(p, "loot_new_isempty");
-				return true;
-			}
+			Util.unknownCmd(p, getClass(), new String[] { args[1], "new", "item", "flag", "save", "list", "remove" });
+			return true;
 		} else {
 			getHelp(p, "loot");
 			return true;
 		}
-		return false;
 	}
 
 	private void save() {
@@ -160,13 +158,6 @@ public class Loot extends Handler {
 			}
 		} else
 			getHelp(p, "loot.flag");
-	}
-
-	public void debug() {
-		for (Entry<Material, ItemData> s : nameOfLoot.get(p).getItems().entrySet()) {
-			System.out.println(s.getKey().name() + " (" + s.getValue().getSpawn() + "|" + s.getValue().getEffect() + ")");
-		}
-		System.out.println("Potion (" + nameOfLoot.get(p).getPotion().getSpawn() + "|" + nameOfLoot.get(p).getPotion().getEffect() + ")");
 	}
 
 	private String potionEffectParser(String arg) {

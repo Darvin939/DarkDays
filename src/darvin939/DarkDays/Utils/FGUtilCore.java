@@ -28,6 +28,7 @@ package darvin939.DarkDays.Utils;
  * */
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -185,7 +186,8 @@ public abstract class FGUtilCore extends CipherUtil {
 			msglist = msglist + "NEXTMESSAGE" + key;
 	}
 
-	public void InitMsgFile() {
+	@Deprecated
+	public void InitMsgFileFromCipher() {
 		try {
 			Map<String, String> map = readMap(plg.getDataFolder() + File.separator + "locales", language + ".ddlang");
 			lng = new YamlConfiguration();
@@ -201,7 +203,26 @@ public abstract class FGUtilCore extends CipherUtil {
 		}
 	}
 
-	public void SaveMSG() {
+	public void InitMsgFile() {
+		try {
+			lng = new YamlConfiguration();
+			File f = new File(plg.getDataFolder() + File.separator + "locales/" + language + ".lng");
+			if (f.exists()) {
+				plg.getLogger().info("Initialize language file..");
+				lng.load(f);
+			} else {
+				plg.getLogger().info("Language file not found. Making new...");
+				InputStream is = plg.getClass().getResourceAsStream("/language/" + language + ".lng");
+				if (is != null)
+					lng.load(is);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Deprecated
+	public void SaveMSGToCipher() {
 		String[] keys = msglist.split("NEXTMESSAGE");
 		try {
 			HashMap<String, String> map = new HashMap<String, String>();
@@ -209,6 +230,21 @@ public abstract class FGUtilCore extends CipherUtil {
 				map.put(keys[i], msg.get(keys[i]));
 			}
 			writeMap(plg.getDataFolder() + File.separator + "locales", language + ".ddlang", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void SaveMSG() {
+		String[] keys = msglist.split("NEXTMESSAGE");
+		try {
+			File f = new File(plg.getDataFolder() + File.separator + "locales/" + language + ".lng");
+			if (!f.exists())
+				f.createNewFile();
+			YamlConfiguration cfg = new YamlConfiguration();
+			for (int i = 0; i < keys.length; i++)
+				cfg.set(keys[i], msg.get(keys[i]));
+			cfg.save(f);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

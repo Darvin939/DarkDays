@@ -19,10 +19,11 @@ import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class Config extends FGUtilCore {
 	public static FGUtilCore FGU;
-	private static PC playerCfg;
-	private static CC chestCfg;
-	private static RC regionCfg;
-	private static LC lootCfg;
+	private static PlayerConfig playerCfg;
+	private static ChestConfig chestCfg;
+	private static RegionConfig regionCfg;
+	private static LootConfig lootCfg;
+	private static SpawnConfig spawnCfg;
 
 	public Config(DarkDays plg, boolean vcheck, String lng, String devbukkitname, String px) {
 		super(plg, vcheck, lng, devbukkitname, px);
@@ -32,10 +33,32 @@ public class Config extends FGUtilCore {
 	}
 
 	public static enum Nodes {
-		language("General.Language", "english"), verCheck("General.Version-check", true), prefix("General.Prefix", "DarkDays"), only_zombies("General.Zombie.OnlyZombies", true), zombie_speed("General.Zombie.Speed", 0.4), zombie_smoothness("General.Zombie.Smoothness", 15), attack_strength(
-				"General.Zombie.AttackStrength", 4), zombie_health("General.Zombie.Health", 24), thirst_speed("General.Thirst.Speed", 2), bandage_id("General.Bandages.Id", 339), bandage_health("General.Bandages.Restore", 8), chest_empty("General.Chest.IfOnlyEmpty", true), chest_regen(
-				"General.Chest.RegenTime", 2), chest_disappear("General.Chest.Disappear", true), wand_item("General.WandItem", 369), control_sitemst("General.ControlSItems", true), coloured_tegs("General.ColouredTags", true), enable_regions("General.EnableRegions", false), MYSQL_USER(
-				"MySQL.Username", "root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname", "localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none");
+		language("Language", "english"), 
+		verCheck("Version-check", true), 
+		prefix("Prefix", "DarkDays"), 
+		only_zombies("Zombie.OnlyZombies", true), 
+		zombie_speed("Zombie.Speed", 0.4), 
+		zombie_smoothness("Zombie.Smoothness", 15), 
+		attack_strength("Zombie.AttackStrength", 4), 
+		zombie_health("Zombie.Health", 24), 
+		zombie_pickup("Zombie.PickUpPlayerArmor",true),
+		thirst_speed("Thirst.Speed", 2), 
+		bandage_id("Bandages.Id", 339), 
+		bandage_health("Bandages.Restore", 8), 
+		chest_empty("Chest.IfOnlyEmpty", true), 
+		chest_regen("Chest.RegenTime", 2), 
+		chest_disappear("Chest.Disappear", true), 
+		wand_item("WandItem", 369), 
+		control_sitemst("ControlSItems", true), 
+		coloured_tegs("ColouredTags", true), 
+		enable_regions("EnableRegions", false), 
+		MYSQL_USER("MySQL.Username", "root"), 
+		MYSQL_PASS("MySQL.Password", "root"),
+		MYSQL_HOST("MySQL.Hostname", "localhost"),
+		MYSQL_PORT("MySQL.Port", 3306), 
+		MYSQL_DATABASE("MySQL.Database", "darkdays"), 
+		MYSQL_DBWRAPPER("MySQL.DataWrapper", "none");
+		
 
 		String node;
 		Object value;
@@ -120,12 +143,12 @@ public class Config extends FGUtilCore {
 		// spawn_
 		addMSG("spawn_lobby_new", "New lobby location created");
 		addMSG("spawn_lobby_error", "Failed to create location of lobby");
-		addMSG("spawn_new", "Add new spawn point");
-		addMSG("spawn_error", "Failed to add new spawn point");
+		addMSG("spawn_new", "Added new spawn point");
+		addMSG("spawn_error", "Failed to added new spawn point");
 		addMSG("spawn_lobby_nf", "Lobby not found");
 		addMSG("spawn_nf", "Spawns not found");
-		// item_
-		//addMSG("item_drink_water", "You drink some water");
+		addMSG("spawn_remove_success", "Spawn %1% successfully removed");
+		addMSG("spawn_remove_fail", "An error occurred while removing spawn %1%");
 		// tags_
 		addMSG("tag_ends", "TAG's %1%");
 		// hlp_
@@ -141,6 +164,7 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_spawn", "Start playing");
 		addMSG("hlp_cmd_spawn_set", "Add new spawn point. Type &2..set lobby &fto add new lobby location");
 		addMSG("hlp_cmd_spawn_list", "Show list of all spawns and lobby locations");
+		addMSG("hlp_cmd_spawn_remove", "Type &2..remove &7[name] &fto remove the spawn point by name");
 		addMSG("hlp_cmd_tag", "Type&2 ..tag enable/disable &fto enable/disable colored names");
 		addMSG("hlp_cmd_region", "Make a region of zombie spawn locations. Select region with WorldEdit Wand. Then type &2..region save &7[name] [parametrs]&f. Parametrs: &2s=&7[true/false]&f - can spawn, &2h=&7[true/false]&f - top-to-bottom");
 		addMSG("hlp_cmd_loot", "Create, delete, assigning flags for loot");
@@ -150,6 +174,7 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_loot_item", "Add items to your loot");
 		addMSG("hlp_cmd_loot_flag", "Set the flags for the items in your loot");
 		addMSG("hlp_cmd_loot_save", "Save your loot");
+		addMSG("hlp_cmd_about", "Show information about the plugin");
 		addMSG("hlp_cmd_debug", "&4Simple debug command. Only for the developers!");
 	}
 
@@ -172,25 +197,31 @@ public class Config extends FGUtilCore {
 			ChestManager.init();
 		}
 
-		playerCfg = new PC(plg);
-		lootCfg = new LC(plg);
-		chestCfg = new CC(plg);
-		regionCfg = new RC(plg);
+		playerCfg = new PlayerConfig(plg);
+		lootCfg = new LootConfig(plg);
+		chestCfg = new ChestConfig(plg);
+		regionCfg = new RegionConfig(plg);
+		spawnCfg = new SpawnConfig(plg);
+
 	}
 
-	public static LC getLC() {
+	public static SpawnConfig getSpawnCfg() {
+		return spawnCfg;
+	}
+
+	public static LootConfig getLC() {
 		return lootCfg;
 	}
 
-	public static RC getRC() {
+	public static RegionConfig getRC() {
 		return regionCfg;
 	}
 
-	public static CC getCC() {
+	public static ChestConfig getCC() {
 		return chestCfg;
 	}
 
-	public static PC getPC() {
+	public static PlayerConfig getPC() {
 		return playerCfg;
 	}
 

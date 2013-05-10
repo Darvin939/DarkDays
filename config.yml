@@ -1,26 +1,26 @@
-General:
-  Language: english
-  Version-check: false
-  Zombie:
-    OnlyZombies: true
-    Speed: 4
-    Smoothness: 5
-    AttackStrength: 4
-    Health: 100
-  Thirst:
-    Speed: 10
-  Bandages:
-    Id: 339
-    Restore: 8
-  Chest:
-    IfOnlyEmpty: true
-    RegenTime: 2
-    Disappear: true
-  WandItem: 369
-  ControlSItems: false
-  ColouredTags: true
-  EnableRegions: false
-  Prefix: DarkDays
+Language: english
+Version-check: true
+Prefix: DarkDays
+Zombie:
+  OnlyZombies: true
+  Speed: 4
+  Smoothness: 5
+  AttackStrength: 4
+  Health: 12
+  PickUpPlayerArmor: true
+Thirst:
+  Speed: 2
+Bandages:
+  Id: 339
+  Restore: 8
+Chest:
+  IfOnlyEmpty: true
+  RegenTime: 2
+  Disappear: true
+WandItem: 369
+ControlSItems: true
+ColouredTags: true
+EnableRegions: false
 MySQL:
   Username: root
   Password: root
@@ -28,24 +28,3 @@ MySQL:
   Port: 3306
   Database: darkdays
   DataWrapper: none
-Spawns:
-  Spawn0:
-    x: -4.5
-    y: 4.0
-    z: 4.5
-  Spawn1:
-    x: -4.5
-    y: 4.0
-    z: 12.5
-  Lobby:
-    x: -3.5
-    y: 4.0
-    z: 15.5
-  Spawn2:
-    x: 0.5
-    y: 4.0
-    z: 0.5
-  Spawn3:
-    x: -3.5
-    y: 4.0
-    z: 9.5

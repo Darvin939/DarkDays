@@ -18,12 +18,12 @@ import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Chests.Sql.ChestManager;
 import darvin939.DarkDays.Utils.Util;
 
-public class CC {
+public class ChestConfig {
 	public FileConfiguration cfgChest;
 	private File cfgChestFile;
 	private HashMap<Location, String> chests = new HashMap<Location, String>();
 
-	public CC(DarkDays plg) {
+	public ChestConfig(DarkDays plg) {
 		if (!Config.isSqlWrapper()) {
 			cfgChestFile = new File(plg.getDataFolder() + "/chests.yml");
 			cfgChest = YamlConfiguration.loadConfiguration(cfgChestFile);

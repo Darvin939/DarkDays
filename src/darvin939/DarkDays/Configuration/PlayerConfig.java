@@ -18,7 +18,7 @@ import darvin939.DarkDays.Players.Memory.PlayerLoadData;
 import darvin939.DarkDays.Players.Sql.DDPlayer;
 import darvin939.DarkDays.Players.Sql.PlayerManager;
 
-public class PC {
+public class PlayerConfig {
 	private FileConfiguration cfgPlayers;
 	private File cfgPlayersFile;
 
@@ -32,7 +32,7 @@ public class PC {
 	public static final String HUNGER = "hunger";
 	public static final String EFFECTS = "effects";
 
-	public PC(DarkDays plugin) {
+	public PlayerConfig(DarkDays plugin) {
 		plg = plugin;
 		if (!Config.isSqlWrapper()) {
 			cfgPlayersFile = new File(plg.getDataFolder() + "/players.yml");

@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import darvin939.DarkDays.Configuration.PC;
+import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Players.Memory.PlayerLoadData;
 import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
@@ -196,11 +196,11 @@ public class SQLPlayer extends DDPlayer {
 					UPDATE_PLAYER.setFloat(4, player.getLocation().getYaw());
 					UPDATE_PLAYER.setFloat(5, player.getLocation().getPitch());
 				} else {
-					UPDATE_PLAYER.setDouble(1, PC.getSpawnLoc(player).getX());
-					UPDATE_PLAYER.setDouble(2, PC.getSpawnLoc(player).getY());
-					UPDATE_PLAYER.setDouble(3, PC.getSpawnLoc(player).getZ());
-					UPDATE_PLAYER.setFloat(4, PC.getSpawnLoc(player).getYaw());
-					UPDATE_PLAYER.setFloat(5, PC.getSpawnLoc(player).getPitch());
+					UPDATE_PLAYER.setDouble(1, PlayerConfig.getSpawnLoc(player).getX());
+					UPDATE_PLAYER.setDouble(2, PlayerConfig.getSpawnLoc(player).getY());
+					UPDATE_PLAYER.setDouble(3, PlayerConfig.getSpawnLoc(player).getZ());
+					UPDATE_PLAYER.setFloat(4, PlayerConfig.getSpawnLoc(player).getYaw());
+					UPDATE_PLAYER.setFloat(5, PlayerConfig.getSpawnLoc(player).getPitch());
 				}
 				UPDATE_PLAYER.setString(6, player.getWorld().getName());
 				UPDATE_PLAYER.setLong(7, id);
