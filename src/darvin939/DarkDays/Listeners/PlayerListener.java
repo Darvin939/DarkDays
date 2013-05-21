@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,8 +31,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.kitteh.tag.PlayerReceiveNameTagEvent;
-import org.kitteh.tag.TagAPI;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Tasks;
@@ -49,7 +46,7 @@ import darvin939.DarkDays.Utils.Util;
 
 public class PlayerListener implements Listener {
 	DarkDays plg;
-	public static ArrayList<Player> ptag = new ArrayList<Player>();
+
 	private static ThreadGroup rootThreadGroup = null;
 
 	public PlayerListener(DarkDays plg) {
@@ -75,8 +72,9 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerQuit(EntityRegainHealthEvent event) {
-		if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED)
-			event.setCancelled(true);
+		if (Nodes.disable_health_regen.getBoolean())
+			if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED)
+				event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -102,7 +100,7 @@ public class PlayerListener implements Listener {
 		}
 		for (Player op : plg.getServer().getOnlinePlayers()) {
 			if (!op.equals(p)) {
-				TagAPI.refreshPlayer(op, p);
+				TagAPIListener.refreshPlayer(op, p);
 			}
 		}
 	}
@@ -145,7 +143,7 @@ public class PlayerListener implements Listener {
 		p.getInventory().clear();
 		for (Player op : plg.getServer().getOnlinePlayers()) {
 			if (!op.equals(p)) {
-				TagAPI.refreshPlayer(op, p);
+				TagAPIListener.refreshPlayer(op, p);
 			}
 		}
 	}
@@ -180,27 +178,6 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onNameTag(PlayerReceiveNameTagEvent event) {
-		if (Nodes.coloured_tegs.getBoolean()) {
-			Player p = event.getNamedPlayer();
-			String name = p.getDisplayName();
-			if (PlayerInfo.getPlayerHeals(p) < PlayerInfo.getPlayerKills(p)) {
-				event.setTag(ChatColor.RED.toString() + name);
-				p.sendMessage("RED" + PlayerInfo.getPlayerHeals(p) + " - " + PlayerInfo.getPlayerKills(p));
-			} else if (PlayerInfo.getPlayerHeals(p) > PlayerInfo.getPlayerKills(p)) {
-				event.setTag(ChatColor.GREEN.toString() + name);
-				p.sendMessage("GREEN" + PlayerInfo.getPlayerHeals(p) + " - " + PlayerInfo.getPlayerKills(p));
-			} else
-				event.setTag(name);
-			for (Player op : plg.getServer().getOnlinePlayers()) {
-				if (ptag.contains(op)) {
-					event.setTag(name);
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
 		onPlayerExit(p);
@@ -231,7 +208,7 @@ public class PlayerListener implements Listener {
 					Player h = (Player) event.getEntity();
 					if (event.getDamage() > h.getHealth()) {
 						PlayerInfo.addPlayerKill(d);
-						TagAPI.refreshPlayer(d);
+						TagAPIListener.refreshPlayer(d);
 						Util.Print(d, "You killed " + h.getName() + "!");
 					}
 				}
@@ -248,7 +225,7 @@ public class PlayerListener implements Listener {
 			if (dEvent.getDamager() instanceof Player && PlayerInfo.isPlaying(p)) {
 				Player d = (Player) dEvent.getDamager();
 				PlayerInfo.addPlayerKill(d);
-				TagAPI.refreshPlayer(d);
+				TagAPIListener.refreshPlayer(d);
 				Util.Print(d, "You killed " + p.getName() + "!");
 			}
 			if (dEvent.getDamager() instanceof Zombie) {
@@ -285,7 +262,7 @@ public class PlayerListener implements Listener {
 				event.setDroppedExp(0);
 				for (Player op : plg.getServer().getOnlinePlayers()) {
 					if (!op.equals(p)) {
-						TagAPI.refreshPlayer(op, p);
+						TagAPIListener.refreshPlayer(op, p);
 					}
 				}
 				PlayerZombie.add(datZombie, items);

@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Chests.Sql;
+package darvin939.DarkDays.SQL.Chests;
 
 import org.bukkit.Location;
 

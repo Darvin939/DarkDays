@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Players.Sql;
+package darvin939.DarkDays.SQL.Players;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +8,9 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
+import com.mysql.jdbc.Statement;
+
+import darvin939.DarkDays.SQL.DBInit;
 
 public class PlayerManager {
 	private static final PlayerManager instance = new PlayerManager();
@@ -21,11 +23,12 @@ public class PlayerManager {
 	}
 
 	private PlayerManager() {
-		insertPlayer = Database.DATABASE.prepare("INSERT INTO `players` (`username`) VALUES (?)");
+		insertPlayer = DBInit.prepareStatement("INSERT INTO `players` (`username`) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
 	}
 
 	public static void init() {
-		final ResultSet rs = Database.DATABASE.query("SELECT `username`,`id` FROM `players`");
+		ResultSet rs;
+		rs = DBInit.query("SELECT `username`,`id` FROM `players`");
 		try {
 			while (rs.next()) {
 				playersID.put(rs.getString("username"), rs.getLong("id"));
@@ -84,10 +87,12 @@ public class PlayerManager {
 					}
 				}
 			} catch (final SQLException e) {
+				e.printStackTrace();
 				if (rs != null) {
 					try {
 						rs.close();
 					} catch (final SQLException e1) {
+						e1.printStackTrace();
 					}
 				}
 			}

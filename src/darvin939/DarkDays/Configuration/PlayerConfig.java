@@ -15,8 +15,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Players.Memory.PlayerLoadData;
-import darvin939.DarkDays.Players.Sql.DDPlayer;
-import darvin939.DarkDays.Players.Sql.PlayerManager;
+import darvin939.DarkDays.SQL.Players.DDPlayer;
+import darvin939.DarkDays.SQL.Players.PlayerManager;
 
 public class PlayerConfig {
 	private FileConfiguration cfgPlayers;

@@ -4,18 +4,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
+
+import lib.PatPeter.SQLibrary.Database;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Chests.Sql.ChestManager;
-import darvin939.DarkDays.Chests.Sql.SQLChest;
-import darvin939.DarkDays.Players.Sql.PlayerManager;
-import darvin939.DarkDays.Players.Sql.SQLPlayer;
+import darvin939.DarkDays.SQL.DBInit;
+import darvin939.DarkDays.SQL.Chests.ChestManager;
+import darvin939.DarkDays.SQL.Chests.SQLChest;
+import darvin939.DarkDays.SQL.Players.PlayerManager;
+import darvin939.DarkDays.SQL.Players.SQLPlayer;
 import darvin939.DarkDays.Utils.FGUtilCore;
-import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
 
 public class Config extends FGUtilCore {
 	public static FGUtilCore FGU;
@@ -33,32 +34,10 @@ public class Config extends FGUtilCore {
 	}
 
 	public static enum Nodes {
-		language("Language", "english"), 
-		verCheck("Version-check", true), 
-		prefix("Prefix", "DarkDays"), 
-		only_zombies("Zombie.OnlyZombies", true), 
-		zombie_speed("Zombie.Speed", 0.4), 
-		zombie_smoothness("Zombie.Smoothness", 15), 
-		attack_strength("Zombie.AttackStrength", 4), 
-		zombie_health("Zombie.Health", 24), 
-		zombie_pickup("Zombie.PickUpPlayerArmor",true),
-		thirst_speed("Thirst.Speed", 2), 
-		bandage_id("Bandages.Id", 339), 
-		bandage_health("Bandages.Restore", 8), 
-		chest_empty("Chest.IfOnlyEmpty", true), 
-		chest_regen("Chest.RegenTime", 2), 
-		chest_disappear("Chest.Disappear", true), 
-		wand_item("WandItem", 369), 
-		control_sitemst("ControlSItems", true), 
-		coloured_tegs("ColouredTags", true), 
-		enable_regions("EnableRegions", false), 
-		MYSQL_USER("MySQL.Username", "root"), 
-		MYSQL_PASS("MySQL.Password", "root"),
-		MYSQL_HOST("MySQL.Hostname", "localhost"),
-		MYSQL_PORT("MySQL.Port", 3306), 
-		MYSQL_DATABASE("MySQL.Database", "darkdays"), 
-		MYSQL_DBWRAPPER("MySQL.DataWrapper", "none");
-		
+		language("Language", "english"), verCheck("Version-check", true), prefix("Prefix", "DarkDays"), only_zombies("Zombie.OnlyZombies", true), zombie_speed("Zombie.Speed", 0.4), zombie_smoothness("Zombie.Smoothness", 15), attack_strength("Zombie.AttackStrength", 4), zombie_health(
+				"Zombie.Health", 24), zombie_pickup("Zombie.PickUpPlayerArmor", true), thirst_speed("Thirst.Speed", 2), bandage_id("Bandages.Id", 339), bandage_health("Bandages.Restore", 8), chest_empty("Chest.IfOnlyEmpty", true), chest_regen("Chest.RegenTime", 2), chest_disappear(
+				"Chest.Disappear", true), wand_item("WandItem", 369), control_sitemst("ControlSItems", true), coloured_tegs("ColouredTags", true), enable_regions("EnableRegions", false), MYSQL_USER("MySQL.Username", "root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname",
+				"localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), disable_health_regen("DisableHealthRegen", false);
 
 		String node;
 		Object value;
@@ -180,14 +159,9 @@ public class Config extends FGUtilCore {
 
 	public void init() {
 		if (isSqlWrapper()) {
-			Database.initDb();
-			Database db = Database.DATABASE;
-			try {
-				db.open();
-			} catch (SQLException e) {
-				plg.getLogger().warning("Couldn't connect to Database");
-				e.printStackTrace();
-			}
+			new DBInit();
+			Database db = DBInit.DATABASE;
+			db.open();
 			SQLPlayer.createTables();
 			SQLPlayer.initPrep();
 			SQLChest.createTables();

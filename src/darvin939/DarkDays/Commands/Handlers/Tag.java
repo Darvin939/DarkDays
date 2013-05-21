@@ -9,7 +9,7 @@ import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Configuration.Config;
-import darvin939.DarkDays.Listeners.PlayerListener;
+import darvin939.DarkDays.Listeners.TagAPIListener;
 import darvin939.DarkDays.Utils.Util;
 
 public class Tag extends Handler {
@@ -20,7 +20,7 @@ public class Tag extends Handler {
 
 	@Override
 	public boolean perform(Player p, String[] args) throws InvalidUsage {
-		ArrayList<Player> ptag = PlayerListener.ptag;
+		ArrayList<Player> ptag = TagAPIListener.ptag;
 		if (args.length > 1) {
 			if (hasPermissions(p, "tag", true)) {
 				if (args[1].equalsIgnoreCase("enable")) {

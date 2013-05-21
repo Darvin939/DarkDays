@@ -37,6 +37,7 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.BlockListener;
 import darvin939.DarkDays.Listeners.EntityListener;
 import darvin939.DarkDays.Listeners.PlayerListener;
+import darvin939.DarkDays.Listeners.TagAPIListener;
 import darvin939.DarkDays.Listeners.Wand;
 import darvin939.DarkDays.Listeners.ZombieListener;
 import darvin939.DarkDays.Loadable.Effect;
@@ -57,9 +58,11 @@ public class DarkDays extends JavaPlugin {
 	private BlockListener blis = new BlockListener(this);
 	private Wand wlis = new Wand(this);
 	private ZombieListener zlis = new ZombieListener(this);
+	private TagAPIListener tlis = new TagAPIListener(this);;
 
 	public Parser Commands = new Parser();
 	private Config cfg;
+	public static boolean tagAPI = false;
 
 	private static EffectManager effects;
 	private static ItemManager items;
@@ -105,34 +108,35 @@ public class DarkDays extends JavaPlugin {
 		des = getDescription();
 		if (getServer().getPluginManager().isPluginEnabled("TagAPI")) {
 			getLogger().info("Successfully hooked with TagAPI!");
-			getLogger().info("Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
-			datafolder = getDataFolder();
-			if (!datafolder.exists())
-				datafolder.mkdir();
-			config = getConfig();
-			PluginManager pm = getServer().getPluginManager();
-			init();
-			cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString(), "darkdays", getPrefix());
-			cfg.init();
-
-			Config.getCC().loadChests();
-			new Tasks(this);
-
-			effects = new EffectManager(this);
-			items = new ItemManager(this);
-			printEffects(effects);
-			printItems(items);
-			setupStackableItems();
-			registerEvents(pm);
-			registerCommands();
-			try {
-				MetricsLite metrics = new MetricsLite(this);
-				metrics.start();
-			} catch (IOException e) {
-				log.info(prefix + "Failed to submit stats to the Metrics (mcstats.org)");
-			}
+			tagAPI = true;
 		} else {
-			log.severe(prefix + "TagAPI not found on the server! Shutting down DarkDays...");
+			getLogger().info("TagAPI not detected! Nametags will not be coloured");
+		}
+		getLogger().info("Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
+		datafolder = getDataFolder();
+		if (!datafolder.exists())
+			datafolder.mkdir();
+		config = getConfig();
+		PluginManager pm = getServer().getPluginManager();
+		init();
+		cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString().toLowerCase(), "darkdays", getPrefix());
+		cfg.init();
+
+		Config.getCC().loadChests();
+		new Tasks(this);
+
+		effects = new EffectManager(this);
+		items = new ItemManager(this);
+		printEffects(effects);
+		printItems(items);
+		setupStackableItems();
+		registerEvents(pm);
+		registerCommands();
+		try {
+			MetricsLite metrics = new MetricsLite(this);
+			metrics.start();
+		} catch (IOException e) {
+			log.info(prefix + "Failed to submit stats to the Metrics (mcstats.org)");
 		}
 	}
 
@@ -175,9 +179,11 @@ public class DarkDays extends JavaPlugin {
 		Commands.setPermission("help", "darkdays.help");
 		Commands.setHelp("help", Config.FGU.MSG("hlp_cmd_help"));
 		// tag
-		Commands.add("/dd tag", new Tag(this));
-		Commands.setPermission("tag", "darkdays.tag");
-		Commands.setHelp("tag", Config.FGU.MSG("hlp_cmd_tag"));
+		if (tagAPI) {
+			Commands.add("/dd tag", new Tag(this));
+			Commands.setPermission("tag", "darkdays.tag");
+			Commands.setHelp("tag", Config.FGU.MSG("hlp_cmd_tag"));
+		}
 		// chest
 		Commands.add("/dd chest", new Chests(this));
 		Commands.setPermission("chest", "darkdays.chest");
@@ -219,6 +225,8 @@ public class DarkDays extends JavaPlugin {
 		pm.registerEvents(blis, this);
 		pm.registerEvents(wlis, this);
 		pm.registerEvents(zlis, this);
+		if (tagAPI)
+			pm.registerEvents(tlis, this);
 	}
 
 	private void printItems(ItemManager items) {

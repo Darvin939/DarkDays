@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Players.Sql;
+package darvin939.DarkDays.SQL.Players;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

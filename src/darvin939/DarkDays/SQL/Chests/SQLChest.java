@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Chests.Sql;
+package darvin939.DarkDays.SQL.Chests;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
+import darvin939.DarkDays.SQL.DBInit;
 
 public class SQLChest extends DDChest {
 
@@ -28,17 +28,17 @@ public class SQLChest extends DDChest {
 	}
 
 	public static void createTables() {
-		Database.DATABASE.query("CREATE TABLE IF NOT EXISTS `chests` (`id` INT NOT NULL AUTO_INCREMENT ,`x` DOUBLE NOT NULL ,`y` DOUBLE NOT NULL ,`z` DOUBLE NOT NULL ,`loot_id` VARCHAR(45) DEFAULT NULL, `world` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
+			DBInit.query("CREATE TABLE IF NOT EXISTS `chests` (`id` INT NOT NULL AUTO_INCREMENT ,`x` DOUBLE NOT NULL ,`y` DOUBLE NOT NULL ,`z` DOUBLE NOT NULL ,`loot_id` VARCHAR(45) DEFAULT NULL, `world` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
 	}
 
 	public static void initPrep() {
-		INSERT_CHEST = Database.DATABASE.prepare("REPLACE INTO `chests` (`x`, `y`, `z`, `loot_id`, `world`) VALUES (?,?,?,?,?)");
-		DELETE_CHEST = Database.DATABASE.prepare("DELETE FROM `chests` WHERE `id`=?");
+	
+			INSERT_CHEST = DBInit.prepare("REPLACE INTO `chests` (`x`, `y`, `z`, `loot_id`, `world`) VALUES (?,?,?,?,?)");
+			DELETE_CHEST = DBInit.prepare("DELETE FROM `chests` WHERE `id`=?");
+			UPDATE_LOOT = DBInit.prepare("UPDATE `chests` SET `loot_id` = ? WHERE `chests`.`id` = ?;");
+			GET_CHEST = DBInit.prepare("SELECT `x`,`y`,`z`,`world` FROM `chests` WHERE `id` = ?");
+			GET_LOOT = DBInit.prepare("SELECT `loot_id` FROM `chests` WHERE `id` = ?");
 
-		UPDATE_LOOT = Database.DATABASE.prepare("UPDATE `chests` SET `loot_id` = ? WHERE `chests`.`id` = ?;");
-
-		GET_CHEST = Database.DATABASE.prepare("SELECT `x`,`y`,`z`,`world` FROM `chests` WHERE `id` = ?");
-		GET_LOOT = Database.DATABASE.prepare("SELECT `loot_id` FROM `chests` WHERE `id` = ?");
 	}
 
 	public void addLoot(String data) {
@@ -92,7 +92,7 @@ public class SQLChest extends DDChest {
 			}
 		}
 	}
-	
+
 	public void addChest() {
 		addChest("");
 	}
@@ -116,6 +116,7 @@ public class SQLChest extends DDChest {
 		synchronized (GET_CHEST) {
 			try {
 				GET_CHEST.clearParameters();
+				
 				GET_CHEST.setLong(1, id);
 				ResultSet rs;
 				synchronized (GET_CHEST.getConnection()) {

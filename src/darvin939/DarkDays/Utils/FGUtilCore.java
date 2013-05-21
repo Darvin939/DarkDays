@@ -239,8 +239,10 @@ public abstract class FGUtilCore extends CipherUtil {
 		String[] keys = msglist.split("NEXTMESSAGE");
 		try {
 			File f = new File(plg.getDataFolder() + File.separator + "locales/" + language + ".lng");
-			if (!f.exists())
+			if (!f.exists()) {
+				new File(plg.getDataFolder() + File.separator + "locales/").mkdirs();
 				f.createNewFile();
+			}
 			YamlConfiguration cfg = new YamlConfiguration();
 			for (int i = 0; i < keys.length; i++)
 				cfg.set(keys[i], msg.get(keys[i]));

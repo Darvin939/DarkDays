@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Players.Sql;
+package darvin939.DarkDays.SQL.Players;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Players.Memory.PlayerLoadData;
-import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
+import darvin939.DarkDays.SQL.DBInit;
 
 public class SQLPlayer extends DDPlayer {
 	private static PreparedStatement INSERT_PLAYER;
@@ -44,28 +44,27 @@ public class SQLPlayer extends DDPlayer {
 	}
 
 	public static void createTables() {
-		Database.DATABASE
-				.query("CREATE TABLE IF NOT EXISTS `players_data` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`hunger` INT NOT NULL DEFAULT 309999 ,`death` VARCHAR(10) NOT NULL DEFAULT 0 ,`novice` VARCHAR(10) NOT NULL DEFAULT 1 ,`spawned` VARCHAR(10) NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`) );");
-		Database.DATABASE
-				.query("CREATE TABLE IF NOT EXISTS `players` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`x` DOUBLE DEFAULT NULL ,`y` DOUBLE DEFAULT NULL ,`z` DOUBLE DEFAULT NULL ,`yaw` FLOAT DEFAULT NULL ,`pitch` FLOAT DEFAULT NULL ,`world` VARCHAR(45) DEFAULT NULL ,PRIMARY KEY (`id`) );");
-		Database.DATABASE.query("CREATE TABLE IF NOT EXISTS `players_effects` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`key` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
+		DBInit.query("CREATE TABLE IF NOT EXISTS `players_data` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`hunger` INT NOT NULL DEFAULT 309999 ,`death` VARCHAR(10) NOT NULL DEFAULT 0 ,`novice` VARCHAR(10) NOT NULL DEFAULT 1 ,`spawned` VARCHAR(10) NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`) );");
+		DBInit.query("CREATE TABLE IF NOT EXISTS `players` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`x` DOUBLE DEFAULT NULL ,`y` DOUBLE DEFAULT NULL ,`z` DOUBLE DEFAULT NULL ,`yaw` FLOAT DEFAULT NULL ,`pitch` FLOAT DEFAULT NULL ,`world` VARCHAR(45) DEFAULT NULL ,PRIMARY KEY (`id`) );");
+		DBInit.query("CREATE TABLE IF NOT EXISTS `players_effects` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`key` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
 	}
 
 	public static void initPrep() {
-		INSERT_PLAYER = Database.DATABASE.prepare("REPLACE INTO `players` (`username`, `x`, `y`, `z`, `yaw`,  `pitch`, `world`) VALUES (?,?,?,?,?,?,?)");
-		DELETE_PLAYER = Database.DATABASE.prepare("DELETE FROM `players` WHERE `id`=?");
-		INSERT_DATA = Database.DATABASE.prepare("REPLACE INTO `players_data` (`username`, `hunger`, `death`, `novice`, `spawned`) VALUES (?,?,?,?,?)");
-		DELETE_DATA = Database.DATABASE.prepare("DELETE FROM `players_data` WHERE `id`=?");
-		INSERT_EFFECTS = Database.DATABASE.prepare("REPLACE INTO `players_effects` (`username`, `key`) VALUES (?,?)");
-		DELETE_EFFECTS = Database.DATABASE.prepare("DELETE FROM `players_effects` WHERE `id`=?");
+		INSERT_PLAYER = DBInit.prepare("REPLACE INTO `players` (`username`, `x`, `y`, `z`, `yaw`,  `pitch`, `world`) VALUES (?,?,?,?,?,?,?)");
 
-		UPDATE_PLAYER = Database.DATABASE.prepare("UPDATE `players` SET `x` = ?, `y` = ?, `z` = ?, `yaw` = ?, `pitch` = ?, `world` = ? WHERE `players`.`id` = ?;");
-		UPDATE_DATA = Database.DATABASE.prepare("UPDATE `players_data` SET `hunger` = ?, `death` = ?, `novice` = ?, `spawned` = ? WHERE `players_data`.`id` = ?;");
-		UPDATE_EFFECTS = Database.DATABASE.prepare("UPDATE `players_effects` SET `key` = ? WHERE `players_effects`.`id` = ?;");
+		DELETE_PLAYER = DBInit.prepare("DELETE FROM `players` WHERE `id`=?");
+		INSERT_DATA = DBInit.prepare("REPLACE INTO `players_data` (`username`, `hunger`, `death`, `novice`, `spawned`) VALUES (?,?,?,?,?)");
+		DELETE_DATA = DBInit.prepare("DELETE FROM `players_data` WHERE `id`=?");
+		INSERT_EFFECTS = DBInit.prepare("REPLACE INTO `players_effects` (`username`, `key`) VALUES (?,?)");
+		DELETE_EFFECTS = DBInit.prepare("DELETE FROM `players_effects` WHERE `id`=?");
 
-		GET_PLAYER = Database.DATABASE.prepare("SELECT `x`,`y`,`z`,`yaw`,`pitch`,`world` FROM `players` WHERE `id` = ?");
-		GET_DATA = Database.DATABASE.prepare("SELECT `hunger`,`death`,`novice`,`spawned` FROM `players_data` WHERE `id` = ?");
-		GET_EFFECTS = Database.DATABASE.prepare("SELECT `key` FROM `players_effects` WHERE `id` = ?");
+		UPDATE_PLAYER = DBInit.prepare("UPDATE `players` SET `x` = ?, `y` = ?, `z` = ?, `yaw` = ?, `pitch` = ?, `world` = ? WHERE `players`.`id` = ?;");
+		UPDATE_DATA = DBInit.prepare("UPDATE `players_data` SET `hunger` = ?, `death` = ?, `novice` = ?, `spawned` = ? WHERE `players_data`.`id` = ?;");
+		UPDATE_EFFECTS = DBInit.prepare("UPDATE `players_effects` SET `key` = ? WHERE `players_effects`.`id` = ?;");
+
+		GET_PLAYER = DBInit.prepare("SELECT `x`,`y`,`z`,`yaw`,`pitch`,`world` FROM `players` WHERE `id` = ?");
+		GET_DATA = DBInit.prepare("SELECT `hunger`,`death`,`novice`,`spawned` FROM `players_data` WHERE `id` = ?");
+		GET_EFFECTS = DBInit.prepare("SELECT `key` FROM `players_effects` WHERE `id` = ?");
 	}
 
 	private void updateEffects(String data) {
@@ -98,7 +97,7 @@ public class SQLPlayer extends DDPlayer {
 						final World world = Bukkit.getWorld(worldName);
 						if (world != null) {
 							playerloc = new Location(world, rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), rs.getFloat("yaw"), rs.getFloat("pitch"));
-						} 
+						}
 					}
 				}
 			} catch (final SQLException e) {

@@ -15,7 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Chests.Sql.ChestManager;
+import darvin939.DarkDays.SQL.Chests.ChestManager;
 import darvin939.DarkDays.Utils.Util;
 
 public class ChestConfig {

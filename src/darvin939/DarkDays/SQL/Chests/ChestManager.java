@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Chests.Sql;
+package darvin939.DarkDays.SQL.Chests;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import darvin939.DarkDays.Utils.PatPeter.SQLibrary.Database;
+import com.mysql.jdbc.Statement;
+
+import darvin939.DarkDays.SQL.DBInit;
 
 public class ChestManager {
 	private static final ChestManager instance = new ChestManager();
@@ -23,11 +25,12 @@ public class ChestManager {
 	}
 
 	private ChestManager() {
-		insertChest = Database.DATABASE.prepare("INSERT INTO `chests` (`x`,`y`,`z`,`world`) VALUES (?,?,?,?)");
+		insertChest = DBInit.prepareStatement("INSERT INTO `chests` (`x`,`y`,`z`,`world`) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 	}
 
 	public static void init() {
-		final ResultSet rs = Database.DATABASE.query("SELECT `x`,`y`,`z`,`world`,`id` FROM `chests`");
+		ResultSet rs;
+		rs = DBInit.query("SELECT `x`,`y`,`z`,`world`,`id` FROM `chests`");
 		try {
 			while (rs.next()) {
 				final String worldName = rs.getString("world");
@@ -39,7 +42,8 @@ public class ChestManager {
 				}
 			}
 			rs.close();
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
