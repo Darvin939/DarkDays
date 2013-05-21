@@ -62,6 +62,7 @@ public class DarkDays extends JavaPlugin {
 
 	public Parser Commands = new Parser();
 	private Config cfg;
+	public static boolean sqlibrary = false;
 	public static boolean tagAPI = false;
 
 	private static EffectManager effects;
@@ -106,11 +107,13 @@ public class DarkDays extends JavaPlugin {
 
 	public void onEnable() {
 		des = getDescription();
+		if (getServer().getPluginManager().isPluginEnabled("SQLibrary")) {
+			getLogger().info("Successfully hooked with SQLibrary! Now you can use the database.");
+			sqlibrary = true;
+		}
 		if (getServer().getPluginManager().isPluginEnabled("TagAPI")) {
 			getLogger().info("Successfully hooked with TagAPI!");
 			tagAPI = true;
-		} else {
-			getLogger().info("TagAPI not detected! Nametags will not be coloured");
 		}
 		getLogger().info("Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
 		datafolder = getDataFolder();
@@ -138,6 +141,7 @@ public class DarkDays extends JavaPlugin {
 		} catch (IOException e) {
 			log.info(prefix + "Failed to submit stats to the Metrics (mcstats.org)");
 		}
+
 	}
 
 	public void init() {

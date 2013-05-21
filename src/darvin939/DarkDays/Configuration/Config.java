@@ -201,7 +201,7 @@ public class Config extends FGUtilCore {
 
 	public static boolean isSqlWrapper() {
 		String wrapper = Nodes.MYSQL_DBWRAPPER.getString();
-		return wrapper.equalsIgnoreCase("mysql") || wrapper.equalsIgnoreCase("sqlite");
+		return DarkDays.sqlibrary && (wrapper.equalsIgnoreCase("mysql") || wrapper.equalsIgnoreCase("sqlite"));
 	}
 
 	public static void extract(String[] names) {
