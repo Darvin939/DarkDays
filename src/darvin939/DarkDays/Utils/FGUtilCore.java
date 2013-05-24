@@ -126,16 +126,18 @@ public abstract class FGUtilCore extends CipherUtil {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
 			doc.getDocumentElement().normalize();
 			NodeList nodes = doc.getElementsByTagName("item");
-			Node firstNode = nodes.item(1);
+			Node firstNode = nodes.item(0);
 			if (firstNode.getNodeType() == 1) {
 				Element firstElement = (Element) firstNode;
 				NodeList firstElementTagName = firstElement.getElementsByTagName("title");
 				Element firstNameElement = (Element) firstElementTagName.item(0);
 				NodeList firstNodes = firstNameElement.getChildNodes();
 				version_new_str = firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim();
+				
 				return Double.parseDouble(firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim());
 			}
-		} catch (Exception localException) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return currentVersion;
 	}

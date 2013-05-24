@@ -26,7 +26,6 @@ import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Commands.Parser;
 import darvin939.DarkDays.Commands.Handlers.About;
 import darvin939.DarkDays.Commands.Handlers.Chests;
-import darvin939.DarkDays.Commands.Handlers.Debug;
 import darvin939.DarkDays.Commands.Handlers.Help;
 import darvin939.DarkDays.Commands.Handlers.Loot;
 import darvin939.DarkDays.Commands.Handlers.Spawn;
@@ -217,10 +216,6 @@ public class DarkDays extends JavaPlugin {
 		// about
 		Commands.add("/dd about", new About(this));
 		Commands.setHelp("about", Config.FGU.MSG("hlp_cmd_about"));
-		// debug
-		Commands.add("/dd debug", new Debug(this));
-		Commands.setPermission("debug", "darkdays.debug");
-		Commands.setHelp("debug", Config.FGU.MSG("hlp_cmd_debug"));
 	}
 
 	public void registerEvents(PluginManager pm) {
