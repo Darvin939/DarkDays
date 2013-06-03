@@ -34,10 +34,32 @@ public class Config extends FGUtilCore {
 	}
 
 	public static enum Nodes {
-		language("Language", "english"), verCheck("Version-check", true), prefix("Prefix", "DarkDays"), only_zombies("Zombie.OnlyZombies", true), zombie_speed("Zombie.Speed", 0.4), zombie_smoothness("Zombie.Smoothness", 15), attack_strength("Zombie.AttackStrength", 4), zombie_health(
-				"Zombie.Health", 24), zombie_pickup("Zombie.PickUpPlayerArmor", true), thirst_speed("Thirst.Speed", 2), bandage_id("Bandages.Id", 339), bandage_health("Bandages.Restore", 8), chest_empty("Chest.IfOnlyEmpty", true), chest_regen("Chest.RegenTime", 2), chest_disappear(
-				"Chest.Disappear", true), wand_item("WandItem", 369), control_sitemst("ControlSItems", true), coloured_tegs("ColouredTags", true), enable_regions("EnableRegions", false), MYSQL_USER("MySQL.Username", "root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname",
-				"localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), disable_health_regen("DisableHealthRegen", false);
+		language("Language", "english"), 
+		verCheck("Version-check", true), 
+		prefix("Prefix", "DarkDays"),
+		only_zombies("Zombie.OnlyZombies", true), 
+		zombie_speed("Zombie.Speed", 0.4), 
+		zombie_smoothness("Zombie.Smoothness", 15), 
+		attack_strength("Zombie.AttackStrength", 4), 
+		zombie_health("Zombie.Health", 24), 
+		zombie_pickup("Zombie.PickUpPlayerArmor", true), 
+		thirst_speed("Thirst.Speed", 2),
+		bandage_id("Bandages.Id", 339), 
+		bandage_health("Bandages.Restore", 8), 
+		chest_empty("Chest.IfOnlyEmpty", true), 
+		chest_regen("Chest.RegenTime", 2), 
+		chest_disappear("Chest.Disappear", true),
+		wand_item("WandItem", 369),
+		control_sitemst("ControlSItems", true),
+		coloured_tegs("ColouredTags", true), 
+		enable_regions("EnableRegions", false), 
+		MYSQL_USER("MySQL.Username", "root"), 
+		MYSQL_PASS("MySQL.Password", "root"),
+		MYSQL_HOST("MySQL.Hostname","localhost"), 
+		MYSQL_PORT("MySQL.Port", 3306), 
+		MYSQL_DATABASE("MySQL.Database", "darkdays"), 
+		MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), 
+		disable_health_regen("DisableHealthRegen", false);
 
 		String node;
 		Object value;

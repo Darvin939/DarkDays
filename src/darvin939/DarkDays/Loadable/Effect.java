@@ -56,12 +56,12 @@ public class Effect extends LoadUtils implements AbsEffect {
 	}
 
 	public boolean isEffect(Player p) {
-		if (EffectManager.isEffect(p, getName()) != null)
+		if (DarkDays.getEffectManager().isEffect(p, getName()))
 			return true;
 		return false;
 	}
 
 	public void addEffect(Player p, Integer id) {
-		EffectManager.setEffect(p, getName(), id);
+		DarkDays.getEffectManager().setEffect(p, getName(), id);
 	}
 }

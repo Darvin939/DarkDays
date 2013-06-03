@@ -22,7 +22,7 @@ public class ItemManager {
 	private DarkDays plugin;
 	private Map<String, File> itemFiles;
 	public HashMap<String, Item> items = new HashMap<String, Item>();
-	private final File dir;
+	private File dir;
 	private final ClassLoader classLoader;
 
 	public ItemManager(DarkDays plugin) {
@@ -52,6 +52,10 @@ public class ItemManager {
 		ClassLoader cl = plugin.getClass().getClassLoader();
 		classLoader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]), cl);
 		loadItems();
+	}
+	
+	public File getPath() {
+		return dir;
 	}
 
 	public HashMap<String, Item> getItems() {

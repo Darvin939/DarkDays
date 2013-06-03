@@ -1,7 +1,7 @@
 name: DarkDays
 main: darvin939.DarkDays.DarkDays
-version: 0.85
-description: DarkDays Mod v0.85
+version: 0.857
+description: DarkDays Mod v0.857
 softdepend: [TagAPI, StackableItems, SQLibrary]
 commands:
     dd:

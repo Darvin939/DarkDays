@@ -38,7 +38,6 @@ import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Loadable.Effect;
-import darvin939.DarkDays.Loadable.EffectManager;
 import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
@@ -110,7 +109,7 @@ public class PlayerListener implements Listener {
 			for (String effect : Config.getPC().getEffects(p)) {
 				if (((Effect) set.getValue()).getName().equalsIgnoreCase(effect)) {
 					try {
-						EffectManager.addTaskID(p, effect, Integer.parseInt(String.valueOf(set.getKey().invoke(set.getValue(), p))));
+						DarkDays.getEffectManager().addTaskID(p, effect, Integer.parseInt(String.valueOf(set.getKey().invoke(set.getValue(), p))));
 					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					} catch (IllegalArgumentException e) {

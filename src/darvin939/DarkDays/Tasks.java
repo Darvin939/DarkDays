@@ -88,7 +88,10 @@ public class Tasks {
 						if ((int) player_loc.get(p).getX() == (int) p.getLocation().getX() && (int) player_loc.get(p).getZ() == (int) p.getLocation().getZ() && (int) player_loc.get(p).getY() == (int) p.getLocation().getY()) {
 							PlayerListener.smoothExp(original, 0, p);
 							if (p.getExp() == 0 && PlayerListener.getThread(p.getName()) != null)
-								PlayerListener.getThread(p.getName()).interrupt();
+								try {
+									PlayerListener.getThread(p.getName()).interrupt();
+								} catch (Exception e) {
+								}
 							Tasks.player_noise.put(p, 1);
 						}
 					player_loc.put(p, p.getLocation());

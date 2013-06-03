@@ -28,7 +28,7 @@ public class EffectManager {
 	public HashMap<String, Effect> effects = new HashMap<String, Effect>();
 	private HashMap<Method, Object> runMethods = new HashMap<Method, Object>();
 	private static Map<Player, Map<String, Integer>> tasksID = new HashMap<Player, Map<String, Integer>>();
-	private final File dir;
+	private File dir;
 	private final ClassLoader classLoader;
 
 	public EffectManager(DarkDays plugin) {
@@ -60,6 +60,10 @@ public class EffectManager {
 		loadEffects();
 	}
 
+	public File getPath() {
+		return dir;
+	}
+
 	public HashMap<Method, Object> getRunMethods() {
 		return runMethods;
 	}
@@ -68,7 +72,7 @@ public class EffectManager {
 		return effects;
 	}
 
-	public static void addTaskID(Player p, String name, Integer id) {
+	public void addTaskID(Player p, String name, Integer id) {
 		if (tasksID.containsKey(p))
 			tasksID.get(p).put(name, id);
 		else {
@@ -112,20 +116,28 @@ public class EffectManager {
 		}
 	}
 
-	public static String isEffect(Player p, String eff) {
+	public boolean isEffect(Player p, String eff) {
 		if (Config.getPC().getEffects(p) != null) {
 			String[] effects = Config.getPC().getEffects(p);
 			if (effects.length > 0)
 				for (String effect : effects) {
 					if (effect.equalsIgnoreCase(eff)) {
-						return effect;
+						return true;
 					}
 				}
 		}
-		return null;
+		return false;
 	}
 
-	public static void setEffect(Player p, String effect, Integer id) {
+	public boolean isEffect(String eff) {
+		for (Entry<String, Effect> s : effects.entrySet()) {
+			if (s.getKey().equalsIgnoreCase(eff))
+				return true;
+		}
+		return false;
+	}
+
+	public void setEffect(Player p, String effect, Integer id) {
 		Config.getPC().addEffect(p, effect);
 		addTaskID(p, effect, id);
 	}
@@ -141,13 +153,13 @@ public class EffectManager {
 		if (tasksID.containsKey(p))
 			for (Entry<String, Integer> s : tasksID.get(p).entrySet()) {
 				plugin.getServer().getScheduler().cancelTask(s.getValue());
-				if (isEffect(p, s.getKey()) != null)
+				if (isEffect(p, s.getKey()))
 					Config.getPC().removeEffect(p, s.getKey());
 			}
 	}
 
 	public void cancelEffect(Player p, String effect) {
-		if (isEffect(p, effect) != null)
+		if (isEffect(p, effect))
 			Config.getPC().removeEffect(p, effect);
 		if (tasksID.containsKey(p)) {
 			for (Entry<String, Integer> s : tasksID.get(p).entrySet()) {

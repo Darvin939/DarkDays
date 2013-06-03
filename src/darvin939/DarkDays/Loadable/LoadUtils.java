@@ -33,11 +33,4 @@ public class LoadUtils {
 		}
 		return false;
 	}
-
-	//public void createConfig(DarkDays plugin, Class<?> clazz) {
-	//	plugin.getConfiguration().SC("awdawdawd"+clazz.getSuperclass().getSimpleName());
-		
-		//cfgSpawnFile = new File(plugin.getDataFolder() + "/spawns.yml");
-		//cfgSpawn = YamlConfiguration.loadConfiguration(cfgSpawnFile);
-	//}
 }
