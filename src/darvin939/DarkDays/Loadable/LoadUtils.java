@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import darvin939.DarkDays.DarkDays;
+import darvin939.DarkDays.Utils.Randomizer;
 
 public class LoadUtils {
 	// For items
@@ -20,16 +21,14 @@ public class LoadUtils {
 
 	// For effects
 	public boolean isPercent(String effect) {
-		try {
-			Random random = new Random();
-			int percent;
-			percent = DarkDays.getEffectManager().getEffects().get(effect).getPercent();
-			int chance = random.nextInt(98) + 1;
-			if (percent > chance) {
+		int percent;
+		percent = DarkDays.getEffectManager().getEffects().get(effect).getPercent();
+		if (Randomizer.isCPercent(percent)) {
+			int r = new Random().nextInt(Randomizer.getPeriod(percent)[1]) + Randomizer.getPeriod(percent)[0];
+			System.out.println("Okey :"+r);
+			if (percent >= r) {
 				return true;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return false;
 	}

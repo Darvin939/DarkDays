@@ -44,15 +44,8 @@ public class PlayerConfig {
 
 	public void addEffect(Player p, String effect) {
 		String SE = effects.get(p) != null ? effects.get(p) : "";
-		if (Config.isSqlWrapper()) {
-			if (SE.isEmpty())
-				effects.put(p, effect);
-			else {
-				effects.put(p, effects.get(p) + "," + effect);
-			}
-		} else {
-			effects.put(p, !SE.isEmpty() ? SE + ", " + effect : effect);
-		}
+		if (!DarkDays.getEffectManager().isEffect(p, effect))
+			effects.put(p, !SE.isEmpty() ? SE + "," + effect : effect);
 	}
 
 	public static void fixLocation(Player p) {
@@ -115,14 +108,6 @@ public class PlayerConfig {
 		return effects.get(p) != null ? effects.get(p).split("\\,") : null;
 	}
 
-	public String getEffect(Player p, String effect) {
-		for (String e : getEffects(p)) {
-			if (e.equalsIgnoreCase(effect))
-				return e;
-		}
-		return "";
-	}
-
 	public Object getData(Player p, String param) {
 		return data.get(p).get(param);
 	}
@@ -130,7 +115,7 @@ public class PlayerConfig {
 	public void setData(Player p, String param, Object value) {
 		data.get(p).set(param, value);
 	}
-	
+
 	public void saveConfig() {
 		try {
 			cfgPlayers.save(cfgPlayersFile);
