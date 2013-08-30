@@ -176,7 +176,6 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_loot_flag", "Set the flags for the items in your loot");
 		addMSG("hlp_cmd_loot_save", "Save your loot");
 		addMSG("hlp_cmd_about", "Show information about the plugin");
-		addMSG("hlp_cmd_debug", "&4Simple debug command. Only for the developers!");
 	}
 
 	public void init() {

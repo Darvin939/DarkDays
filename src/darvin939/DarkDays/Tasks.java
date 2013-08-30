@@ -6,25 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.EntityVillager;
-import net.minecraft.server.v1_5_R3.EntityZombie;
-import net.minecraft.server.v1_5_R3.PathfinderGoalBreakDoor;
-import net.minecraft.server.v1_5_R3.PathfinderGoalFloat;
-import net.minecraft.server.v1_5_R3.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_5_R3.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_5_R3.PathfinderGoalMoveThroughVillage;
-import net.minecraft.server.v1_5_R3.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_5_R3.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_5_R3.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_5_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_6_R2.EntityHuman;
+import net.minecraft.server.v1_6_R2.EntityInsentient;
+import net.minecraft.server.v1_6_R2.EntityVillager;
+import net.minecraft.server.v1_6_R2.EntityZombie;
+import net.minecraft.server.v1_6_R2.PathfinderGoalBreakDoor;
+import net.minecraft.server.v1_6_R2.PathfinderGoalFloat;
+import net.minecraft.server.v1_6_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_6_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_6_R2.PathfinderGoalMoveThroughVillage;
+import net.minecraft.server.v1_6_R2.PathfinderGoalMoveTowardsRestriction;
+import net.minecraft.server.v1_6_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_6_R2.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_6_R2.PathfinderGoalSelector;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftZombie;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -119,7 +119,7 @@ public class Tasks {
 							double nx = (pl.getX() + el.getX()) / 2.0;
 							double ny = (pl.getY() + el.getY()) / 2.0;
 							double nz = (pl.getZ() + el.getZ()) / 2.0;
-							((CraftLivingEntity) e).getHandle().getNavigation().a(nx, ny, nz, new Float(Nodes.zombie_speed.getDouble() / 4));
+							((EntityInsentient) ((CraftLivingEntity) e).getHandle()).getNavigation().a(nx, ny, nz, new Float(Nodes.zombie_speed.getDouble() / 4));
 						}
 						setSpeed(e);
 
@@ -143,7 +143,7 @@ public class Tasks {
 		EntityZombie zombie = ((CraftZombie) entity).getHandle();
 		Field fGoalSelector;
 		try {
-			fGoalSelector = EntityLiving.class.getDeclaredField("goalSelector");
+			fGoalSelector = EntityInsentient.class.getDeclaredField("goalSelector");
 			fGoalSelector.setAccessible(true);
 			Float speed = 0.23F;
 			speed = new Float(Nodes.zombie_speed.getDouble() / 10);

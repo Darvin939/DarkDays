@@ -23,9 +23,9 @@ public class LoadUtils {
 	public boolean isPercent(String effect) {
 		int percent;
 		percent = DarkDays.getEffectManager().getEffects().get(effect).getPercent();
-		if (Randomizer.isCPercent(percent)) {
-			int r = new Random().nextInt(Randomizer.getPeriod(percent)[1]) + Randomizer.getPeriod(percent)[0];
-			System.out.println("Okey :"+r);
+		if (Randomizer.isPercent(percent)) {
+			Integer[] i = Randomizer.getPeriod(percent);
+			int r = new Random().nextInt(i[1]) + i[0];
 			if (percent >= r) {
 				return true;
 			}

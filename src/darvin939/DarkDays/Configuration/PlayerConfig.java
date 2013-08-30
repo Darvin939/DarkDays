@@ -39,7 +39,6 @@ public class PlayerConfig {
 			cfgPlayers = YamlConfiguration.loadConfiguration(cfgPlayersFile);
 			saveConfig();
 		}
-
 	}
 
 	public void addEffect(Player p, String effect) {

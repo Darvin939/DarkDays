@@ -4,13 +4,11 @@ import java.util.Random;
 
 public class Randomizer {
 
-	private static Integer a = 3;
-	private static Integer b = 2;
+	private final static Integer a = 5;
+	private final static Integer b = 2;
 
-	public static boolean isCPercent(Integer chance) {
-		int type = getCType(chance);
-		System.out.println("======================");
-		System.out.println("Chance: "+chance);
+	public static boolean isPercent(Integer chance) {
+		int type = getType(chance);
 		Random r = new Random();
 		int summ = 0;
 		for (int i = 0; i < type; i++) {
@@ -18,15 +16,13 @@ public class Randomizer {
 			if (s < b)
 				summ += 1;
 		}
-		System.out.println("Type: "+type);
-		System.out.println("Summ: "+summ);
 		if (summ == type) {
 			return true;
 		}
 		return false;
 	}
 
-	public static Integer getCType(Integer chance) {
+	public static Integer getType(Integer chance) {
 		int type;
 		if (chance > 75)
 			type = 1;
@@ -40,7 +36,7 @@ public class Randomizer {
 	}
 
 	public static Integer[] getPeriod(Integer chance) {
-		int type = getCType(chance);
+		int type = getType(chance);
 		Integer[] out = new Integer[] { 0, 100 };
 		if (type == 1)
 			out = new Integer[] { 75, 25 };

@@ -57,4 +57,3 @@ hlp_cmd_loot_item: Add items to your loot
 hlp_cmd_loot_flag: Set the flags for the items in your loot
 hlp_cmd_loot_save: Save your loot
 hlp_cmd_about: Show information about the plugin
-hlp_cmd_debug: §4Simple debug command. Only for the developers!

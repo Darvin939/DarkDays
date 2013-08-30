@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -238,7 +238,7 @@ public class PlayerListener implements Listener {
 				if (kill) {
 					for (Entity e : p.getNearbyEntities(50, 50, 50)) {
 						if (e instanceof Zombie) {
-							net.minecraft.server.v1_5_R3.Entity entity = ((CraftLivingEntity) e).getHandle();
+							net.minecraft.server.v1_6_R2.Entity entity = ((CraftLivingEntity) e).getHandle();
 							entity.die();
 						}
 					}

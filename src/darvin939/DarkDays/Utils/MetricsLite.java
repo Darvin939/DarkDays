@@ -185,7 +185,6 @@ public class MetricsLite {
 		}
 
 		URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(pluginName)));
-
 		URLConnection connection;
 
 		if (isMineshafterPresent()) {
