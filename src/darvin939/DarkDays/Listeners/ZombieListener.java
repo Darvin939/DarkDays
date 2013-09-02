@@ -80,7 +80,7 @@ public class ZombieListener implements Listener {
 			if (Nodes.only_zombies.getBoolean()) {
 				if (!event.getEntityType().equals(EntityType.ZOMBIE)) {
 					if ((e instanceof Monster) || e instanceof Animals) {
-						e.getWorld().spawnEntity(e.getLocation(), EntityType.ZOMBIE);
+						e.getWorld().spawn(e.getLocation(), (Class<? extends Entity>)Zombie.class);
 						event.setCancelled(true);
 					} else {
 						event.setCancelled(true);

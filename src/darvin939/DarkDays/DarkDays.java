@@ -36,6 +36,7 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.BlockListener;
 import darvin939.DarkDays.Listeners.EntityListener;
 import darvin939.DarkDays.Listeners.PlayerListener;
+import darvin939.DarkDays.Listeners.SignListener;
 import darvin939.DarkDays.Listeners.TagAPIListener;
 import darvin939.DarkDays.Listeners.Wand;
 import darvin939.DarkDays.Listeners.ZombieListener;
@@ -57,7 +58,8 @@ public class DarkDays extends JavaPlugin {
 	private BlockListener blis = new BlockListener(this);
 	private Wand wlis = new Wand(this);
 	private ZombieListener zlis = new ZombieListener(this);
-	private TagAPIListener tlis = new TagAPIListener(this);;
+	private TagAPIListener tlis = new TagAPIListener(this);
+	private SignListener slis = new SignListener(this);
 
 	public Parser Commands = new Parser();
 	private Config cfg;
@@ -224,6 +226,7 @@ public class DarkDays extends JavaPlugin {
 		pm.registerEvents(blis, this);
 		pm.registerEvents(wlis, this);
 		pm.registerEvents(zlis, this);
+		pm.registerEvents(slis, this);
 		if (tagAPI)
 			pm.registerEvents(tlis, this);
 	}

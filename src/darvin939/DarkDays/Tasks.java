@@ -86,7 +86,8 @@ public class Tasks {
 					float original = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * maxExp);
 					if (player_loc.get(p) != null)
 						if ((int) player_loc.get(p).getX() == (int) p.getLocation().getX() && (int) player_loc.get(p).getZ() == (int) p.getLocation().getZ() && (int) player_loc.get(p).getY() == (int) p.getLocation().getY()) {
-							PlayerListener.smoothExp(original, 0, p);
+							if (original != 0)
+								PlayerListener.smoothExp(original, 0, p);
 							if (p.getExp() == 0 && PlayerListener.getThread(p.getName()) != null)
 								try {
 									PlayerListener.getThread(p.getName()).interrupt();
