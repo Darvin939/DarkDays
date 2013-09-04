@@ -26,7 +26,7 @@ public class CipherUtil {
 		String out = "";
 		try {
 			File localFile = new File(dir, filename);
-			Cipher localCipher = getCipher(2, "darkdayslangfile");
+			Cipher localCipher = getCipher(2, "darkdaysfile");
 			DataInputStream localDataInputStream;
 			if (localCipher != null)
 				localDataInputStream = new DataInputStream(new CipherInputStream(new FileInputStream(localFile), localCipher));
@@ -73,7 +73,7 @@ public class CipherUtil {
 			if (!path.exists())
 				path.mkdir();
 			File localFile = new File(dir, filename);
-			Cipher localCipher = getCipher(1, "darkdayslangfile");
+			Cipher localCipher = getCipher(1, "darkdaysfile");
 			DataOutputStream localDataOutputStream;
 			if (localCipher != null)
 				localDataOutputStream = new DataOutputStream(new CipherOutputStream(new FileOutputStream(localFile), localCipher));

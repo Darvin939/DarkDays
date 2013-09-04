@@ -1,5 +1,6 @@
-package darvin939.DarkDays;
+package darvin939.DarkDays.Regions;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +8,13 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -25,14 +30,19 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Polygonal2DRegionSelector;
 
+import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
+import darvin939.DarkDays.Utils.CipherUtil;
 import darvin939.DarkDays.Utils.Util;
 
-public class Region {
+public class RegionManager {
 	private static Logger log = Logger.getLogger("Minecraft");
 	private static List<Polygonal2DRegionSelector> regions = new ArrayList<Polygonal2DRegionSelector>();
 	private static int matID = 88;
+	public static HashMap<String, SignRegionData> sData = new HashMap<String, SignRegionData>();
+	private CipherUtil ciph;
+	protected DarkDays plg;
 
 	public static WorldEditPlugin getWorldEdit() {
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -68,6 +78,55 @@ public class Region {
 			result.put(section, list);
 		}
 		return result;
+	}
+
+	public RegionManager(DarkDays plg) {
+		this.plg = plg;
+		ciph = new CipherUtil();
+
+		String[] sLocs = loadSignData().split(";");
+		for (String sLoc : sLocs) {
+			String[] wxyz = sLoc.split(" ");
+			try {
+				World world = plg.getServer().getWorld(wxyz[0]);
+				double x = Double.parseDouble(wxyz[1]);
+				double y = Double.parseDouble(wxyz[2]);
+				double z = Double.parseDouble(wxyz[3]);
+				Location loc = new Location(world, x, y, z);
+
+				sData.put(loc.toString(), getSignRegionDataByLocation(loc));
+
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public SignRegionData getSignRegionDataByLocation(Location loc) {
+		Block b = loc.getBlock();
+		if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN)) {
+			BlockState state = b.getState();
+			if ((state instanceof Sign)) {
+				Sign sign = (Sign) state;
+				Integer radius = Integer.parseInt(ChatColor.stripColor(sign.getLine(1)).replace("Radius=", ""));
+				Boolean spawn = Boolean.parseBoolean(ChatColor.stripColor(sign.getLine(2)).replace("Spawn=", ""));
+				Integer max = Integer.parseInt(ChatColor.stripColor(sign.getLine(3)).replace("MaxZmbs=", "").isEmpty() ? "0" : ChatColor.stripColor(sign.getLine(3)).replace("MaxZmbs=", ""));
+
+				return new SignRegionData(loc, radius, max, spawn);
+			}
+		}
+		return null;
+
+	}
+
+	public void saveSignData(String data) {
+		ciph.write(plg.getDataFolder() + File.separator, "signs.dat", data);
+	}
+
+	public String loadSignData() {
+		File f = new File(plg.getDataFolder() + File.separator + "signs.dat");
+		if (f.exists())
+			return ciph.read(plg.getDataFolder() + File.separator, "signs.dat");
+		return "";
 	}
 
 	public static boolean canSpawn(CreatureSpawnEvent event) {

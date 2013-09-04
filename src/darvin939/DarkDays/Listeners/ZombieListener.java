@@ -23,11 +23,11 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Region;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
+import darvin939.DarkDays.Regions.RegionManager;
 
 public class ZombieListener implements Listener {
 
@@ -76,7 +76,7 @@ public class ZombieListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntitySpawn(CreatureSpawnEvent event) {
 		Entity e = event.getEntity();
-		if (Region.canSpawn(event)) {
+		if (RegionManager.canSpawn(event)) {
 			if (Nodes.only_zombies.getBoolean()) {
 				if (!event.getEntityType().equals(EntityType.ZOMBIE)) {
 					if ((e instanceof Monster) || e instanceof Animals) {

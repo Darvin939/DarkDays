@@ -1,26 +1,37 @@
 package darvin939.DarkDays.Listeners;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import darvin939.DarkDays.DarkDays;
+import darvin939.DarkDays.Regions.RegionManager;
+import darvin939.DarkDays.Regions.SignRegionData;
+import darvin939.DarkDays.Utils.Util;
 
-public class SignListener implements Listener {
-	DarkDays plg;
+public class SignListener extends RegionManager implements Listener {
 
 	public SignListener(DarkDays plg) {
-		this.plg = plg;
+		super(plg);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
-		if (ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("[dd]"))
-			if (!plg.hasPermissions(p, "sign")) {
+		if (ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("[dd]")) {
+			if (!plg.hasPermissions(p, "sign.create")) {
 				event.setLine(0, "{dd}");
 			} else {
 				setLine(event, 0, "&9[DarkDays]");
@@ -77,12 +88,62 @@ public class SignListener implements Listener {
 					setLine(event, 2, "Spawn=&6" + sb);
 					if (sb)
 						setLine(event, 3, "MaxZmbs=&6" + mi);
+
+					Location l = event.getBlock().getLocation();
+
+					sData.put(l.toString(), new SignRegionData(l, ri, mi, sb));
+
+					String sLoc = new StringBuilder().append(l.getWorld().getName()).append(" ").append(l.getX()).append(" ").append(l.getY()).append(" ").append(l.getZ()).toString();
+
+					File f = new File(plg.getDataFolder() + File.separator + "signs.dat");
+					if (!f.exists())
+						try {
+							f.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+					String data = loadSignData();
+					if (data.isEmpty())
+						data = sLoc + ";";
+					else
+						data = data + sLoc + ";";
+					saveSignData(data);
 				}
 
 			}
-		if ((ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("[DarkDays]"))) {
+		} else if ((ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("[DarkDays]"))) {
 			event.setLine(0, "{DarkDays}");
 			clearParamLines(event);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onBlockBreak(BlockBreakEvent event) {
+		Block b = event.getBlock();
+		Player p = event.getPlayer();
+		Location loc = b.getLocation();
+		if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN)) {
+			BlockState state = b.getState();
+			if ((state instanceof Sign)) {
+				if (plg.hasPermissions(p, "sign.destroy")) {
+					Sign sign = (Sign) state;
+					if (ChatColor.stripColor(sign.getLine(2)).equalsIgnoreCase("{Error}")) {
+						return;
+					}
+					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("[DarkDays]")) {
+						String sLoc = new StringBuilder().append(loc.getX()).append(" ").append(loc.getY()).append(" ").append(loc.getZ()).toString();
+						String data = loadSignData();
+						saveSignData(data.replaceAll(sLoc + ";", ""));
+						sData.remove(loc.toString());
+						Util.Print(p, "You destroyed the DarkDays Sign!");
+					}
+				} else {
+					Util.Print(p, "You can't destroy the DarkDays Sign!");
+					event.setCancelled(true);
+				}
+
+			}
 		}
 	}
 
