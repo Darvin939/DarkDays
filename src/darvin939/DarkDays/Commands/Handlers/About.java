@@ -9,7 +9,7 @@ import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Regions.RegionManager;
-import darvin939.DarkDays.Regions.SignRegionData;
+import darvin939.DarkDays.Regions.Memory.SignRegionData;
 import darvin939.DarkDays.Utils.Util;
 
 public class About extends Handler {

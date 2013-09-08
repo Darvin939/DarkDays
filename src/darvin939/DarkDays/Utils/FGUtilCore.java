@@ -271,7 +271,7 @@ public abstract class FGUtilCore extends CipherUtil {
 	}
 
 	/*
-	 * Расшифровка: id - ID строки, keys - заменитель %n% ("test;bal bla bla"),
+	 * Расшифровка: id - ID строки, keys - заменитель %n% ,
 	 * c1 - цвет всей строки, c2 - цвет %n%
 	 * 
 	 * Пример: MSG("hlp_thishelp", "Test",'b', '2'); Вывод:

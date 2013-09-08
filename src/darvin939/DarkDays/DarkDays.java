@@ -36,7 +36,6 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.BlockListener;
 import darvin939.DarkDays.Listeners.EntityListener;
 import darvin939.DarkDays.Listeners.PlayerListener;
-import darvin939.DarkDays.Listeners.SignListener;
 import darvin939.DarkDays.Listeners.TagAPIListener;
 import darvin939.DarkDays.Listeners.Wand;
 import darvin939.DarkDays.Listeners.ZombieListener;
@@ -44,6 +43,7 @@ import darvin939.DarkDays.Loadable.Effect;
 import darvin939.DarkDays.Loadable.EffectManager;
 import darvin939.DarkDays.Loadable.Item;
 import darvin939.DarkDays.Loadable.ItemManager;
+import darvin939.DarkDays.Regions.SignListener;
 import darvin939.DarkDays.Utils.MetricsLite;
 import darvin939.DarkDays.Utils.Util;
 

@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Listeners;
+package darvin939.DarkDays.Regions;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,8 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Regions.RegionManager;
-import darvin939.DarkDays.Regions.SignRegionData;
+import darvin939.DarkDays.Regions.Memory.SignRegionData;
 import darvin939.DarkDays.Utils.Util;
 
 public class SignListener extends RegionManager implements Listener {
@@ -26,6 +27,26 @@ public class SignListener extends RegionManager implements Listener {
 	public SignListener(DarkDays plg) {
 		super(plg);
 	}
+
+	public static void entityRespawnTask() {
+		for (SignRegionData srd : sData.values()) {
+			if (srd.isChunkLoaded()) {
+				if (!srd.isMaxMobCount()) {
+					System.out.println("Spawn Mob");
+					Double[] randomXZ = srd.getRandomPoint();
+					if (randomXZ != null) {
+						srd.getWorld().spawn(new Location(srd.getWorld(), randomXZ[0], srd.getHighestBlock().getY() + 1, randomXZ[1]), (Class<? extends Entity>) Zombie.class);
+						srd.addMod();
+					}
+				}
+			}
+		}
+	}
+
+	// @EventHandler(priority = EventPriority.NORMAL)
+	// public void onEntitySpawn(CreatureSpawnEvent event) {
+	// event.setCancelled(insideSignRegion(event.getLocation()));
+	// }
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event) {
@@ -85,7 +106,10 @@ public class SignListener extends RegionManager implements Listener {
 				} else {
 					clearParamLines(event);
 					setLine(event, 1, "Radius=&6" + ri);
-					setLine(event, 2, "Spawn=&6" + sb);
+					if (!sb)
+						setLine(event, 2, "&mSpawn=" + sb);
+					else
+						setLine(event, 2, "Spawn=&6" + sb);
 					if (sb)
 						setLine(event, 3, "MaxZmbs=&6" + mi);
 
@@ -119,18 +143,19 @@ public class SignListener extends RegionManager implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onBlockBreak(BlockBreakEvent event) {
+	public void onSignBreak(BlockBreakEvent event) {
 		Block b = event.getBlock();
 		Player p = event.getPlayer();
 		Location loc = b.getLocation();
 		if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN)) {
 			BlockState state = b.getState();
 			if ((state instanceof Sign)) {
+				Sign sign = (Sign) state;
+				if (ChatColor.stripColor(sign.getLine(2)).equalsIgnoreCase("{Error}") && ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("[DarkDays]")) {
+					return;
+				}
 				if (plg.hasPermissions(p, "sign.destroy")) {
-					Sign sign = (Sign) state;
-					if (ChatColor.stripColor(sign.getLine(2)).equalsIgnoreCase("{Error}")) {
-						return;
-					}
+
 					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("[DarkDays]")) {
 						String sLoc = new StringBuilder().append(loc.getX()).append(" ").append(loc.getY()).append(" ").append(loc.getZ()).toString();
 						String data = loadSignData();

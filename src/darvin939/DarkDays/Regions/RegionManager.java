@@ -33,6 +33,7 @@ import com.sk89q.worldedit.regions.Polygonal2DRegionSelector;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
+import darvin939.DarkDays.Regions.Memory.SignRegionData;
 import darvin939.DarkDays.Utils.CipherUtil;
 import darvin939.DarkDays.Utils.Util;
 
@@ -43,6 +44,27 @@ public class RegionManager {
 	public static HashMap<String, SignRegionData> sData = new HashMap<String, SignRegionData>();
 	private CipherUtil ciph;
 	protected DarkDays plg;
+
+	public RegionManager(DarkDays plg) {
+		this.plg = plg;
+		ciph = new CipherUtil();
+
+		String[] sLocs = loadSignData().split(";");
+		for (String sLoc : sLocs) {
+			String[] wxyz = sLoc.split(" ");
+			try {
+				World world = plg.getServer().getWorld(wxyz[0]);
+				double x = Double.parseDouble(wxyz[1]);
+				double y = Double.parseDouble(wxyz[2]);
+				double z = Double.parseDouble(wxyz[3]);
+				Location loc = new Location(world, x, y, z);
+
+				sData.put(loc.toString(), getSignRegionDataByLocation(loc));
+
+			} catch (Exception e) {
+			}
+		}
+	}
 
 	public static WorldEditPlugin getWorldEdit() {
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -80,27 +102,6 @@ public class RegionManager {
 		return result;
 	}
 
-	public RegionManager(DarkDays plg) {
-		this.plg = plg;
-		ciph = new CipherUtil();
-
-		String[] sLocs = loadSignData().split(";");
-		for (String sLoc : sLocs) {
-			String[] wxyz = sLoc.split(" ");
-			try {
-				World world = plg.getServer().getWorld(wxyz[0]);
-				double x = Double.parseDouble(wxyz[1]);
-				double y = Double.parseDouble(wxyz[2]);
-				double z = Double.parseDouble(wxyz[3]);
-				Location loc = new Location(world, x, y, z);
-
-				sData.put(loc.toString(), getSignRegionDataByLocation(loc));
-
-			} catch (Exception e) {
-			}
-		}
-	}
-
 	public SignRegionData getSignRegionDataByLocation(Location loc) {
 		Block b = loc.getBlock();
 		if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN)) {
@@ -115,7 +116,15 @@ public class RegionManager {
 			}
 		}
 		return null;
+	}
 
+	protected boolean insideSignRegion(Location location) {
+		for (SignRegionData srd : sData.values()) {
+			if (srd.isInside(location)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void saveSignData(String data) {

@@ -35,6 +35,7 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.PlayerListener;
 import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Regions.SignListener;
 import darvin939.DarkDays.Utils.Util;
 
 public class Tasks {
@@ -73,7 +74,13 @@ public class Tasks {
 				Config.getPC().saveAll();
 				Config.getCC().saveAll();
 			}
-		}, 3 * 100, 3 * 100);
+		}, 1000, 1000);
+		
+		plg.getServer().getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
+			public void run() {
+				SignListener.entityRespawnTask();
+			}
+		}, 200, 200);
 
 	}
 
