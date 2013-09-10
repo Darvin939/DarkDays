@@ -17,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Regions.Memory.SignRegionData;
@@ -43,10 +44,11 @@ public class SignListener extends RegionManager implements Listener {
 		}
 	}
 
-	// @EventHandler(priority = EventPriority.NORMAL)
-	// public void onEntitySpawn(CreatureSpawnEvent event) {
-	// event.setCancelled(insideSignRegion(event.getLocation()));
-	// }
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onEntitySpawn(CreatureSpawnEvent event) {
+		if (insideSignRegion(event.getLocation()))
+			event.setCancelled(true);
+	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignChange(SignChangeEvent event) {
@@ -107,7 +109,7 @@ public class SignListener extends RegionManager implements Listener {
 					clearParamLines(event);
 					setLine(event, 1, "Radius=&6" + ri);
 					if (!sb)
-						setLine(event, 2, "&mSpawn=" + sb);
+						setLine(event, 2, "Spawn=&6" + sb);
 					else
 						setLine(event, 2, "Spawn=&6" + sb);
 					if (sb)
@@ -146,7 +148,7 @@ public class SignListener extends RegionManager implements Listener {
 	public void onSignBreak(BlockBreakEvent event) {
 		Block b = event.getBlock();
 		Player p = event.getPlayer();
-		Location loc = b.getLocation();
+		Location l = b.getLocation();
 		if ((b.getType() == Material.SIGN_POST) || (b.getType() == Material.WALL_SIGN)) {
 			BlockState state = b.getState();
 			if ((state instanceof Sign)) {
@@ -157,10 +159,10 @@ public class SignListener extends RegionManager implements Listener {
 				if (plg.hasPermissions(p, "sign.destroy")) {
 
 					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("[DarkDays]")) {
-						String sLoc = new StringBuilder().append(loc.getX()).append(" ").append(loc.getY()).append(" ").append(loc.getZ()).toString();
+						String sLoc = new StringBuilder().append(l.getWorld().getName()).append(" ").append(l.getX()).append(" ").append(l.getY()).append(" ").append(l.getZ()).toString();
 						String data = loadSignData();
 						saveSignData(data.replaceAll(sLoc + ";", ""));
-						sData.remove(loc.toString());
+						sData.remove(l.toString());
 						Util.Print(p, "You destroyed the DarkDays Sign!");
 					}
 				} else {

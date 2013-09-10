@@ -59,7 +59,7 @@ public class DarkDays extends JavaPlugin {
 	private Wand wlis = new Wand(this);
 	private ZombieListener zlis = new ZombieListener(this);
 	private TagAPIListener tlis = new TagAPIListener(this);
-	private SignListener slis = new SignListener(this);
+	//private SignListener slis = new SignListener(this);
 
 	public Parser Commands = new Parser();
 	private Config cfg;
@@ -226,7 +226,7 @@ public class DarkDays extends JavaPlugin {
 		pm.registerEvents(blis, this);
 		pm.registerEvents(wlis, this);
 		pm.registerEvents(zlis, this);
-		pm.registerEvents(slis, this);
+		pm.registerEvents(new SignListener(this), this);
 		if (tagAPI)
 			pm.registerEvents(tlis, this);
 	}

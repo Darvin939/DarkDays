@@ -50,6 +50,10 @@ public class RegionManager {
 		ciph = new CipherUtil();
 
 		String[] sLocs = loadSignData().split(";");
+
+		if (sLocs.length == 0)
+			saveSignData("");
+		
 		for (String sLoc : sLocs) {
 			String[] wxyz = sLoc.split(" ");
 			try {
