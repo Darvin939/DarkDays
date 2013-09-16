@@ -33,7 +33,6 @@ public class SignListener extends RegionManager implements Listener {
 		for (SignRegionData srd : sData.values()) {
 			if (srd.isChunkLoaded()) {
 				if (!srd.isMaxMobCount()) {
-					System.out.println("Spawn Mob");
 					Double[] randomXZ = srd.getRandomPoint();
 					if (randomXZ != null) {
 						srd.getWorld().spawn(new Location(srd.getWorld(), randomXZ[0], srd.getHighestBlock().getY() + 1, randomXZ[1]), (Class<? extends Entity>) Zombie.class);
@@ -46,7 +45,7 @@ public class SignListener extends RegionManager implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntitySpawn(CreatureSpawnEvent event) {
-		if (insideSignRegion(event.getLocation()))
+		if (!canSpawnInSignRegion(event.getLocation()))
 			event.setCancelled(true);
 	}
 

@@ -101,8 +101,6 @@ public class SignRegionData {
 			z = rnd.nextInt((int) (radius * 2)) + signZ - radius;
 		}
 
-		System.out.println("X: " + x + "Z: " + z);
-
 		if (isInside(x, z))
 			return new Double[] { x, z };
 

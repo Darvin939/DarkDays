@@ -6,7 +6,7 @@ public class Item extends LoadUtils implements AbsItem {
 	protected final String name;
 	protected final DarkDays plugin;
 	private String message;
-	private String item;
+	private int item;
 	private String depend;
 
 	public Item(DarkDays plugin, String name) {
@@ -29,14 +29,14 @@ public class Item extends LoadUtils implements AbsItem {
 	public String getMessage() {
 		return message;
 	}
-
+	
 	@Override
-	public void setItem(String item) {
+	public void setItem(int item) {
 		this.item = item;
 	}
 
 	@Override
-	public String getItem() {
+	public int getItem() {
 		return item;
 	}
 

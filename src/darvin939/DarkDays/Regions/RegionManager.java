@@ -53,7 +53,7 @@ public class RegionManager {
 
 		if (sLocs.length == 0)
 			saveSignData("");
-		
+
 		for (String sLoc : sLocs) {
 			String[] wxyz = sLoc.split(" ");
 			try {
@@ -122,10 +122,12 @@ public class RegionManager {
 		return null;
 	}
 
-	protected boolean insideSignRegion(Location location) {
+	protected boolean canSpawnInSignRegion(Location location) {
 		for (SignRegionData srd : sData.values()) {
 			if (srd.isInside(location)) {
-				return true;
+				if (srd.canSpawn())
+					return true;
+				break;
 			}
 		}
 		return false;
