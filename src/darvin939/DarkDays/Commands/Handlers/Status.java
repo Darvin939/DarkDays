@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
-import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Players.Memory.PlayerData;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Utils.Util;
@@ -31,7 +30,7 @@ public class Status extends Handler {
 				Util.Print(p, "  &7Killed players:&6 " + pd.getPlayerKills());
 				Util.Print(p, "  &7Killed zombies:&6 " + pd.getZombieKills());
 			} else
-				Util.Print(p, Config.FGU.MSG("game_noplay", "/dd spawn"));
+				Util.PrintMSG(p, "game_noplay", "/dd spawn");
 		return true;
 	}
 

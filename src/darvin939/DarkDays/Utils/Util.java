@@ -23,6 +23,10 @@ public class Util {
 	public static void PrintPx(Player p, String message) {
 		Config.FGU.PrintPxMsg(p, message);
 	}
+	
+	public static void PrintMSG(Player p, String message, String keys) {
+		Print(p, Config.FGU.MSG(message, keys));
+	}
 
 	public static void PrintSysPx(Player p, String message) {
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', DarkDays.sysPrefix + message));

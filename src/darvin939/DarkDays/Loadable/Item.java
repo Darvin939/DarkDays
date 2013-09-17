@@ -1,6 +1,9 @@
 package darvin939.DarkDays.Loadable;
 
+import org.bukkit.entity.Player;
+
 import darvin939.DarkDays.DarkDays;
+import darvin939.DarkDays.Utils.Util;
 
 public class Item extends LoadUtils implements AbsItem {
 	protected final String name;
@@ -29,6 +32,13 @@ public class Item extends LoadUtils implements AbsItem {
 	public String getMessage() {
 		return message;
 	}
+	
+	
+	@Override
+	public void sendMessage(Player p) {
+		Util.PrintPxMSG(p, message);
+	}
+	
 	
 	@Override
 	public void setItem(int item) {

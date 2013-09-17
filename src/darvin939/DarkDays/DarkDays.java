@@ -333,7 +333,7 @@ public class DarkDays extends JavaPlugin {
 			} else {
 
 				if (handler == null) {
-					Util.Print(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + args[0]));
+					Util.PrintMSG(p, "cmd_unknown", DarkDays.cmdPrefix + args[0]);
 					Util.Print(p, Config.FGU.MSG("hlp_commands") + " &2" + DarkDays.cmdPrefix + "&7<" + Commands.getCommandsString() + "&7>");
 					return true;
 				}

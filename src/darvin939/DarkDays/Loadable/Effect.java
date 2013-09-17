@@ -3,11 +3,13 @@ package darvin939.DarkDays.Loadable;
 import org.bukkit.entity.Player;
 
 import darvin939.DarkDays.DarkDays;
+import darvin939.DarkDays.Utils.Util;
 
 public class Effect extends LoadUtils implements AbsEffect {
 	protected final String name;
 	private int percent;
 	protected final DarkDays plugin;
+	private String message;
 	private int delay;
 	private int power;
 
@@ -63,5 +65,22 @@ public class Effect extends LoadUtils implements AbsEffect {
 
 	public void addEffect(Player p, Integer id) {
 		DarkDays.getEffectManager().setEffect(p, getName(), id);
+	}
+
+	@Override
+	public void setMessage(String key, String msg) {
+		this.message = key;
+		plugin.getConfiguration().addMSG(key, msg);
+	}
+
+	@Override
+	public String getMessage() {
+		return message;
+	}
+	
+	
+	@Override
+	public void sendMessage(Player p) {
+		Util.PrintPxMSG(p, message);
 	}
 }

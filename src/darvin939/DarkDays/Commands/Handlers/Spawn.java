@@ -97,9 +97,9 @@ public class Spawn extends Handler {
 				getHelp(p, "spawn.set");
 			else if (Config.getSpawnCfg().removeSpawn(nargs[1])) {
 				formatConig();
-				Util.Print(p, Config.FGU.MSG("spawn_remove_success", Util.FCTU(nargs[1].toLowerCase())));
+				Util.PrintMSG(p, "spawn_remove_success", Util.FCTU(nargs[1].toLowerCase()));
 			} else
-				Util.Print(p, Config.FGU.MSG("spawn_remove_fail", Util.FCTU(nargs[1].toLowerCase())));
+				Util.PrintMSG(p, "spawn_remove_fail", Util.FCTU(nargs[1].toLowerCase()));
 
 		} else
 			getHelp(p, "spawn.remove");

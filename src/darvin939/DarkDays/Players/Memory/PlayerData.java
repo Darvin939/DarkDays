@@ -5,10 +5,6 @@ import java.util.UUID;
 public class PlayerData {
 	private UUID playerId;
 	private boolean novice;
-	private boolean infected;
-	private boolean bandaged;
-	private boolean ointment;
-	private boolean antibiotic;
 	private Integer zombieKills = 0;
 	private Integer playerKills = 0;
 	private Integer playerHeals = 0;
@@ -31,38 +27,6 @@ public class PlayerData {
 
 	public void setNovice(Boolean novice) {
 		this.novice = novice;
-	}
-
-	public boolean isInfected() {
-		return infected;
-	}
-
-	public void setInfected(Boolean infected) {
-		this.infected = infected.booleanValue();
-	}
-
-	public boolean isBandaged() {
-		return bandaged;
-	}
-
-	public void setBandaged(Boolean bandaged) {
-		this.bandaged = bandaged.booleanValue();
-	}
-
-	public boolean isOintment() {
-		return ointment;
-	}
-
-	public void setOintment(Boolean ointment) {
-		this.ointment = ointment.booleanValue();
-	}
-
-	public boolean isAntibiotic() {
-		return antibiotic;
-	}
-
-	public void setAntibiotic(Boolean antibiotic) {
-		this.antibiotic = antibiotic.booleanValue();
 	}
 
 	public Integer getZombieKills() {

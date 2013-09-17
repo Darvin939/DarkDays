@@ -136,6 +136,7 @@ public class Config extends FGUtilCore {
 		addMSG("cmd_indev", "This command in the process of developing");
 		addMSG("cmd_occurred", "Error occurred when trying the command /%1%");
 		addMSG("cmd_noperm", "You don't have the Permission(%1%) to do that!");
+		addMSG("cmd_effectnf", "Effect &2%1% &fnot found on the server!");
 		// game_
 		addMSG("game_start", "You are in the world. Good luck!");
 		addMSG("game_alrady", "You alrady spawned!");

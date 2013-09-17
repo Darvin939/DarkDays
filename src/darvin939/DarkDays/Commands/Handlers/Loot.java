@@ -98,7 +98,7 @@ public class Loot extends Handler {
 			sec.set("spawn", potion.getSpawn());
 			sec.set("effects", Arrays.asList(potion.getEffect().split(";")));
 		}
-		Util.Print(p, Config.FGU.MSG("loot_save", Util.FCTU(data.getName())));
+		Util.PrintMSG(p, "loot_save", Util.FCTU(data.getName()));
 		Config.getLC().saveConfig();
 	}
 
@@ -300,7 +300,7 @@ public class Loot extends Handler {
 				if (list.equalsIgnoreCase(nargs[1])) {
 					Config.getLC().getCfg().set(Util.FCTU(nargs[1].toLowerCase()), null);
 					Config.getLC().saveConfig();
-					Util.Print(p, Config.FGU.MSG("loot_remove", Util.FCTU(nargs[1].toLowerCase())));
+					Util.PrintMSG(p, "loot_remove", Util.FCTU(nargs[1].toLowerCase()));
 				}
 			}
 		} else
@@ -311,7 +311,7 @@ public class Loot extends Handler {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
 			nameOfLoot.put(p, new Data(nargs[1].toLowerCase()));
-			Util.Print(p, Config.FGU.MSG("loot_new", Util.FCTU(nargs[1].toLowerCase()) + ";" + nargs[1].toLowerCase()));
+			Util.PrintMSG(p, "loot_new", Util.FCTU(nargs[1].toLowerCase()) + ";" + nargs[1].toLowerCase());
 			// Util.Print(p, "A New loot " + Util.FCTU(nargs[1].toLowerCase()) +
 			// " created. Type /dd loot save " + nargs[1].toLowerCase() +
 			// " to save this loot");

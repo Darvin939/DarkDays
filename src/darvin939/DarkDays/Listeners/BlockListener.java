@@ -8,6 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config;
+import darvin939.DarkDays.Utils.Util;
 
 public class BlockListener implements Listener {
 
@@ -21,7 +22,7 @@ public class BlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player p = event.getPlayer();
 		if (Config.getCC().isChest(p)) {
-			Config.FGU.PrintMsg(p, Config.FGU.MSG("chest_cantDestroy"));
+			Util.PrintMSG(p, "chest_cantDestroy");
 			// Util.msg(p, "You can't destroy the loot chest!", 'p');
 			event.setCancelled(true);
 		}

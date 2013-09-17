@@ -127,10 +127,10 @@ public class RegionManager {
 			if (srd.isInside(location)) {
 				if (srd.canSpawn())
 					return true;
-				break;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public void saveSignData(String data) {

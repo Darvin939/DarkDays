@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
+import darvin939.DarkDays.Utils.Util;
 
 public class Wand implements Listener {
 
@@ -30,7 +31,7 @@ public class Wand implements Listener {
 			if (b.getType() == Material.CHEST)
 				if (Config.getCC().getChestInfo(p, b.getLocation())) {
 				} else
-					Config.FGU.PrintMsg(p, Config.FGU.MSG("chest_normal"));
+					Util.PrintMSG(p,"chest_normal");
 			event.setCancelled(true);
 		}
 	}

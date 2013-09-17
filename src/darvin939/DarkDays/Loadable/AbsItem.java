@@ -1,5 +1,7 @@
 package darvin939.DarkDays.Loadable;
 
+import org.bukkit.entity.Player;
+
 public abstract interface AbsItem {
 	
 	public abstract String getName();
@@ -15,4 +17,6 @@ public abstract interface AbsItem {
 	public abstract void setMessage(String key, String msg);
 
 	public abstract void setItem(int item);
+
+	public abstract void sendMessage(Player p);
 }
