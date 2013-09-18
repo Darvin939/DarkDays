@@ -7,7 +7,7 @@ import org.bukkit.Material;
 
 public class Data {
 	Map<Material, ItemData> items = new HashMap<Material, ItemData>();
-	PotionData potion = new PotionData("", "");
+	PotionData potion = null;
 	String name;
 
 	public Data(String name) {
@@ -37,6 +37,8 @@ public class Data {
 	}
 
 	public void setPotion(String type, String value) {
+		if (this.potion == null)
+			this.potion = new PotionData("", "");
 		if (type.equalsIgnoreCase("spawn"))
 			this.potion.spawn = value;
 		if (type.equalsIgnoreCase("effects"))

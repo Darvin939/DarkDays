@@ -166,34 +166,36 @@ public class LootManager {
 		ItemStack[] items = new ItemStack[itemList.size()];
 		for (int i = 0; i < itemList.size(); i++) {
 			String item = itemList.get(i);
-			Material material = getMaterial(item);
+			if (cfg.isSet(list + ".items." + item + ".spawn") && !cfg.getString(list + ".items." + item + ".spawn").isEmpty()) {
+				Material material = getMaterial(item);
 
-			int[] amountRange = getItemAmount(list, item);
-			int min = amountRange[0];
-			int max = amountRange[1] - amountRange[0];
-			int percent = getItemChance(list, item);
-			int amount = 0;
+				int[] amountRange = getItemAmount(list, item);
+				int min = amountRange[0];
+				int max = amountRange[1] - amountRange[0];
+				int percent = getItemChance(list, item);
+				int amount = 0;
 
-			if (max > 0) {
-				max = random.nextInt(max);
-			}
-
-			amount = max + min;
-			int chance = random.nextInt(100);
-
-			if ((percent < chance) || (amount <= 0))
-				continue;
-			try {
-				items[i] = new ItemStack(material, amount);
-				items[i].setDurability(getDurability(list, item));
-
-				if (material.equals(Material.POTION))
-					applyEffect(items[i], new ArrayList<String>(getEffects(list, item)));
-				else {
-					enchant(items[i], new ArrayList<String>(getEffects(list, item)));
+				if (max > 0) {
+					max = random.nextInt(max);
 				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
+
+				amount = max + min;
+				int chance = random.nextInt(100);
+
+				if ((percent < chance) || (amount <= 0))
+					continue;
+				try {
+					items[i] = new ItemStack(material, amount);
+					items[i].setDurability(getDurability(list, item));
+
+					if (material.equals(Material.POTION))
+						applyEffect(items[i], new ArrayList<String>(getEffects(list, item)));
+					else {
+						enchant(items[i], new ArrayList<String>(getEffects(list, item)));
+					}
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
@@ -205,17 +207,21 @@ public class LootManager {
 		ArrayList<Object[]> effects = new ArrayList<Object[]>();
 		for (int i = 0; i < list.size(); i++) {
 			String[] properties = ((String) list.get(i)).split(",");
-			PotionType effect = PotionType.valueOf(properties[0].toUpperCase());
-			if (effect != null) {
-				String[] range = properties[1].split("-");
-				int minLvl = Integer.parseInt(range[0]);
-				int maxLvl = Integer.parseInt(range[1]);
-				// int chance = Integer.parseInt(properties[2]);
-				boolean splash = Boolean.parseBoolean(properties[2]);
-				boolean extend = Boolean.parseBoolean(properties[3]);
-				Object[] potion = { effect, Integer.valueOf(minLvl), Integer.valueOf(maxLvl), Boolean.valueOf(splash), Boolean.valueOf(extend) };
-				//Object[] potion = { effect, Integer.valueOf(minLvl), Integer.valueOf(maxLvl), Integer.valueOf(chance), Boolean.valueOf(splash), Boolean.valueOf(extend) };
-				effects.add(potion);
+			if (properties.length == 4) {
+				PotionType effect = PotionType.valueOf(properties[0].toUpperCase());
+				if (effect != null) {
+					String[] range = properties[1].split("-");
+					int minLvl = Integer.parseInt(range[0]);
+					int maxLvl = Integer.parseInt(range[1]);
+					// int chance = Integer.parseInt(properties[2]);
+					boolean splash = Boolean.parseBoolean(properties[2]);
+					boolean extend = Boolean.parseBoolean(properties[3]);
+					Object[] potion = { effect, Integer.valueOf(minLvl), Integer.valueOf(maxLvl), Boolean.valueOf(splash), Boolean.valueOf(extend) };
+					// Object[] potion = { effect, Integer.valueOf(minLvl),
+					// Integer.valueOf(maxLvl), Integer.valueOf(chance),
+					// Boolean.valueOf(splash), Boolean.valueOf(extend) };
+					effects.add(potion);
+				}
 			}
 		}
 		if (effects.isEmpty()) {
@@ -269,23 +275,25 @@ public class LootManager {
 
 			for (int j = 0; j < enchantments.size(); j++) {
 				String[] properties = ((String) enchantments.get(j)).split(",");
-				String[] range = properties[1].split("-");
-				Enchantment enchantment = Enchantment.getByName(properties[0].toUpperCase());
-				if (availableEnchantments.contains(enchantment)) {
-					int chance = Integer.parseInt(properties[2]);
-					int minLvl = Integer.parseInt(range[0]);
-					int maxLvl = Integer.parseInt(range[1]);
-					int lvl = minLvl;
-					if (minLvl != maxLvl) {
-						lvl = minLvl + random.nextInt(maxLvl - minLvl);
+				if (properties.length == 3) {
+					String[] range = properties[1].split("-");
+					Enchantment enchantment = Enchantment.getByName(properties[0].toUpperCase());
+					if (availableEnchantments.contains(enchantment)) {
+						int chance = Integer.parseInt(properties[2]);
+						int minLvl = Integer.parseInt(range[0]);
+						int maxLvl = Integer.parseInt(range[1]);
+						int lvl = minLvl;
+						if (minLvl != maxLvl) {
+							lvl = minLvl + random.nextInt(maxLvl - minLvl);
+						}
+						if (lvl > enchantment.getMaxLevel())
+							lvl = enchantment.getMaxLevel();
+						else if (lvl < enchantment.getStartLevel()) {
+							lvl = enchantment.getStartLevel();
+						}
+						if (random.nextInt(100) <= chance)
+							item.addEnchantment(enchantment, lvl);
 					}
-					if (lvl > enchantment.getMaxLevel())
-						lvl = enchantment.getMaxLevel();
-					else if (lvl < enchantment.getStartLevel()) {
-						lvl = enchantment.getStartLevel();
-					}
-					if (random.nextInt(100) <= chance)
-						item.addEnchantment(enchantment, lvl);
 				}
 			}
 		} catch (Exception e) {

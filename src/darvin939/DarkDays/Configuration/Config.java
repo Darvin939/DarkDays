@@ -124,8 +124,13 @@ public class Config extends FGUtilCore {
 		addMSG("loot_flag_item_isEmpty", "Usage: &2..flag &7[id] <spawn=[%,minCount-maxCount]> <effect=[type,minlvl-maxlvl,%]>");
 		addMSG("loot_save", "Loot %1% successfully saved");
 		addMSG("loot_remove", "Loot %1% successfully removed");
-		addMSG("loot_new", "A new loot &7%1%&f created. Type &2/dd loot save %2%&f to save this loot");
+		addMSG("loot_new", "New loot &7%1%&f created. Enter &2/dd loot item &7[id,id,..]&f to add items or just setup the flags for potions");
+		addMSG("loot_item_add","Item(s) %1% added to your loot. Now, set the flags for ID of items &2/dd loot flag &7[id]&f ...");
+		addMSG("loot_flag_set","The flags are set for %1%. Enter &2/dd loot save &f to save the loot or continue setup the  flags");	
 		addMSG("loot_new_isempty", "First add the new loot! Type &2/dd loot new &7[name]&f to create new loot");
+		addMSG("loot_parser","%1% Syntax error: check the entered data");
+		addMSG("loot_flag_spawnnf","The flag &7\"spawn\"&f  is not set for %1%! Set this flag otherwise this item will not spawn");
+		addMSG("loot_flag_nf","Item ID or Potion not found. Please check the entered command");
 		// chest_
 		addMSG("chest_normal", "This is a normal chest");
 		addMSG("chest_newWithID", "Created new looted chest with LootID");

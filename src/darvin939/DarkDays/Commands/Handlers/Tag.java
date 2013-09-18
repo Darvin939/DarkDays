@@ -40,11 +40,16 @@ public class Tag extends Handler {
 						}
 					}
 				}
-				if (args[1].equalsIgnoreCase("help"))
-					getHelp(p, "tag");
 			}
+			if (args[1].equalsIgnoreCase("help")) {
+				getHelp(p, "tag");
+				return true;
+			}
+			Util.unknownCmd(p, getClass(), new String[] { args[1], "enable", "disable" });
+			return true;
+		} else {
+			getHelp(p, "tag");
+			return true;
 		}
-		return true;
 	}
-
 }

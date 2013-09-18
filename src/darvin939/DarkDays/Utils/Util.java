@@ -35,7 +35,7 @@ public class Util {
 	public static String FCTU(String s) {
 		if (s!= null && !s.isEmpty() && s.length() > 1)
 			return s.substring(0, 1).toUpperCase() + s.substring(1);
-		return s;
+		return s.toUpperCase();
 	}
 
 	public static String[] newArgs(String[] args) {

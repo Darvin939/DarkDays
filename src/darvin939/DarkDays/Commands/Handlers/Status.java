@@ -25,10 +25,10 @@ public class Status extends Handler {
 				Util.Print(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals());
 				Util.Print(p, "  &7Killed players:&6 " + pd.getPlayerKills());
 				Util.Print(p, "  &7Killed zombies:&6 " + pd.getZombieKills());
-				Util.Print(p, "Total:");
-				Util.Print(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals());
-				Util.Print(p, "  &7Killed players:&6 " + pd.getPlayerKills());
-				Util.Print(p, "  &7Killed zombies:&6 " + pd.getZombieKills());
+				//Util.Print(p, "Total:");
+				//Util.Print(p, "  &7Players you bandaged:&6 " + pd.getPlayerHeals());
+				//Util.Print(p, "  &7Killed players:&6 " + pd.getPlayerKills());
+				//Util.Print(p, "  &7Killed zombies:&6 " + pd.getZombieKills());
 			} else
 				Util.PrintMSG(p, "game_noplay", "/dd spawn");
 		return true;

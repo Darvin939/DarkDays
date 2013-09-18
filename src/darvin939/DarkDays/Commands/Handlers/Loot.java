@@ -49,6 +49,10 @@ public class Loot extends Handler {
 					remove();
 				return true;
 			}
+			if (args[1].equalsIgnoreCase("help")) {
+				getHelp(p, "loot");
+				return true;
+			}
 			if (args[1].equalsIgnoreCase("list")) {
 				if (hasPermissions(p, "chest.remove", true))
 					list();
@@ -89,15 +93,19 @@ public class Loot extends Handler {
 		ConfigurationSection section = cfg.createSection(Util.FCTU(data.getName())).createSection("items");
 		for (Entry<Material, ItemData> s : data.getItems().entrySet()) {
 			ConfigurationSection sec = section.createSection(String.valueOf(s.getKey().getId()));
+			if (s.getValue().getSpawn().isEmpty())
+				Util.PrintMSG(p, "loot_flag_spawnnf", "item " + s.getKey().getId());
 			sec.set("spawn", s.getValue().getSpawn());
-			sec.set("effects", s.getValue().getEffect());
+			sec.set("effects", Arrays.asList(s.getValue().getEffect().split(";")));
 		}
 		PotionData potion = data.getPotion();
-		if (!potion.getSpawn().isEmpty() && !potion.getEffect().isEmpty()) {
-			ConfigurationSection sec = section.createSection("potion");
-			sec.set("spawn", potion.getSpawn());
-			sec.set("effects", Arrays.asList(potion.getEffect().split(";")));
-		}
+		if (potion != null)
+			if (!potion.getSpawn().isEmpty() && !potion.getEffect().isEmpty()) {
+				ConfigurationSection sec = section.createSection("potion");
+				sec.set("spawn", potion.getSpawn());
+				sec.set("effects", Arrays.asList(potion.getEffect().split(";")));
+			} else
+				Util.PrintMSG(p, "loot_flag_spawnnf", "Potion");
 		Util.PrintMSG(p, "loot_save", Util.FCTU(data.getName()));
 		Config.getLC().saveConfig();
 	}
@@ -123,12 +131,15 @@ public class Loot extends Handler {
 							effects = potionEffectParser(nargs[i]);
 					}
 				}
-				if (spawn.isEmpty() && effects.isEmpty())
+				if (spawn.isEmpty() && effects.isEmpty()) {
 					Util.PrintMSG(p, "loot_flag_potion_isEmpty");
+					return;
+				}
 				if (!spawn.isEmpty())
 					data.setPotion("spawn", spawn);
 				if (!effects.isEmpty())
 					data.setPotion("effects", effects);
+				Util.PrintMSG(p, "loot_flag_set", "Potion");
 				return;
 			}
 			if (LootManager.getMaterial(nargs[1]) != null && data.getItems().containsKey(LootManager.getMaterial(nargs[1]))) {
@@ -146,25 +157,30 @@ public class Loot extends Handler {
 							effects = itemEffectParser(nargs[i]);
 					}
 				}
-				if (spawn.isEmpty() && effects.isEmpty())
+				if (spawn.isEmpty() && effects.isEmpty()) {
 					Util.PrintMSG(p, "loot_flag_item_isEmpty");
+					return;
+				}
 				if (data.getItem(LootManager.getMaterial(nargs[1])) != null) {
 					if (!spawn.isEmpty())
 						data.getItem(LootManager.getMaterial(nargs[1])).setSpawn(spawn);
 					if (!effects.isEmpty())
 						data.getItem(LootManager.getMaterial(nargs[1])).setEffect(effects);
+					Util.PrintMSG(p, "loot_flag_set", nargs[1]);
 				}
 				return;
 			}
+			Util.PrintMSG(p, "loot_flag_nf");
 		} else
 			getHelp(p, "loot.flag");
 	}
 
 	private String potionEffectParser(String arg) {
-		Boolean b1 = false, b2 = false, b3 = false;
+		int counter = 0;
 		String e = arg.replace("effect=", "");
 		String[] effects = e.split(";");
 		for (String effect : effects) {
+			Boolean b1 = false, b2 = false, b3 = false;
 			String[] args = effect.split(",");
 			if (args.length == 4) {
 				if (PotionType.valueOf(args[0].toUpperCase()) != null)
@@ -181,18 +197,21 @@ public class Loot extends Handler {
 				if ((args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) && (args[3].equalsIgnoreCase("true") || args[3].equalsIgnoreCase("false")))
 					b3 = true;
 			}
+			if (b1 && b2 && b3)
+				counter++;
 		}
-		if (b1 && b2 && b3)
+		if (counter == effects.length)
 			return e;
-		Util.PrintSysPx(p, "Effect Syntax error: check the entered data");
+		Util.PrintMSG(p, "loot_parser", "Potion ffect");
 		return "";
 	}
 
 	private String itemEffectParser(String arg) {
-		Boolean b1 = false, b2 = false, b3 = false;
+		int counter = 0;
 		String e = arg.replace("effect=", "");
 		String[] effects = e.split(";");
 		for (String effect : effects) {
+			Boolean b1 = false, b2 = false, b3 = false;
 			String[] args = effect.split(",");
 			if (args.length == 3) {
 				if (Enchantment.getByName(args[0].toUpperCase()) != null)
@@ -212,10 +231,12 @@ public class Loot extends Handler {
 						b3 = true;
 				}
 			}
+			if (b1 && b2 && b3)
+				counter++;
 		}
-		if (b1 && b2 && b3)
+		if (counter == effects.length)
 			return e;
-		Util.PrintSysPx(p, "Item Syntax error: check the entered data");
+		Util.PrintMSG(p, "loot_parser", "Item effect");
 		return "";
 	}
 
@@ -241,7 +262,7 @@ public class Loot extends Handler {
 		}
 		if (b1 && b2)
 			return s;
-		Util.PrintSysPx(p, "Spawn Syntax error: check the entered data");
+		Util.PrintMSG(p, "loot_parser", "Spawn");
 		return "";
 	}
 
@@ -256,7 +277,7 @@ public class Loot extends Handler {
 					items = items.isEmpty() ? "&2" + item + "&f" : items + ", &2" + item + "&f";
 				}
 			}
-			Util.Print(p, "Items " + items + " added to your loot");
+			Util.PrintMSG(p, "loot_item_add", items);
 		} else
 			getHelp(p, "loot.item");
 	}

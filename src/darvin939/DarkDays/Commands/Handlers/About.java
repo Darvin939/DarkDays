@@ -17,7 +17,7 @@ public class About extends Handler {
 	public boolean perform(Player p, String[] args) throws InvalidUsage {
 		PluginDescriptionFile des = plugin.getDescription();
 		Util.Print(p, "&2&l&oPlugin " + des.getName() + " v" + des.getVersion());
-		Util.Print(p, "&6Author: &7Darvin939 (Sergey Mashoshin)");
+		Util.Print(p, "&6Author: &7Darvin939 (Sergey Mashoshin. Russia, Moscow)");
 		Util.Print(p, "&6Contact Email:&7 darvin212@gmail.com");
 		return true;
 	}

@@ -1,18 +1,15 @@
 Language: english
 Version-check: true
-Prefix: DarkDays
+Prefix: none
 Zombie:
   OnlyZombies: true
-  Speed: 4
+  Speed: 15
   Smoothness: 5
   AttackStrength: 4
   Health: 12
   PickUpPlayerArmor: true
 Thirst:
   Speed: 2
-Bandages:
-  Id: 339
-  Restore: 8
 Chest:
   IfOnlyEmpty: true
   RegenTime: 2
