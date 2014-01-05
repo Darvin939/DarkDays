@@ -36,6 +36,7 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Regions.Memory.SignRegionData;
 import darvin939.DarkDays.Utils.CipherUtil;
 import darvin939.DarkDays.Utils.Util;
+import darvin939.DeprecAPI.ItemAPI;
 
 public class RegionManager {
 	private static Logger log = Logger.getLogger("Minecraft");
@@ -73,7 +74,7 @@ public class RegionManager {
 	public static WorldEditPlugin getWorldEdit() {
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
 		if (plugin == null || !(plugin instanceof WorldEditPlugin)) {
-			log.warning(DarkDays.prefix + "WorldEdit not found on the server");
+			log.warning(DarkDays.getConsolePfx() + "WorldEdit not found on the server");
 			return null;
 		}
 		return (WorldEditPlugin) plugin;
@@ -152,9 +153,9 @@ public class RegionManager {
 				String wName = e.getWorld().getName();
 				if (Config.getRC().getCfg().isConfigurationSection(wName) && event.getSpawnReason() != SpawnReason.CUSTOM) {
 					for (String section : Config.getRC().getCfg().getConfigurationSection(wName).getKeys(false)) {
-						if (new Location(l.getWorld(), l.getX(), 0, l.getZ()).getBlock().getType() == Material.getMaterial(matID) && Boolean.valueOf(((String) Config.getRC().getParam(wName + "." + section, "SpawnZombie")).replace("[", "").replace("]", ""))) {
+						if (new Location(l.getWorld(), l.getX(), 0, l.getZ()).getBlock().getType() == ItemAPI.get(matID).type() && Boolean.valueOf(((String) Config.getRC().getParam(wName + "." + section, "SpawnZombie")).replace("[", "").replace("]", ""))) {
 							int min = 0, max = e.getWorld().getMaxHeight();
-							for (Points point : getPoints().get(wName + "." + section)) {
+							for (Points point : getPoints().get(wName + "." + section)) {  
 								if (point.max != null && point.min != null) {
 									max = Integer.parseInt(point.max);
 									min = Integer.parseInt(point.min);
@@ -196,7 +197,7 @@ public class RegionManager {
 				for (Vector v : poly.getRegion()) {
 					Vector2D v2d = v.toVector2D();
 					Location loc = new Location(BukkitUtil.toWorld(poly.getRegion().getWorld()), v2d.getX(), 0, v2d.getZ());
-					loc.getBlock().setType(Material.getMaterial(matID));
+					loc.getBlock().setType(ItemAPI.get(matID).type());
 
 				}
 			} catch (IncompleteRegionException e) {

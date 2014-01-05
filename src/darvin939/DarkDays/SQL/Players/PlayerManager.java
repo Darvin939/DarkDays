@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.mysql.jdbc.Statement;
 
-import darvin939.DarkDays.SQL.DBInit;
+import darvin939.DarkDays.SQL.DBInitLite;
 
 public class PlayerManager {
 	private static final PlayerManager instance = new PlayerManager();
@@ -23,12 +23,12 @@ public class PlayerManager {
 	}
 
 	private PlayerManager() {
-		insertPlayer = DBInit.prepareStatement("INSERT INTO `players` (`username`) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+		insertPlayer = DBInitLite.prepareStatement("INSERT INTO `players` (`username`) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
 	}
 
 	public static void init() {
 		ResultSet rs;
-		rs = DBInit.query("SELECT `username`,`id` FROM `players`");
+		rs = DBInitLite.query("SELECT `username`,`id` FROM `players`");
 		try {
 			while (rs.next()) {
 				playersID.put(rs.getString("username"), rs.getLong("id"));

@@ -50,7 +50,7 @@ import darvin939.DarkDays.Utils.Util;
 public class DarkDays extends JavaPlugin {
 	private Logger log = Logger.getLogger("Minecraft");
 	public PluginDescriptionFile des;
-	public static File datafolder;
+	private static File datafolder;
 	private FileConfiguration config;
 
 	private PlayerListener plis = new PlayerListener(this);
@@ -59,39 +59,55 @@ public class DarkDays extends JavaPlugin {
 	private Wand wlis = new Wand(this);
 	private ZombieListener zlis = new ZombieListener(this);
 	private TagAPIListener tlis = new TagAPIListener(this);
-	//private SignListener slis = new SignListener(this);
+	// private SignListener slis = new SignListener(this);
 
 	public Parser Commands = new Parser();
 	private Config cfg;
-	public static boolean sqlibrary = false;
-	public static boolean tagAPI = false;
+	private static boolean sqlibrary = false;
+	private static boolean tagAPI = false;
 
 	private static EffectManager effects;
 	private static ItemManager items;
 
-	public static final String sysPrefix = "&b[DarkDays]&f ";
-	public static String prefix = "&b[DarkDays]&f ";
-	public static final String premPrefix = "darkdays.";
-	public static final String cmdPrefix = "/dd ";
+	private static final String consolePfx = "[DarkDays] ";
+	private static String chatPfx = "&b[DarkDays]&f ";
+	private static final String premPfx = "darkdays.";
+	private static final String cmdPfx = "/dd ";
 
 	public void onDisable() {
-		log.info(prefix + "Plugin v." + des.getVersion() + " disabled");
+		log.info(consolePfx + "Plugin v." + des.getVersion() + " disabled");
 		Config.getPC().saveAll();
 		Config.getCC().saveAll();
 		Config.FGU.SaveMSG();
 		Config.save(new File(datafolder, "config.yml"));
 	}
 
-	public static String getPrefix() {
-		return prefix;
+	public static boolean isSQLbrary() {
+		return sqlibrary;
+	}
+
+	public static boolean isTagAPI() {
+		return tagAPI;
+	}
+
+	public static String getConsolePfx() {
+		return consolePfx;
+	}
+
+	public static String getCmdPfx() {
+		return cmdPfx;
+	}
+
+	public static String getChatPfx() {
+		return chatPfx;
+	}
+
+	public static void setChatPfx(String pfx) {
+		chatPfx = pfx;
 	}
 
 	public static String getDataPath() {
 		return datafolder.getAbsolutePath();
-	}
-
-	public static void setPrefix(String pfx) {
-		prefix = pfx;
 	}
 
 	public static EffectManager getEffectManager() {
@@ -123,7 +139,7 @@ public class DarkDays extends JavaPlugin {
 		config = getConfig();
 		PluginManager pm = getServer().getPluginManager();
 		init();
-		cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString().toLowerCase(), "darkdays", getPrefix());
+		cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString().toLowerCase(), premPfx, chatPfx);
 		cfg.init();
 
 		Config.getCC().loadChests();
@@ -140,7 +156,7 @@ public class DarkDays extends JavaPlugin {
 			MetricsLite metrics = new MetricsLite(this);
 			metrics.start();
 		} catch (IOException e) {
-			log.info(prefix + "Failed to submit stats to the Metrics (mcstats.org)");
+			log.info(consolePfx + "Failed to submit stats to the Metrics (mcstats.org)");
 		}
 
 	}
@@ -154,7 +170,7 @@ public class DarkDays extends JavaPlugin {
 			if (Nodes.prefix.getString().toLowerCase().equalsIgnoreCase("none"))
 				px = "";
 			getLogger().info("Found custom prefix [" + Nodes.prefix.getString() + "]. Use it");
-			setPrefix(px);
+			setChatPfx(px);
 		}
 		if (Nodes.zombie_smoothness.getInteger() > 19)
 			Nodes.zombie_smoothness.setValue(19);
@@ -328,18 +344,18 @@ public class DarkDays extends JavaPlugin {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (split.equalsIgnoreCase("/dd") || args.length == 0) {
-				Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", DarkDays.cmdPrefix + "help"));
+				Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
 				return true;
 			} else {
 
 				if (handler == null) {
-					Util.PrintMSG(p, "cmd_unknown", DarkDays.cmdPrefix + args[0]);
-					Util.Print(p, Config.FGU.MSG("hlp_commands") + " &2" + DarkDays.cmdPrefix + "&7<" + Commands.getCommandsString() + "&7>");
+					Util.PrintMSG(p, "cmd_unknown", getCmdPfx() + args[0]);
+					Util.Print(p, Config.FGU.MSG("hlp_commands") + " &2" + getCmdPfx() + "&7<" + Commands.getCommandsString() + "&7>");
 					return true;
 				}
 				try {
 					if (!handler.perform(p, args))
-						Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", DarkDays.cmdPrefix + "help"));
+						Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
 					return true;
 				} catch (InvalidUsage ex) {
 					return false;
@@ -357,7 +373,7 @@ public class DarkDays extends JavaPlugin {
 				return true;
 			else {
 				if (mess)
-					Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_noperm", Commands.getPermission(command), 'f', '7'));
+					Util.Print(p, Config.FGU.MSG("cmd_noperm", Commands.getPermission(command), 'f', '7'));
 				return false;
 			}
 		}
@@ -365,12 +381,12 @@ public class DarkDays extends JavaPlugin {
 	}
 
 	public boolean hasPermissions(Player p, String perm) {
-		return p.hasPermission(DarkDays.premPrefix + perm);
+		return p.hasPermission(premPfx + perm);
 	}
 
 	public void getHelp(Player p, String command) {
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b================= &2DarkDays Help &b================="));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Command:&6 " + DarkDays.cmdPrefix + command.replaceAll("\\.", " ")));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Command:&6 " + getCmdPfx() + command.replaceAll("\\.", " ")));
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', Commands.getHelp(command)));
 	}
 }

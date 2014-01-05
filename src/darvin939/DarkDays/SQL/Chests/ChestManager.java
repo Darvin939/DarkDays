@@ -12,7 +12,7 @@ import org.bukkit.World;
 
 import com.mysql.jdbc.Statement;
 
-import darvin939.DarkDays.SQL.DBInit;
+import darvin939.DarkDays.SQL.DBInitLite;
 
 public class ChestManager {
 	private static final ChestManager instance = new ChestManager();
@@ -25,12 +25,12 @@ public class ChestManager {
 	}
 
 	private ChestManager() {
-		insertChest = DBInit.prepareStatement("INSERT INTO `chests` (`x`,`y`,`z`,`world`) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+		insertChest = DBInitLite.prepareStatement("INSERT INTO `chests` (`x`,`y`,`z`,`world`) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 	}
 
 	public static void init() {
 		ResultSet rs;
-		rs = DBInit.query("SELECT `x`,`y`,`z`,`world`,`id` FROM `chests`");
+		rs = DBInitLite.query("SELECT `x`,`y`,`z`,`world`,`id` FROM `chests`");
 		try {
 			while (rs.next()) {
 				final String worldName = rs.getString("world");

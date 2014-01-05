@@ -9,6 +9,7 @@ import lib.PatPeter.SQLibrary.DBMS;
 import lib.PatPeter.SQLibrary.Database;
 import lib.PatPeter.SQLibrary.Factory.DatabaseConfig;
 import lib.PatPeter.SQLibrary.Factory.DatabaseFactory;
+import lib.PatPeter.SQLibrary.Factory.Parameter;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 
@@ -19,25 +20,25 @@ public class DBInit {
 		if (DATABASE != null) {
 			DATABASE.close();
 		}
-		final DatabaseConfig config = new DatabaseConfig();
+		DatabaseConfig config = new DatabaseConfig();
 		Database db = null;
 		final String dbWrapper = Nodes.MYSQL_DBWRAPPER.getString();
 		if (dbWrapper.equalsIgnoreCase("mysql")) {
 			config.setType(DBMS.MySQL);
 			try {
-				config.setParameter(DatabaseConfig.Parameter.HOSTNAME, Nodes.MYSQL_HOST.getString());
-				config.setParameter(DatabaseConfig.Parameter.PASSWORD, Nodes.MYSQL_PASS.getString());
-				config.setParameter(DatabaseConfig.Parameter.USERNAME, Nodes.MYSQL_USER.getString());
-				config.setParameter(DatabaseConfig.Parameter.PORTNMBR, Nodes.MYSQL_PORT.toString());
-				config.setParameter(DatabaseConfig.Parameter.DATABASE, Nodes.MYSQL_DATABASE.getString());
+				config.setParameter(Parameter.HOST, Nodes.MYSQL_HOST.getString());
+				config.setParameter(Parameter.PASSWORD, String.valueOf(Nodes.MYSQL_PASS.getInteger()));
+				config.setParameter(Parameter.USERNAME, Nodes.MYSQL_USER.getString());
+				config.setParameter(Parameter.PORT, Nodes.MYSQL_PORT.toString());
+				config.setParameter(Parameter.DATABASE, Nodes.MYSQL_DATABASE.getString());
 			} catch (lib.PatPeter.SQLibrary.Factory.InvalidConfigurationException e) {
 				e.printStackTrace();
 			}
 		} else if (dbWrapper.equalsIgnoreCase("sqlite")) {
 			config.setType(DBMS.SQLite);
 			try {
-				config.setParameter(DatabaseConfig.Parameter.LOCATION, DarkDays.getDataPath());
-				config.setParameter(DatabaseConfig.Parameter.FILENAME, "darkdays");
+				config.setParameter(Parameter.LOCATION, DarkDays.getDataPath());
+				config.setParameter(Parameter.FILENAME, "darkdays");
 			} catch (lib.PatPeter.SQLibrary.Factory.InvalidConfigurationException e) {
 				e.printStackTrace();
 			}
@@ -45,7 +46,7 @@ public class DBInit {
 		config.setLog(Logger.getLogger("Minecraft"));
 		try {
 			try {
-				config.setParameter(DatabaseConfig.Parameter.PREFIX, "[DarkDays Database]");
+				config.setParameter(Parameter.PREFIX, "[DarkDays Database]");
 			} catch (lib.PatPeter.SQLibrary.Factory.InvalidConfigurationException e) {
 				e.printStackTrace();
 			}

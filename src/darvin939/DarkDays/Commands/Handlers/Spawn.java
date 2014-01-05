@@ -71,7 +71,7 @@ public class Spawn extends Handler {
 						double y = cfg.getDouble("Spawn" + spawn + ".y");
 						double z = cfg.getDouble("Spawn" + spawn + ".z");
 						Location loc = new Location(p.getWorld(), x, y, z);
-						Util.PrintPxMSG(p, "game_start");
+						Util.PrintMSG(p, "game_start");
 						Config.getPC().setData(p, PlayerConfig.SPAWNED, true);
 						Config.getPC().setData(p, PlayerConfig.NOVICE, false);
 						p.teleport(loc);

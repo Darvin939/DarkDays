@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import darvin939.DarkDays.SQL.DBInit;
+import darvin939.DarkDays.SQL.DBInitLite;
 
 public class SQLChest extends DDChest {
 
@@ -28,16 +28,16 @@ public class SQLChest extends DDChest {
 	}
 
 	public static void createTables() {
-			DBInit.query("CREATE TABLE IF NOT EXISTS `chests` (`id` INT NOT NULL AUTO_INCREMENT ,`x` DOUBLE NOT NULL ,`y` DOUBLE NOT NULL ,`z` DOUBLE NOT NULL ,`loot_id` VARCHAR(45) DEFAULT NULL, `world` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
+			DBInitLite.query("CREATE TABLE IF NOT EXISTS `chests` (`id` INT NOT NULL AUTO_INCREMENT ,`x` DOUBLE NOT NULL ,`y` DOUBLE NOT NULL ,`z` DOUBLE NOT NULL ,`loot_id` VARCHAR(45) DEFAULT NULL, `world` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
 	}
 
 	public static void initPrep() {
 	
-			INSERT_CHEST = DBInit.prepare("REPLACE INTO `chests` (`x`, `y`, `z`, `loot_id`, `world`) VALUES (?,?,?,?,?)");
-			DELETE_CHEST = DBInit.prepare("DELETE FROM `chests` WHERE `id`=?");
-			UPDATE_LOOT = DBInit.prepare("UPDATE `chests` SET `loot_id` = ? WHERE `chests`.`id` = ?;");
-			GET_CHEST = DBInit.prepare("SELECT `x`,`y`,`z`,`world` FROM `chests` WHERE `id` = ?");
-			GET_LOOT = DBInit.prepare("SELECT `loot_id` FROM `chests` WHERE `id` = ?");
+			INSERT_CHEST = DBInitLite.prepare("REPLACE INTO `chests` (`x`, `y`, `z`, `loot_id`, `world`) VALUES (?,?,?,?,?)");
+			DELETE_CHEST = DBInitLite.prepare("DELETE FROM `chests` WHERE `id`=?");
+			UPDATE_LOOT = DBInitLite.prepare("UPDATE `chests` SET `loot_id` = ? WHERE `chests`.`id` = ?;");
+			GET_CHEST = DBInitLite.prepare("SELECT `x`,`y`,`z`,`world` FROM `chests` WHERE `id` = ?");
+			GET_LOOT = DBInitLite.prepare("SELECT `loot_id` FROM `chests` WHERE `id` = ?");
 
 	}
 

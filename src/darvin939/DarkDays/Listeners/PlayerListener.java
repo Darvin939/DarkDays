@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -42,6 +42,7 @@ import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Utils.Util;
+import darvin939.DeprecAPI.BlockAPI;
 
 public class PlayerListener implements Listener {
 	DarkDays plg;
@@ -57,10 +58,10 @@ public class PlayerListener implements Listener {
 		Player p = (Player) event.getPlayer();
 		if (event.getInventory().getHolder() instanceof Chest && event.getPlayer() instanceof Player) {
 			if (Config.getCC().isChest(p))
-				if (Nodes.chest_disappear.getBoolean() && Config.getCC().getLoot(p.getTargetBlock(null, 10).getLocation()) != null) {
+				if (Nodes.chest_disappear.getBoolean() && Config.getCC().getLoot(BlockAPI.getTargetBlock(p, 10).getLocation()) != null) {
 					Chest chest = (Chest) event.getInventory().getHolder();
-					if (LootManager.isChestEmpty(p.getTargetBlock(null, 10))) {
-						Block block = p.getTargetBlock(null, 10);
+					if (LootManager.isChestEmpty(BlockAPI.getTargetBlock(p, 10))) {
+						Block block = BlockAPI.getTargetBlock(p, 10);
 						chest.getInventory().clear();
 						Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 						chestloc.getBlock().setType(Material.AIR);
@@ -238,7 +239,7 @@ public class PlayerListener implements Listener {
 				if (kill) {
 					for (Entity e : p.getNearbyEntities(50, 50, 50)) {
 						if (e instanceof Zombie) {
-							net.minecraft.server.v1_6_R2.Entity entity = ((CraftLivingEntity) e).getHandle();
+							net.minecraft.server.v1_7_R1.Entity entity = ((CraftLivingEntity) e).getHandle();
 							entity.die();
 						}
 					}

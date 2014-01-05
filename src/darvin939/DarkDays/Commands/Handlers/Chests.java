@@ -11,6 +11,7 @@ import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Utils.Util;
+import darvin939.DeprecAPI.BlockAPI;
 
 public class Chests extends Handler {
 
@@ -48,8 +49,8 @@ public class Chests extends Handler {
 			Util.unknownCmd(p, "chest", new String[] { args[1], "add", "set", "remove", "help" });
 			return true;
 		} else {
-			if (p.getTargetBlock(null, 10).getType() == Material.CHEST && hasPermissions(p, "chest", false))
-				if (Config.getCC().getChestInfo(p, p.getTargetBlock(null, 10).getLocation())) {
+			if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST && hasPermissions(p, "chest", false))
+				if (Config.getCC().getChestInfo(p, BlockAPI.getTargetBlock(p, 10).getLocation())) {
 				} else
 					Util.PrintPxMSG(p, "chest_normal");
 			return true;
@@ -62,9 +63,9 @@ public class Chests extends Handler {
 			if (nargs[1].equalsIgnoreCase("help"))
 				getHelp(p, "chest.remove");
 		} else {
-			if (p.getTargetBlock(null, 10).getType() == Material.CHEST) {
+			if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST) {
 				if (Config.getCC().isChest(p) != null) {
-					Location chestloc = p.getTargetBlock(null, 10).getLocation();
+					Location chestloc = BlockAPI.getTargetBlock(p, 10).getLocation();
 					Config.getCC().removeChest(chestloc);
 					if (chestloc.getBlock().getState() instanceof Chest) {
 						((Chest) chestloc.getBlock().getState()).getInventory().clear();
@@ -79,7 +80,7 @@ public class Chests extends Handler {
 
 	private void add() {
 		String[] nargs = Util.newArgs(args);
-		Location chestloc = p.getTargetBlock(null, 10).getLocation();
+		Location chestloc = BlockAPI.getTargetBlock(p, 10).getLocation();
 		chestloc.setY(chestloc.getY() + 1);
 		if (nargs.length > 1) {
 			if (nargs[1].equalsIgnoreCase("help"))

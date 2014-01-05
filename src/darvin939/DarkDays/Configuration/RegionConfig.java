@@ -52,7 +52,7 @@ public class RegionConfig {
 			ConfigurationSection section = cfgRegions.getConfigurationSection(reg);
 			return section.getList(value).toString();
 		}
-		log.severe(DarkDays.prefix + "Error of receiving parameter from regions.yml");
+		log.severe(DarkDays.getConsolePfx() + "Error of receiving parameter from regions.yml");
 		return null;
 	}
 }

@@ -52,11 +52,10 @@ import darvin939.DarkDays.DarkDays;
 public abstract class FGUtilCore extends CipherUtil {
 
 	protected DarkDays plg;
-	public String px = "";
-	private String permprefix = DarkDays.premPrefix + "fgutilcore.";
+	public String px = "123";
 	private boolean version_check = false;
 	private String version_check_url = "";
-	private String version_info_perm = permprefix + "config";
+	private String version_info_perm;
 	private String language = "english";
 	YamlConfiguration lng;
 	protected HashMap<String, String> msg = new HashMap<String, String>();
@@ -71,6 +70,7 @@ public abstract class FGUtilCore extends CipherUtil {
 	String version_new_str = "unknown";
 	Random random = new Random();
 	BukkitTask chId = null;
+	private String permprefix;
 
 	public FGUtilCore(DarkDays plg, boolean vcheck, String lng, String devbukkitname, String px) {
 		this.plg = plg;
@@ -80,35 +80,24 @@ public abstract class FGUtilCore extends CipherUtil {
 		this.version_check = vcheck;
 		this.language = lng.toLowerCase();
 		InitMsgFile();
-		initStdMsg();
 
-		if (devbukkitname.isEmpty())
-			this.version_check = false;
-		else {
-			this.version_check_url = "http://dev.bukkit.org/server-mods/" + devbukkitname + "/files.rss";
-			this.permprefix = devbukkitname.toLowerCase() + ".";
-			startUpdateTick();
-			version_new = getNewVersion(version_current);
-			UpdateMsg();
-		}
+		this.version_check_url = "http://dev.bukkit.org/server-mods/" + devbukkitname + "/files.rss";
+		this.permprefix = devbukkitname.toLowerCase();
+		this.version_info_perm = this.permprefix + "config";
+		startUpdateTick();
+		version_new = getNewVersion(version_current);
+		UpdateMsg();
 	}
 
 	public DarkDays getPugin() {
 		return plg;
 	}
 
-	private void initStdMsg() {
-		addMSG("msg_outdated", "%1% is outdated!");
-		addMSG("msg_pleasedownload", "Please download new version (%1%) from ");
-		addMSG("hlp_commands", "Command list:");
-		addMSG("cmd_unknown", "Unknown command: %1%");
-	}
-
 	public void UpdateMsg(Player p) {
 		if (version_check && p.hasPermission(this.version_info_perm) && (version_new > version_current)) {
 			PrintMSG(p, "msg_outdated", "&6" + des.getName() + " v" + version_current, 'e', '6');
 			PrintMSG(p, "msg_pleasedownload", version_new_str, 'e', '6');
-			PrintMsg(p, "&3" + version_check_url.replace("files.rss", ""));
+			Util.Print(p, "&3" + version_check_url.replace("files.rss", ""));
 		}
 	}
 
@@ -133,11 +122,11 @@ public abstract class FGUtilCore extends CipherUtil {
 				Element firstNameElement = (Element) firstElementTagName.item(0);
 				NodeList firstNodes = firstNameElement.getChildNodes();
 				version_new_str = firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim();
-				
+
 				return Double.parseDouble(firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SCStd("Failed to get updates");
 		}
 		return currentVersion;
 	}
@@ -162,6 +151,10 @@ public abstract class FGUtilCore extends CipherUtil {
 		plg.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', px + msg));
 	}
 
+	public void SCStd(String msg) {
+		plg.getServer().getConsoleSender().sendMessage(px + msg);
+	}
+
 	public class Cmd {
 		String perm;
 		public String desc;
@@ -170,14 +163,6 @@ public abstract class FGUtilCore extends CipherUtil {
 			this.perm = perm;
 			this.desc = desc;
 		}
-	}
-
-	public void PrintMsg(Player p, String msg) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
-	}
-
-	public void PrintPxMsg(Player p, String msg) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', px + msg));
 	}
 
 	public void addMSG(String key, String txt) {
@@ -258,21 +243,13 @@ public abstract class FGUtilCore extends CipherUtil {
 		return MSG(id, "", this.c1, this.c2);
 	}
 
-	public String MSG(String id, char c) {
-		return MSG(id, "", c, this.c2);
-	}
-
 	public String MSG(String id, String keys) {
 		return MSG(id, keys, this.c1, this.c2);
 	}
 
-	public String MSG(String id, String keys, char c) {
-		return MSG(id, keys, this.c1, c);
-	}
-
 	/*
-	 * Расшифровка: id - ID строки, keys - заменитель %n% ,
-	 * c1 - цвет всей строки, c2 - цвет %n%
+	 * Расшифровка: id - ID строки, keys - заменитель %n% , c1 - цвет всей
+	 * строки, c2 - цвет %n%
 	 * 
 	 * Пример: MSG("hlp_thishelp", "Test",'b', '2'); Вывод:
 	 * "&b&2Test&b - this help"
@@ -307,15 +284,7 @@ public abstract class FGUtilCore extends CipherUtil {
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 
-	public void PrintMSG(Player p, String msg_key, String keys) {
-		p.sendMessage(MSG(msg_key, keys, this.c1, this.c2));
-	}
-
 	public void PrintMSG(Player p, String msg_key, String keys, char c1, char c2) {
 		p.sendMessage(MSG(msg_key, keys, c1, c2));
-	}
-
-	public void PrintMSG(Player p, String msg_key) {
-		p.sendMessage(MSG(msg_key));
 	}
 }

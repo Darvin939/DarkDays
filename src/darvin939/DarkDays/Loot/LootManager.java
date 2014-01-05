@@ -23,6 +23,8 @@ import org.bukkit.potion.PotionType;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Utils.Util;
+import darvin939.DeprecAPI.BlockAPI;
+import darvin939.DeprecAPI.ItemAPI;
 
 public class LootManager {
 	private static FileConfiguration cfg = Config.getLC().getCfg();
@@ -42,7 +44,8 @@ public class LootManager {
 
 	public static Material getMaterial(String stringMaterial) {
 		if (Util.isInteger(stringMaterial)) {
-			return Material.getMaterial(Integer.parseInt(stringMaterial));
+			
+			return ItemAPI.get(Integer.parseInt(stringMaterial)).type();
 		}
 		return Material.getMaterial(stringMaterial.toUpperCase());
 	}
@@ -82,7 +85,8 @@ public class LootManager {
 				if (item != null && item.getType() != null && !item.getType().equals(Material.AIR)) {
 					for (String list : getItemList(Config.getCC().getLoot(block.getLocation()))) {
 						if (Util.isInteger(list)) {
-							if (item.getType() == Material.getMaterial(Integer.valueOf(list))) {
+							
+							if (item.getType() == ItemAPI.get(Integer.valueOf(list)).type()) {
 								ret = false;
 								skip = true;
 							}
@@ -127,11 +131,11 @@ public class LootManager {
 	public static void setLoot(Player p, String list) {
 		list = Util.FCTU(list);
 		if (cfg.isConfigurationSection(list)) {
-			Block block = p.getTargetBlock(null, 10);
+			Block block = BlockAPI.getTargetBlock(p, 10);
 			if (block.getState() instanceof Chest) {
 				Config.getCC().setLoot(block.getLocation(), list);
 				fillChest((Chest) block.getState(), list);
-				Config.FGU.PrintMSG(p, "loot_set", list);
+				Util.PrintMSG(p, "loot_set", list);
 			}
 		} else
 			Util.PrintPxMSG(p, "loot_error");

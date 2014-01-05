@@ -6,25 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.server.v1_6_R2.EntityHuman;
-import net.minecraft.server.v1_6_R2.EntityInsentient;
-import net.minecraft.server.v1_6_R2.EntityVillager;
-import net.minecraft.server.v1_6_R2.EntityZombie;
-import net.minecraft.server.v1_6_R2.PathfinderGoalBreakDoor;
-import net.minecraft.server.v1_6_R2.PathfinderGoalFloat;
-import net.minecraft.server.v1_6_R2.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_6_R2.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_6_R2.PathfinderGoalMoveThroughVillage;
-import net.minecraft.server.v1_6_R2.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_6_R2.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_6_R2.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_6_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R1.EntityHuman;
+import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R1.EntityVillager;
+import net.minecraft.server.v1_7_R1.EntityZombie;
+import net.minecraft.server.v1_7_R1.PathfinderGoalBreakDoor;
+import net.minecraft.server.v1_7_R1.PathfinderGoalFloat;
+import net.minecraft.server.v1_7_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_7_R1.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_7_R1.PathfinderGoalMoveThroughVillage;
+import net.minecraft.server.v1_7_R1.PathfinderGoalMoveTowardsRestriction;
+import net.minecraft.server.v1_7_R1.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_7_R1.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftZombie;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -75,7 +75,7 @@ public class Tasks {
 				Config.getCC().saveAll();
 			}
 		}, 1000, 1000);
-		
+
 		plg.getServer().getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
 			public void run() {
 				SignListener.entityRespawnTask();
@@ -114,20 +114,29 @@ public class Tasks {
 
 						if (!(e instanceof Zombie))
 							continue;
-						((Zombie) e).setTarget(null);
+						// ((Zombie) e).setTarget(null);
 						Location pl = p.getLocation();
 						Location el = e.getLocation();
+						Double dist = pl.distance(el);
+						Zombie zmb = (Zombie) e;
 
-						if (pl.distance(el) > pvr) {
-							((Zombie) e).setTarget(null);
-						} else
-							((Zombie) e).setTarget(p);
+						// Util.Print(p, String.valueOf(dist));
+						// Util.Print(p, String.valueOf(Math.pow(6, 2)));
 
-						if (pl.distance(el) > 16.0) {
+						if (dist >= pvr) {
+							zmb.setTarget(null);
+							setSpeed(e, 0.23F);
+						}
+
+						if (dist < pvr) {
+							zmb.setTarget(p);
+						}
+
+						if (dist > 16.0) {
 							double nx = (pl.getX() + el.getX()) / 2.0;
 							double ny = (pl.getY() + el.getY()) / 2.0;
 							double nz = (pl.getZ() + el.getZ()) / 2.0;
-							((EntityInsentient) ((CraftLivingEntity) e).getHandle()).getNavigation().a(nx, ny, nz, new Float(Nodes.zombie_speed.getDouble() / 4));
+							((EntityInsentient) ((CraftLivingEntity) e).getHandle()).getNavigation().a(nx, ny, nz, new Float(Nodes.zombie_speed.getDouble() / 6));
 						}
 						setSpeed(e);
 
@@ -143,7 +152,7 @@ public class Tasks {
 		player_hunger.put(player, nt);
 	}
 
-	private void setSpeed(Entity entity) {
+	private void setSpeed(Entity entity, float speed) {
 		UUID id = ((LivingEntity) entity).getUniqueId();
 		if (speedZombies.contains(id))
 			return;
@@ -153,7 +162,7 @@ public class Tasks {
 		try {
 			fGoalSelector = EntityInsentient.class.getDeclaredField("goalSelector");
 			fGoalSelector.setAccessible(true);
-			Float speed = 0.23F;
+			// Float speed = 0.23F;
 			speed = new Float(Nodes.zombie_speed.getDouble() / 10);
 			PathfinderGoalSelector gs = new PathfinderGoalSelector(((CraftWorld) entity.getWorld()).getHandle() != null && ((CraftWorld) entity.getWorld()).getHandle().methodProfiler != null ? ((CraftWorld) entity.getWorld()).getHandle().methodProfiler : null);
 			gs.a(0, new PathfinderGoalFloat(zombie));
@@ -177,6 +186,12 @@ public class Tasks {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void setSpeed(Entity entity) {
+		Float speed = 0.23F;
+		speed = new Float(Nodes.zombie_speed.getDouble() / 10);
+		setSpeed(entity, speed);
 	}
 
 	public static void removeFromHashMaps(Player p) {

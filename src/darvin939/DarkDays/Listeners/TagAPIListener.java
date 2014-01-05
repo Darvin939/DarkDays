@@ -23,12 +23,12 @@ public class TagAPIListener implements Listener {
 	}
 
 	public static void refreshPlayer(Player p1, Player p2) {
-		if (DarkDays.tagAPI)
+		if (DarkDays.isTagAPI())
 			TagAPI.refreshPlayer(p1, p2);
 	}
 
 	public static void refreshPlayer(Player p) {
-		if (DarkDays.tagAPI)
+		if (DarkDays.isTagAPI())
 			TagAPI.refreshPlayer(p);
 	}
 

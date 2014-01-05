@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.SQL.Chests.ChestManager;
 import darvin939.DarkDays.Utils.Util;
+import darvin939.DeprecAPI.BlockAPI;
 
 public class ChestConfig {
 	public FileConfiguration cfgChest;
@@ -128,8 +129,8 @@ public class ChestConfig {
 	}
 
 	public Boolean isChest(Player p) {
-		if (p.getTargetBlock(null, 10).getType() == Material.CHEST) {
-			Location l = p.getTargetBlock(null, 10).getLocation();
+		if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST) {
+			Location l = BlockAPI.getTargetBlock(p, 10).getLocation();
 			if (chests.containsKey(l))
 				return true;
 		}

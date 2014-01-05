@@ -17,11 +17,7 @@ public class Util {
 	}
 
 	public static void PrintPxMSG(Player p, String message) {
-		Config.FGU.PrintPxMsg(p, Config.FGU.MSG(message));
-	}
-
-	public static void PrintPx(Player p, String message) {
-		Config.FGU.PrintPxMsg(p, message);
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', DarkDays.getChatPfx() + message));
 	}
 	
 	public static void PrintMSG(Player p, String message, String keys) {
@@ -29,7 +25,7 @@ public class Util {
 	}
 
 	public static void PrintSysPx(Player p, String message) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', DarkDays.sysPrefix + message));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', DarkDays.getConsolePfx() + message));
 	}
 
 	public static String FCTU(String s) {
@@ -50,7 +46,7 @@ public class Util {
 		for (int i = 1; i < commands.length; i++) {
 			list = list.isEmpty() ? "..." + handlerName + "&7<" + commands[i] : list + ", " + commands[i];
 		}
-		Config.FGU.PrintMsg(p, Config.FGU.MSG("cmd_unknown", DarkDays.cmdPrefix + handlerName + commands[0]));
+		Print(p, Config.FGU.MSG("cmd_unknown", DarkDays.getCmdPfx() + handlerName + commands[0]));
 		Print(p, Config.FGU.MSG("hlp_commands") + " &2" + list + "&7>");
 	}
 

@@ -23,6 +23,7 @@ import darvin939.DarkDays.Loot.ItemData;
 import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Loot.PotionData;
 import darvin939.DarkDays.Utils.Util;
+import darvin939.DeprecAPI.ItemAPI;
 
 public class Loot extends Handler {
 
@@ -92,9 +93,9 @@ public class Loot extends Handler {
 		FileConfiguration cfg = Config.getLC().getCfg();
 		ConfigurationSection section = cfg.createSection(Util.FCTU(data.getName())).createSection("items");
 		for (Entry<Material, ItemData> s : data.getItems().entrySet()) {
-			ConfigurationSection sec = section.createSection(String.valueOf(s.getKey().getId()));
+			ConfigurationSection sec = section.createSection(String.valueOf(ItemAPI.get(s.getKey()).id()));
 			if (s.getValue().getSpawn().isEmpty())
-				Util.PrintMSG(p, "loot_flag_spawnnf", "item " + s.getKey().getId());
+				Util.PrintMSG(p, "loot_flag_spawnnf", "item " + ItemAPI.get(s.getKey()).id());
 			sec.set("spawn", s.getValue().getSpawn());
 			sec.set("effects", Arrays.asList(s.getValue().getEffect().split(";")));
 		}
