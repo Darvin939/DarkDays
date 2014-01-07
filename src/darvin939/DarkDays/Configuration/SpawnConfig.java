@@ -40,16 +40,16 @@ public class SpawnConfig {
 
 	public void addSpawn(Player p) {
 		if (add(p.getLocation(), "Spawn"))
-			Util.PrintPxMSG(p, "spawn_new");
+			Util.PrintMSGPx(p, "spawn_new");
 		else
-			Util.PrintPxMSG(p, "spawn_error");
+			Util.PrintMSGPx(p, "spawn_error");
 	}
 
 	public void addLobby(Player p) {
 		if (add(p.getLocation(), "Lobby"))
-			Util.PrintPxMSG(p, "spawn_lobby_new");
+			Util.PrintMSGPx(p, "spawn_lobby_new");
 		else
-			Util.PrintPxMSG(p, "spawn_lobby_error");
+			Util.PrintMSGPx(p, "spawn_lobby_error");
 	}
 
 	private boolean add(Location loc, String type) {

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -36,56 +37,66 @@ public class Loot extends Handler {
 	}
 
 	@Override
-	public boolean perform(Player p, String[] args) throws InvalidUsage {
+	public boolean perform(CommandSender s, String[] args) throws InvalidUsage {
 		this.args = args;
-		this.p = p;
-		if (args.length > 1) {
-			if (args[1].equalsIgnoreCase("new")) {
-				if (hasPermissions(p, "chest.add", true))
-					newLoot();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("remove")) {
-				if (hasPermissions(p, "chest.set", true))
-					remove();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("help")) {
-				getHelp(p, "loot");
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("list")) {
-				if (hasPermissions(p, "chest.remove", true))
-					list();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("item") || args[1].equalsIgnoreCase("flag") || args[1].equalsIgnoreCase("save"))
-				if (nameOfLoot.containsKey(p)) {
-					if (args[1].equalsIgnoreCase("item")) {
-						if (hasPermissions(p, "chest.remove", true))
-							item();
-						return true;
-					}
-					if (args[1].equalsIgnoreCase("flag")) {
-						if (hasPermissions(p, "chest.remove", true))
-							flag();
-						return true;
-					}
-					if (args[1].equalsIgnoreCase("save")) {
-						if (hasPermissions(p, "chest.remove", true))
-							save();
-						return true;
-					}
-				} else {
-					Util.PrintMSG(p, "loot_new_isempty");
+		if (s instanceof Player) {
+			p = (Player) s;
+			if (args.length > 1) {
+				if (args[1].equalsIgnoreCase("new")) {
+					if (hasPermissions(p, "loot.new", true))
+						newLoot();
 					return true;
 				}
-			Util.unknownCmd(p, getClass(), new String[] { args[1], "new", "item", "flag", "save", "list", "remove" });
-			return true;
-		} else {
-			getHelp(p, "loot");
+				if (args[1].equalsIgnoreCase("remove")) {
+					if (hasPermissions(p, "loot.remove", true))
+						remove();
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("help")) {
+					getHelp(p, "loot");
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("list")) {
+					if (hasPermissions(p, "loot.list", true))
+						list();
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("item") || args[1].equalsIgnoreCase("flag") || args[1].equalsIgnoreCase("save") || args[1].equalsIgnoreCase("durability"))
+					if (nameOfLoot.containsKey(p)) {
+						if (args[1].equalsIgnoreCase("item")) {
+							if (hasPermissions(p, "loot.item", true))
+								item();
+							return true;
+						}
+						if (args[1].equalsIgnoreCase("flag")) {
+							if (hasPermissions(p, "loot.falg", true))
+								flag();
+							return true;
+						}
+						if (args[1].equalsIgnoreCase("save")) {
+							if (hasPermissions(p, "loot.save", true))
+								save();
+							return true;
+						}
+						if (args[1].equalsIgnoreCase("durability")) {
+							if (hasPermissions(p, "loot.durability", true))
+								durability();
+							return true;
+						}
+					} else {
+						Util.PrintMSGPx(p, "loot_new_isempty");
+						return true;
+					}
+				Util.unknownCmd(p, getClass(), new String[] { args[1], "new", "item", "flag", "save", "list", "remove", "durability" });
+				return true;
+			} else {
+				getHelp(p, "loot");
+
+			}
 			return true;
 		}
+		s.sendMessage("You must be a Player to do this");
+		return true;
 	}
 
 	private void save() {
@@ -97,6 +108,7 @@ public class Loot extends Handler {
 			if (s.getValue().getSpawn().isEmpty())
 				Util.PrintMSG(p, "loot_flag_spawnnf", "item " + ItemAPI.get(s.getKey()).id());
 			sec.set("spawn", s.getValue().getSpawn());
+			sec.set("durability", s.getValue().getDurability());
 			sec.set("effects", Arrays.asList(s.getValue().getEffect().split(";")));
 		}
 		PotionData potion = data.getPotion();
@@ -109,6 +121,34 @@ public class Loot extends Handler {
 				Util.PrintMSG(p, "loot_flag_spawnnf", "Potion");
 		Util.PrintMSG(p, "loot_save", Util.FCTU(data.getName()));
 		Config.getLC().saveConfig();
+	}
+
+	private void durability() {
+		Data data = nameOfLoot.get(p);
+		String[] nargs = Util.newArgs(args);
+		if (nargs.length > 1) {
+			Integer dur = 0;
+			if (LootManager.getMaterial(nargs[1]) != null && data.getItems().containsKey(LootManager.getMaterial(nargs[1]))) {
+				if (nargs.length == 3) {
+					try {
+						dur = Integer.parseInt(nargs[2]);
+						if (dur != 0 && dur > 0 && dur <= 100) {
+							data.getItem(LootManager.getMaterial(nargs[1])).setDurability(dur);
+							Util.PrintMSG(p, "loot_durability_set", nargs[1] + ";" + dur);
+							return;
+						}
+					} catch (NumberFormatException e) {
+
+					}
+					Util.PrintMSGPx(p, "loot_durability_isEmpty");
+
+				} else
+					Util.PrintMSGPx(p, "loot_durability_isEmpty");
+				return;
+			}
+			Util.PrintMSGPx(p, "loot_durability_nf");
+		} else
+			getHelp(p, "loot.durability");
 	}
 
 	private void flag() {
@@ -133,7 +173,7 @@ public class Loot extends Handler {
 					}
 				}
 				if (spawn.isEmpty() && effects.isEmpty()) {
-					Util.PrintMSG(p, "loot_flag_potion_isEmpty");
+					Util.PrintMSGPx(p, "loot_flag_potion_isEmpty");
 					return;
 				}
 				if (!spawn.isEmpty())
@@ -159,7 +199,7 @@ public class Loot extends Handler {
 					}
 				}
 				if (spawn.isEmpty() && effects.isEmpty()) {
-					Util.PrintMSG(p, "loot_flag_item_isEmpty");
+					Util.PrintMSGPx(p, "loot_flag_item_isEmpty");
 					return;
 				}
 				if (data.getItem(LootManager.getMaterial(nargs[1])) != null) {
@@ -171,7 +211,7 @@ public class Loot extends Handler {
 				}
 				return;
 			}
-			Util.PrintMSG(p, "loot_flag_nf");
+			Util.PrintMSGPx(p, "loot_flag_nf");
 		} else
 			getHelp(p, "loot.flag");
 	}
@@ -274,7 +314,7 @@ public class Loot extends Handler {
 			String[] i = nargs[1].split(",");
 			for (String item : i) {
 				if (LootManager.getMaterial(item) != null) {
-					nameOfLoot.get(p).addItem(LootManager.getMaterial(item), new ItemData("", ""));
+					nameOfLoot.get(p).addItem(LootManager.getMaterial(item), new ItemData("", "", 0));
 					items = items.isEmpty() ? "&2" + item + "&f" : items + ", &2" + item + "&f";
 				}
 			}
@@ -334,10 +374,6 @@ public class Loot extends Handler {
 		if (nargs.length > 1) {
 			nameOfLoot.put(p, new Data(nargs[1].toLowerCase()));
 			Util.PrintMSG(p, "loot_new", Util.FCTU(nargs[1].toLowerCase()) + ";" + nargs[1].toLowerCase());
-			// Util.Print(p, "A New loot " + Util.FCTU(nargs[1].toLowerCase()) +
-			// " created. Type /dd loot save " + nargs[1].toLowerCase() +
-			// " to save this loot");
-
 		} else
 			getHelp(p, "loot.new");
 	}

@@ -33,7 +33,7 @@ public class Wand implements Listener {
 			if (b.getType() == Material.CHEST)
 				if (Config.getCC().getChestInfo(p, b.getLocation())) {
 				} else
-					Util.PrintMSG(p, "chest_normal");
+					Util.PrintMSGPx(p, "chest_normal");
 			// event.setCancelled(true);
 		}
 	}

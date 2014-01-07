@@ -3,10 +3,12 @@ package darvin939.DarkDays.Loot;
 public class ItemData {
 	String effect;
 	String spawn;
+	Integer durability;
 
-	public ItemData(String effect, String spawn) {
+	public ItemData(String effect, String spawn, Integer durability) {
 		this.effect = effect;
 		this.spawn = spawn;
+		this.durability = durability;
 	}
 
 	public String getSpawn() {
@@ -23,5 +25,13 @@ public class ItemData {
 
 	public void setEffect(String effect) {
 		this.effect = effect;
+	}
+
+	public void setDurability(Integer durability) {
+		this.durability = durability;
+	}
+
+	public Integer getDurability() {
+		return durability;
 	}
 }

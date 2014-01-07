@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -28,66 +29,70 @@ public class Spawn extends Handler {
 	}
 
 	@Override
-	public boolean perform(Player p, String[] args) throws InvalidUsage {
+	public boolean perform(CommandSender s, String[] args) throws InvalidUsage {
 		this.args = args;
-		this.p = p;
-		if (args.length > 1) {
-			if (args[1].equalsIgnoreCase("help")) {
-				getHelp(p, "spawn");
+		if (s instanceof Player) {
+			p = (Player) s;
+			if (args.length > 1) {
+				if (args[1].equalsIgnoreCase("help")) {
+					getHelp(p, "spawn");
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("set")) {
+					if (hasPermissions(p, "spawn.set", true))
+						set();
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("remove")) {
+					if (hasPermissions(p, "spawn.remove", true))
+						remove();
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("list")) {
+					if (hasPermissions(p, "spawn.list", true))
+						list();
+					return true;
+				}
+				Util.unknownCmd(p, getClass(), new String[] { args[1], "set", "list", "help" });
 				return true;
-			}
-			if (args[1].equalsIgnoreCase("set")) {
-				if (hasPermissions(p, "spawn.set", true))
-					set();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("remove")) {
-				if (hasPermissions(p, "spawn.remove", true))
-					remove();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("list")) {
-				if (hasPermissions(p, "spawn.list", true))
-					list();
-				return true;
-			}
-			Util.unknownCmd(p, getClass(), new String[] { args[1], "set", "list", "help" });
-			return true;
-		} else {
-			if (hasPermissions(p, "spawn", true))
-				if (!(boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
-					int spawnid = 0;
-					FileConfiguration cfg = Config.getSpawnCfg().getCfg();
-					Random rnd = new Random();
-					formatConig();
-					while (cfg.contains("Spawn" + spawnid)) {
-						spawnid++;
-					}
-					if (spawnid > 0) {
-						int spawn = 0;
-						if (spawnid > 1)
-							spawn = rnd.nextInt(spawnid - 1);
-						double x = cfg.getDouble("Spawn" + spawn + ".x");
-						double y = cfg.getDouble("Spawn" + spawn + ".y");
-						double z = cfg.getDouble("Spawn" + spawn + ".z");
-						Location loc = new Location(p.getWorld(), x, y, z);
-						Util.PrintMSG(p, "game_start");
-						Config.getPC().setData(p, PlayerConfig.SPAWNED, true);
-						Config.getPC().setData(p, PlayerConfig.NOVICE, false);
-						p.teleport(loc);
-						Config.getPC().setData(p, PlayerConfig.HUNGER, 309999);
-						Tasks.player_hunger.put(p, 309999);
-						Tasks.player_noise.put(p, 1);
-						PlayerInfo.addPlayer(p);
-						p.getInventory().clear();
-						// kit
-						p.getInventory().addItem(LootManager.getContents("Test"));
-					}
+			} else {
+				if (hasPermissions(p, "spawn", true))
+					if (!(boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
+						int spawnid = 0;
+						FileConfiguration cfg = Config.getSpawnCfg().getCfg();
+						Random rnd = new Random();
+						formatConig();
+						while (cfg.contains("Spawn" + spawnid)) {
+							spawnid++;
+						}
+						if (spawnid > 0) {
+							int spawn = 0;
+							if (spawnid > 1)
+								spawn = rnd.nextInt(spawnid - 1);
+							double x = cfg.getDouble("Spawn" + spawn + ".x");
+							double y = cfg.getDouble("Spawn" + spawn + ".y");
+							double z = cfg.getDouble("Spawn" + spawn + ".z");
+							Location loc = new Location(p.getWorld(), x, y, z);
+							Util.PrintMSGPx(p, "game_start");
+							Config.getPC().setData(p, PlayerConfig.SPAWNED, true);
+							Config.getPC().setData(p, PlayerConfig.NOVICE, false);
+							p.teleport(loc);
+							Config.getPC().setData(p, PlayerConfig.HUNGER, 309999);
+							Tasks.player_hunger.put(p, 309999);
+							Tasks.player_noise.put(p, 1);
+							PlayerInfo.addPlayer(p);
+							p.getInventory().clear();
+							// kit
+							p.getInventory().addItem(LootManager.getContents("Test"));
+						}
 
-				} else
-					Util.PrintPxMSG(p, "game_alrady");
+					} else
+						Util.PrintMSGPx(p, "game_alrady");
+			}
 			return true;
 		}
+		s.sendMessage("You must be a Player to do this");
+		return true;
 	}
 
 	private void remove() {
@@ -144,7 +149,7 @@ public class Spawn extends Handler {
 				double z = cfg.getDouble("Lobby.z", 0);
 				Util.Print(p, "&6Lobby &7(" + x + " , " + y + " , " + z + ")");
 			} else
-				Util.PrintPxMSG(p, "spawn_lobby_nf");
+				Util.PrintMSGPx(p, "spawn_lobby_nf");
 			formatConig();
 			int spawnid = 0;
 			boolean spawnsfound = false;
@@ -157,7 +162,7 @@ public class Spawn extends Handler {
 				spawnid++;
 			}
 			if (!spawnsfound)
-				Util.PrintPxMSG(p, "spawn_nf");
+				Util.PrintMSGPx(p, "spawn_nf");
 		}
 
 	}

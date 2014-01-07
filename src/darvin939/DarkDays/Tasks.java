@@ -105,7 +105,7 @@ public class Tasks {
 					player_loc.put(p, p.getLocation());
 
 					if (player_hunger.get(p) <= 0) {
-						Util.PrintPxMSG(p, "game_need_water");
+						Util.PrintMSGPx(p, "game_need_water");
 						p.damage(1);
 						player_hunger.put(p, 10 * Nodes.thirst_speed.getInteger());
 					}

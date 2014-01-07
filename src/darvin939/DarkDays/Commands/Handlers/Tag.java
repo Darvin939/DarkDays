@@ -2,6 +2,7 @@ package darvin939.DarkDays.Commands.Handlers;
 
 import java.util.ArrayList;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.kitteh.tag.TagAPI;
 
@@ -18,38 +19,45 @@ public class Tag extends Handler {
 	}
 
 	@Override
-	public boolean perform(Player p, String[] args) throws InvalidUsage {
+	public boolean perform(CommandSender s, String[] args) throws InvalidUsage {
 		ArrayList<Player> ptag = TagAPIListener.ptag;
-		if (args.length > 1) {
-			if (hasPermissions(p, "tag", true)) {
-				if (args[1].equalsIgnoreCase("enable")) {
-					Util.PrintMSG(p, "tag_ends", "enabled");
-					ptag.remove(p);
-					for (Player op : plugin.getServer().getOnlinePlayers()) {
-						if (!op.equals(p)) {
-							TagAPI.refreshPlayer(op, p);
+		if (s instanceof Player) {
+			Player p = (Player) s;
+			if (args.length > 1) {
+				if (hasPermissions(p, "tag", true)) {
+					if (args[1].equalsIgnoreCase("enable")) {
+						Util.PrintMSG(p, "tag_ends", "enabled");
+						ptag.remove(p);
+						for (Player op : plugin.getServer().getOnlinePlayers()) {
+							if (!op.equals(p)) {
+								TagAPI.refreshPlayer(op, p);
+							}
 						}
+						return true;
+					}
+					if (args[1].equalsIgnoreCase("disable")) {
+						Util.PrintMSG(p, "tag_ends", "disabled");
+						ptag.add(p);
+						for (Player op : plugin.getServer().getOnlinePlayers()) {
+							if (!op.equals(p)) {
+								TagAPI.refreshPlayer(op, p);
+							}
+						}
+						return true;
 					}
 				}
-				if (args[1].equalsIgnoreCase("disable")) {
-					Util.PrintMSG(p, "tag_ends", "disabled");
-					ptag.add(p);
-					for (Player op : plugin.getServer().getOnlinePlayers()) {
-						if (!op.equals(p)) {
-							TagAPI.refreshPlayer(op, p);
-						}
-					}
+				if (args[1].equalsIgnoreCase("help")) {
+					getHelp(p, "tag");
+					return true;
 				}
-			}
-			if (args[1].equalsIgnoreCase("help")) {
+				Util.unknownCmd(p, getClass(), new String[] { args[1], "enable", "disable" });
+			} else {
 				getHelp(p, "tag");
-				return true;
+				
 			}
-			Util.unknownCmd(p, getClass(), new String[] { args[1], "enable", "disable" });
-			return true;
-		} else {
-			getHelp(p, "tag");
 			return true;
 		}
+		s.sendMessage("You must be a Player to do this");
+		return true;
 	}
 }

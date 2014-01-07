@@ -124,6 +124,20 @@ public class DarkDays extends JavaPlugin {
 
 	public void onEnable() {
 		des = getDescription();
+
+		// LOGO
+		{
+			Util.SC("");
+			Util.SC("$$$$$    $$$$   $$$$$   $$  $$  $$$$$    $$$$   $$  $$   $$$$ ");
+			Util.SC("$$  $$  $$  $$  $$  $$  $$ $$   $$  $$  $$  $$   $$$$   $$    ");
+			Util.SC("$$  $$  $$$$$$  $$$$$   $$$$    $$  $$  $$$$$$    $$     $$$$ ");
+			Util.SC("$$  $$  $$  $$  $$  $$  $$ $$   $$  $$  $$  $$    $$        $$");
+			Util.SC("$$$$$   $$  $$  $$  $$  $$  $$  $$$$$   $$  $$    $$     $$$$ ");
+			Util.SC("");
+		}
+
+		// getLogger().info("Plugin " + des.getName() + " v" + des.getVersion()
+		// + " enabled");
 		if (getServer().getPluginManager().isPluginEnabled("SQLibrary")) {
 			getLogger().info("Successfully hooked with SQLibrary! Now you can use the database.");
 			sqlibrary = true;
@@ -132,14 +146,13 @@ public class DarkDays extends JavaPlugin {
 			getLogger().info("Successfully hooked with TagAPI!");
 			tagAPI = true;
 		}
-		getLogger().info("Plugin " + des.getName() + " v" + des.getVersion() + " enabled");
 		datafolder = getDataFolder();
 		if (!datafolder.exists())
 			datafolder.mkdir();
 		config = getConfig();
 		PluginManager pm = getServer().getPluginManager();
 		init();
-		cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString().toLowerCase(), premPfx, chatPfx);
+		cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString().toLowerCase(), premPfx, consolePfx);
 		cfg.init();
 
 		Config.getCC().loadChests();
@@ -224,6 +237,7 @@ public class DarkDays extends JavaPlugin {
 		Commands.setPermission("loot.item", "darkdays.loot.item");
 		Commands.setPermission("loot.falg", "darkdays.loot.flag");
 		Commands.setPermission("loot.save", "darkdays.loot.save");
+		Commands.setPermission("loot.durability", "darkdays.loot.durability");
 		Commands.setHelp("loot", Config.FGU.MSG("hlp_cmd_loot"));
 		Commands.setHelp("loot.new", Config.FGU.MSG("hlp_cmd_loot_new"));
 		Commands.setHelp("loot.remove", Config.FGU.MSG("hlp_cmd_loot_remove"));
@@ -231,6 +245,8 @@ public class DarkDays extends JavaPlugin {
 		Commands.setHelp("loot.item", Config.FGU.MSG("hlp_cmd_loot_item"));
 		Commands.setHelp("loot.flag", Config.FGU.MSG("hlp_cmd_loot_flag"));
 		Commands.setHelp("loot.save", Config.FGU.MSG("hlp_cmd_loot_save"));
+		Commands.setHelp("loot.durability", Config.FGU.MSG("hlp_cmd_loot_durability"));
+
 		// about
 		Commands.add("/dd about", new About(this));
 		Commands.setHelp("about", Config.FGU.MSG("hlp_cmd_about"));
@@ -341,30 +357,30 @@ public class DarkDays extends JavaPlugin {
 		if (args.length > 0)
 			split = split + " " + args[0];
 		Handler handler = Commands.getHandler(split);
-		if (sender instanceof Player) {
-			Player p = (Player) sender;
-			if (split.equalsIgnoreCase("/dd") || args.length == 0) {
-				Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
+		// if (sender instanceof Player) {
+		// Player p = (Player) sender;
+		if (split.equalsIgnoreCase("/dd") || args.length == 0) {
+			Util.Print(sender, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
+			return true;
+		} else {
+
+			if (handler == null) {
+				Util.PrintMSG(sender, "cmd_unknown", getCmdPfx() + args[0]);
+				Util.Print(sender, Config.FGU.MSG("hlp_commands") + " &2" + getCmdPfx() + "&7<" + Commands.getCommandsString() + "&7>");
 				return true;
-			} else {
-
-				if (handler == null) {
-					Util.PrintMSG(p, "cmd_unknown", getCmdPfx() + args[0]);
-					Util.Print(p, Config.FGU.MSG("hlp_commands") + " &2" + getCmdPfx() + "&7<" + Commands.getCommandsString() + "&7>");
-					return true;
-				}
-				try {
-					if (!handler.perform(p, args))
-						Util.PrintSysPx(p, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
-					return true;
-				} catch (InvalidUsage ex) {
-					return false;
-				}
 			}
-
+			try {
+				if (!handler.perform(sender, args))
+					Util.Print(sender, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
+				return true;
+			} catch (InvalidUsage ex) {
+				return false;
+			}
 		}
-		sender.sendMessage("You must be a Player to do this");
-		return true;
+
+		// }
+		// sender.sendMessage("You must be a Player to do this");
+		// return true;
 	}
 
 	public boolean hasPermissions(Player p, String command, Boolean mess) {

@@ -36,7 +36,7 @@ public class Item extends LoadUtils implements AbsItem {
 	
 	@Override
 	public void sendMessage(Player p) {
-		Util.PrintPxMSG(p, message);
+		Util.PrintMSGPx(p, message);
 	}
 	
 	

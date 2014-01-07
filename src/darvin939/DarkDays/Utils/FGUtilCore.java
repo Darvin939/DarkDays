@@ -103,9 +103,9 @@ public abstract class FGUtilCore extends CipherUtil {
 
 	public void UpdateMsg() {
 		if ((version_new > version_current) && version_check) {
-			SC(des.getName() + " v" + version_current + " is outdated!");
-			SC("Recommended version is v" + version_new);
-			SC("&3" + version_check_url.replace("files.rss", ""));
+			Util.SC(des.getName() + " v" + version_current + " is outdated!");
+			Util.SC("Recommended version is v" + version_new);
+			Util.SC("&3" + version_check_url.replace("files.rss", ""));
 		}
 	}
 
@@ -126,7 +126,7 @@ public abstract class FGUtilCore extends CipherUtil {
 				return Double.parseDouble(firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim());
 			}
 		} catch (Exception e) {
-			SCStd("Failed to get updates");
+			Util.SCPx("Failed to get updates");
 		}
 		return currentVersion;
 	}
@@ -147,13 +147,7 @@ public abstract class FGUtilCore extends CipherUtil {
 			cmdlist = cmdlist + ", " + cmd;
 	}
 
-	public void SC(String msg) {
-		plg.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', px + msg));
-	}
 
-	public void SCStd(String msg) {
-		plg.getServer().getConsoleSender().sendMessage(px + msg);
-	}
 
 	public class Cmd {
 		String perm;

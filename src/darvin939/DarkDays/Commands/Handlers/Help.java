@@ -1,6 +1,6 @@
 package darvin939.DarkDays.Commands.Handlers;
 
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Commands.Handler;
@@ -14,13 +14,13 @@ public class Help extends Handler {
 	}
 
 	@Override
-	public boolean perform(Player p, String[] args) throws InvalidUsage {
+	public boolean perform(CommandSender s, String[] args) throws InvalidUsage {
 		String[] cmds = plugin.Commands.getCommands();
-		Util.Print(p, "&b=================== &2DarkDays &b===================");
+		Util.Print(s, "&b=================== &2DarkDays &b===================");
 		for (String cmd : cmds) {
-			Util.Print(p, "&6/dd " + cmd + " &f: " + plugin.Commands.getHelp(cmd));
+			Util.Print(s, "&6/dd " + cmd + " &f: " + plugin.Commands.getHelp(cmd));
 		}
-		Util.Print(p, "&7For more help of command type &6/dd &4<command> &6help");
+		Util.Print(s, "&7For more help of command type &6/dd &4<command> &6help");
 		return true;
 	}
 

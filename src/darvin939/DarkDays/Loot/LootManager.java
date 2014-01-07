@@ -138,7 +138,7 @@ public class LootManager {
 				Util.PrintMSG(p, "loot_set", list);
 			}
 		} else
-			Util.PrintPxMSG(p, "loot_error");
+			Util.PrintMSGPx(p, "loot_error");
 	}
 
 	private static void fillChest(Chest chest, String list) {

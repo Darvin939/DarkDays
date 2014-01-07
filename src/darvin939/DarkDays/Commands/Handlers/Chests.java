@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Chest;
+import org.bukkit.command.CommandSender;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Commands.Handler;
@@ -23,38 +24,45 @@ public class Chests extends Handler {
 	}
 
 	@Override
-	public boolean perform(Player p, String[] args) throws InvalidUsage {
+	public boolean perform(CommandSender s, String[] args) throws InvalidUsage {
 		this.args = args;
-		this.p = p;
-		if (args.length > 1) {
-			if (args[1].equalsIgnoreCase("help")) {
-				getHelp(p, "chest");
+		if (s instanceof Player) {
+			p = (Player) s;
+			if (args.length > 1) {
+				if (args[1].equalsIgnoreCase("help")) {
+					getHelp(p, "chest");
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("add")) {
+					if (hasPermissions(p, "chest.add", true))
+						add();
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("set")) {
+					if (hasPermissions(p, "chest.set", true))
+						set();
+					return true;
+				}
+				if (args[1].equalsIgnoreCase("remove")) {
+					if (hasPermissions(p, "chest.remove", true))
+						remove();
+					return true;
+				}
+				Util.unknownCmd(p, "chest", new String[] { args[1], "add", "set", "remove", "help" });
 				return true;
+			} else {
+				if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST && hasPermissions(p, "chest", false))
+					if (!Config.getCC().getChestInfo(p, BlockAPI.getTargetBlock(p, 10).getLocation()))
+						Util.PrintMSGPx(p, "chest_normal");
+					else {
+
+					}
+
 			}
-			if (args[1].equalsIgnoreCase("add")) {
-				if (hasPermissions(p, "chest.add", true))
-					add();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("set")) {
-				if (hasPermissions(p, "chest.set", true))
-					set();
-				return true;
-			}
-			if (args[1].equalsIgnoreCase("remove")) {
-				if (hasPermissions(p, "chest.remove", true))
-					remove();
-				return true;
-			}
-			Util.unknownCmd(p, "chest", new String[] { args[1], "add", "set", "remove", "help" });
-			return true;
-		} else {
-			if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST && hasPermissions(p, "chest", false))
-				if (Config.getCC().getChestInfo(p, BlockAPI.getTargetBlock(p, 10).getLocation())) {
-				} else
-					Util.PrintPxMSG(p, "chest_normal");
 			return true;
 		}
+		s.sendMessage("You must be a Player to do this");
+		return true;
 	}
 
 	private void remove() {
@@ -70,10 +78,10 @@ public class Chests extends Handler {
 					if (chestloc.getBlock().getState() instanceof Chest) {
 						((Chest) chestloc.getBlock().getState()).getInventory().clear();
 						chestloc.getBlock().setType(Material.AIR);
-						Util.PrintPxMSG(p, "chest_remove");
+						Util.PrintMSGPx(p, "chest_remove");
 					}
 				} else
-					Util.PrintPxMSG(p, "chest_normal");
+					Util.PrintMSGPx(p, "chest_normal");
 			}
 		}
 	}
@@ -92,19 +100,19 @@ public class Chests extends Handler {
 				for (String list : Config.getLC().getCfg().getKeys(false))
 					if (nargs[1].equalsIgnoreCase(list)) {
 						find = true;
-						Util.PrintPxMSG(p, "chest_newWithID");
+						Util.PrintMSGPx(p, "chest_newWithID");
 						LootManager.setLoot(p, Util.FCTU(nargs[1]));
 						break;
 					}
 				if (!find) {
-					Util.PrintPxMSG(p, "loot_nf");
-					Util.PrintPxMSG(p, "chest_new");
+					Util.PrintMSGPx(p, "loot_nf");
+					Util.PrintMSGPx(p, "chest_new");
 				}
 			}
 		} else {
 			Config.getCC().addChest(chestloc);
 			chestloc.getBlock().setType(Material.CHEST);
-			Util.PrintPxMSG(p, "chest_new");
+			Util.PrintMSGPx(p, "chest_new");
 		}
 	}
 
@@ -117,7 +125,7 @@ public class Chests extends Handler {
 						LootManager.setLoot(p, Util.FCTU(nargs[1]));
 						return;
 					}
-				Util.PrintPxMSG(p, "loot_nf");
+				Util.PrintMSGPx(p, "loot_nf");
 			}
 		} else
 			getHelp(p, "chest.set");

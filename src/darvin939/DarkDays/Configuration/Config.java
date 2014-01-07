@@ -107,11 +107,14 @@ public class Config extends FGUtilCore {
 		addMSG("loot_remove", "Loot %1% successfully removed");
 		addMSG("loot_new", "New loot &7%1%&f created. Enter &2/dd loot item &7[id,id,..]&f to add items or just setup the flags for potions");
 		addMSG("loot_item_add", "Item(s) %1% added to your loot. Now, set the flags for ID of items &2/dd loot flag &7[id]&f ...");
-		addMSG("loot_flag_set", "The flags are set for %1%. Enter &2/dd loot save &f to save the loot or continue setup the  flags");
+		addMSG("loot_flag_set", "The flags are set for %1%. Now add durability, save or continue setup the flags for loot");
 		addMSG("loot_new_isempty", "First add the new loot! Type &2/dd loot new &7[name]&f to create new loot");
 		addMSG("loot_parser", "%1% Syntax error: check the entered data");
 		addMSG("loot_flag_spawnnf", "The flag &7\"spawn\"&f  is not set for %1%! Set this flag otherwise this item will not spawn");
 		addMSG("loot_flag_nf", "Item ID or Potion not found. Please check the entered command");
+		addMSG("loot_durability_isEmpty", "Usage: &2..durability &7[id] [0-99]");
+		addMSG("loot_durability_set", "Durability %2% set for %1%. Enter &2/dd loot save &f to save the loot or continue setup the flags");
+		addMSG("loot_durability_nf", "Item ID not found. Please check the entered command");
 		// chest_
 		addMSG("chest_normal", "This is a normal chest");
 		addMSG("chest_newWithID", "Created new looted chest with LootID");
@@ -157,7 +160,7 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_spawn_remove", "Type &2..remove &7[name] &fto remove the spawn point by name");
 		addMSG("hlp_cmd_tag", "Type&2 ..tag enable/disable &fto enable/disable colored names");
 		addMSG("hlp_cmd_region", "Make a region of zombie spawn locations. Select region with WorldEdit Wand. Then type &2..region save &7[name] [parametrs]&f. Parametrs: &2s=&7[true/false]&f - can spawn, &2h=&7[true/false]&f - top-to-bottom");
-		addMSG("hlp_cmd_loot", "Create, delete, assigning flags for loot");
+		addMSG("hlp_cmd_loot", "Create, delete, assigning flags and durability for loot");
 		addMSG("hlp_cmd_loot_new", "Type &2/dd loot new &7[name]&f to create new loot in server memory. Type &2/dd loot save&f to save your loot");
 		addMSG("hlp_cmd_loot_remove", "Remove the loot for the specified name");
 		addMSG("hlp_cmd_loot_list", "Show list of existing loot");
@@ -179,10 +182,8 @@ public class Config extends FGUtilCore {
 
 				PlayerManager.init();
 				ChestManager.init();
-			} else {
+			} else
 				Nodes.MYSQL_DBWRAPPER.setValue("none");
-				SCStd(db.getDBMS().name() +"database not found!");
-			}
 		}
 
 		playerCfg = new PlayerConfig(plg);

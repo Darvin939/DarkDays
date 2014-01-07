@@ -22,7 +22,7 @@ public class BlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player p = event.getPlayer();
 		if (Config.getCC().isChest(p)) {
-			Util.PrintMSG(p, "chest_cantDestroy");
+			Util.PrintMSGPx(p, "chest_cantDestroy");
 			// Util.msg(p, "You can't destroy the loot chest!", 'p');
 			event.setCancelled(true);
 		}
