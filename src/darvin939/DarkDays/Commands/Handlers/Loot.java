@@ -43,12 +43,12 @@ public class Loot extends Handler {
 			p = (Player) s;
 			if (args.length > 1) {
 				if (args[1].equalsIgnoreCase("new")) {
-					if (hasPermissions(p, "loot.new", true))
+					if (hasPermission(p, "loot.new", true))
 						newLoot();
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("remove")) {
-					if (hasPermissions(p, "loot.remove", true))
+					if (hasPermission(p, "loot.remove", true))
 						remove();
 					return true;
 				}
@@ -57,29 +57,29 @@ public class Loot extends Handler {
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("list")) {
-					if (hasPermissions(p, "loot.list", true))
+					if (hasPermission(p, "loot.list", true))
 						list();
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("item") || args[1].equalsIgnoreCase("flag") || args[1].equalsIgnoreCase("save") || args[1].equalsIgnoreCase("durability"))
 					if (nameOfLoot.containsKey(p)) {
 						if (args[1].equalsIgnoreCase("item")) {
-							if (hasPermissions(p, "loot.item", true))
+							if (hasPermission(p, "loot.item", true))
 								item();
 							return true;
 						}
 						if (args[1].equalsIgnoreCase("flag")) {
-							if (hasPermissions(p, "loot.falg", true))
+							if (hasPermission(p, "loot.falg", true))
 								flag();
 							return true;
 						}
 						if (args[1].equalsIgnoreCase("save")) {
-							if (hasPermissions(p, "loot.save", true))
+							if (hasPermission(p, "loot.save", true))
 								save();
 							return true;
 						}
 						if (args[1].equalsIgnoreCase("durability")) {
-							if (hasPermissions(p, "loot.durability", true))
+							if (hasPermission(p, "loot.durability", true))
 								durability();
 							return true;
 						}

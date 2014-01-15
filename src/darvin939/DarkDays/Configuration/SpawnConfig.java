@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -52,13 +53,31 @@ public class SpawnConfig {
 			Util.PrintMSGPx(p, "spawn_lobby_error");
 	}
 
+	public Location getSpawnLoc(Player p) {
+		double x, y, z;
+		String section = p.getWorld().getName() + ".Lobby";
+		if (cfgSpawn.isConfigurationSection(section)) {
+			x = cfgSpawn.getDouble(section + ".x");
+			y = cfgSpawn.getDouble(section + ".y");
+			z = cfgSpawn.getDouble(section + ".z");
+			Location loc = new Location(p.getWorld(), x, y, z);
+			return loc;
+		}
+		return p.getWorld().getSpawnLocation();
+	}
+
 	private boolean add(Location loc, String type) {
 		if (new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ()).getBlock().getType() != Material.AIR) {
 			double x = loc.getBlockX() + 0.5;
 			double y = loc.getBlockY();
 			double z = loc.getBlockZ() + 0.5;
+			String world = loc.getWorld().getName();
+
+			if (!cfgSpawn.isConfigurationSection(world))
+				cfgSpawn.createSection(world);
+
 			if (type.equalsIgnoreCase("lobby")) {
-				String section = Util.FCTU(type);
+				String section = world + "." + Util.FCTU(type);
 				if (!cfgSpawn.isConfigurationSection(section))
 					cfgSpawn.createSection(section);
 				cfgSpawn.set(section + ".x", x);
@@ -69,12 +88,12 @@ public class SpawnConfig {
 			} else {
 				int spawnid = 0;
 				int spawnidx = -1;
-				while (cfgSpawn.contains("Spawn" + spawnid)) {
+				while (cfgSpawn.contains(world + "." + "Spawn" + spawnid)) {
 					spawnidx = spawnid;
 					spawnid++;
 				}
 				spawnidx = spawnidx + 1;
-				String section = "Spawn" + spawnidx;
+				String section = world + "." + "Spawn" + spawnidx;
 				cfgSpawn.createSection(section);
 				cfgSpawn.set(section + ".x", x);
 				cfgSpawn.set(section + ".y", y);
@@ -86,8 +105,8 @@ public class SpawnConfig {
 		return false;
 	}
 
-	public boolean removeSpawn(String name) {
-		String section = Util.FCTU(name.toLowerCase());
+	public boolean removeSpawn(World world, String name) {
+		String section = world.getName() + "." + Util.FCTU(name.toLowerCase());
 		if (cfgSpawn.isConfigurationSection(section)) {
 			cfgSpawn.set(section, null);
 			saveConfig();
@@ -95,5 +114,4 @@ public class SpawnConfig {
 		}
 		return false;
 	}
-
 }

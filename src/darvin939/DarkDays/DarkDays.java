@@ -8,9 +8,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,6 +36,8 @@ import darvin939.DarkDays.Listeners.PlayerListener;
 import darvin939.DarkDays.Listeners.TagAPIListener;
 import darvin939.DarkDays.Listeners.Wand;
 import darvin939.DarkDays.Listeners.ZombieListener;
+import darvin939.DarkDays.Listeners.Noise.Noise;
+import darvin939.DarkDays.Listeners.Noise.Surface;
 import darvin939.DarkDays.Loadable.Effect;
 import darvin939.DarkDays.Loadable.EffectManager;
 import darvin939.DarkDays.Loadable.Item;
@@ -51,9 +50,9 @@ public class DarkDays extends JavaPlugin {
 	private Logger log = Logger.getLogger("Minecraft");
 	public PluginDescriptionFile des;
 	private static File datafolder;
-	private FileConfiguration config;
 
 	private PlayerListener plis = new PlayerListener(this);
+	private Noise pnoise = new Noise(this);
 	private EntityListener elis = new EntityListener(this);
 	private BlockListener blis = new BlockListener(this);
 	private Wand wlis = new Wand(this);
@@ -63,6 +62,7 @@ public class DarkDays extends JavaPlugin {
 
 	public Parser Commands = new Parser();
 	private Config cfg;
+
 	private static boolean sqlibrary = false;
 	private static boolean tagAPI = false;
 
@@ -124,7 +124,6 @@ public class DarkDays extends JavaPlugin {
 
 	public void onEnable() {
 		des = getDescription();
-
 		// LOGO
 		{
 			Util.SC("");
@@ -149,7 +148,7 @@ public class DarkDays extends JavaPlugin {
 		datafolder = getDataFolder();
 		if (!datafolder.exists())
 			datafolder.mkdir();
-		config = getConfig();
+
 		PluginManager pm = getServer().getPluginManager();
 		init();
 		cfg = new Config(this, Nodes.verCheck.getBoolean(), Nodes.language.getString().toLowerCase(), premPfx, consolePfx);
@@ -157,6 +156,7 @@ public class DarkDays extends JavaPlugin {
 
 		Config.getCC().loadChests();
 		new Tasks(this);
+		new Surface(getConfig());
 
 		effects = new EffectManager(this);
 		items = new ItemManager(this);
@@ -258,6 +258,7 @@ public class DarkDays extends JavaPlugin {
 		pm.registerEvents(blis, this);
 		pm.registerEvents(wlis, this);
 		pm.registerEvents(zlis, this);
+		pm.registerEvents(pnoise, this);
 		pm.registerEvents(new SignListener(this), this);
 		if (tagAPI)
 			pm.registerEvents(tlis, this);
@@ -316,49 +317,11 @@ public class DarkDays extends JavaPlugin {
 		}
 	}
 
-	public boolean setLocation(Player p, String type) {
-		if (new Location(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY() - 1, p.getLocation().getBlockZ()).getBlock().getType() != Material.AIR) {
-			Location loc = p.getLocation();
-			double x = loc.getBlockX() + 0.5;
-			double y = loc.getBlockY();
-			double z = loc.getBlockZ() + 0.5;
-			if (type.equalsIgnoreCase("lobby")) {
-				String section = "Spawns." + Util.FCTU(type);
-				if (!config.isConfigurationSection(section))
-					config.createSection(section);
-				config.set(section + ".x", x);
-				config.set(section + ".y", y);
-				config.set(section + ".z", z);
-				saveConfig();
-				return true;
-			} else {
-				int spawnid = 0;
-				int spawnidx = -1;
-				while (config.contains("Spawns.Spawn" + spawnid)) {
-					spawnidx = spawnid;
-					spawnid++;
-				}
-				spawnidx = spawnidx + 1;
-				String section = "Spawns.Spawn" + spawnidx;
-				config.createSection(section);
-				config.set(section + ".x", x);
-				config.set(section + ".y", y);
-				config.set(section + ".z", z);
-				saveConfig();
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/* Util.unknownCmd() */
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String split = "/" + command.getName().toLowerCase();
 		if (args.length > 0)
 			split = split + " " + args[0];
 		Handler handler = Commands.getHandler(split);
-		// if (sender instanceof Player) {
-		// Player p = (Player) sender;
 		if (split.equalsIgnoreCase("/dd") || args.length == 0) {
 			Util.Print(sender, Config.FGU.MSG("hlp_topic", getCmdPfx() + "help"));
 			return true;
@@ -377,13 +340,9 @@ public class DarkDays extends JavaPlugin {
 				return false;
 			}
 		}
-
-		// }
-		// sender.sendMessage("You must be a Player to do this");
-		// return true;
 	}
 
-	public boolean hasPermissions(Player p, String command, Boolean mess) {
+	public boolean hasPermission(Player p, String command, Boolean mess) {
 		if (Commands.hasPermission(command)) {
 			if (p.hasPermission(Commands.getPermission(command)))
 				return true;
@@ -396,13 +355,13 @@ public class DarkDays extends JavaPlugin {
 		return false;
 	}
 
-	public boolean hasPermissions(Player p, String perm) {
+	public boolean hasPermission(Player p, String perm) {
 		return p.hasPermission(premPfx + perm);
 	}
 
 	public void getHelp(Player p, String command) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b================= &2DarkDays Help &b================="));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Command:&6 " + getCmdPfx() + command.replaceAll("\\.", " ")));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', Commands.getHelp(command)));
+		Util.Print(p, "&b================= &2DarkDays Help &b=================");
+		Util.Print(p, "&7Command:&6 " + getCmdPfx() + command.replaceAll("\\.", " "));
+		Util.Print(p, Commands.getHelp(command));
 	}
 }

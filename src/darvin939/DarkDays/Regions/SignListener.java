@@ -53,7 +53,7 @@ public class SignListener extends RegionManager implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
 		if (ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase("[dd]")) {
-			if (!plg.hasPermissions(p, "sign.create")) {
+			if (!plg.hasPermission(p, "sign.create")) {
 				event.setLine(0, "{dd}");
 			} else {
 				setLine(event, 0, "&9[DarkDays]");
@@ -155,7 +155,7 @@ public class SignListener extends RegionManager implements Listener {
 				if (ChatColor.stripColor(sign.getLine(2)).equalsIgnoreCase("{Error}") && ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("[DarkDays]")) {
 					return;
 				}
-				if (plg.hasPermissions(p, "sign.destroy")) {
+				if (plg.hasPermission(p, "sign.destroy")) {
 
 					if (ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("[DarkDays]")) {
 						String sLoc = new StringBuilder().append(l.getWorld().getName()).append(" ").append(l.getX()).append(" ").append(l.getY()).append(" ").append(l.getZ()).toString();

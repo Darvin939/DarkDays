@@ -1,0 +1,31 @@
+Language: english
+Version-check: true
+Prefix: DarkDays
+DisableHealthRegen: false
+WandItem: 369
+ControlSItems: true
+ColouredTags: true
+EnableRegions: false
+Zombie:
+  OnlyZombies: true
+  Speed: 0.4
+  Smoothness: 5
+  AttackStrength: 4
+  Health: 24
+  PickUpPlayerArmor: true
+Thirst:
+  Speed: 2
+Chest:
+  IfOnlyEmpty: true
+  RegenTime: 2
+  Disappear: true
+MySQL:
+  Username: root
+  Password: root
+  Hostname: localhost
+  Port: 3306
+  Database: darkdays
+  DataWrapper: none
+Noise:
+  EnableBlockData: true
+  Multiplier: 0.3

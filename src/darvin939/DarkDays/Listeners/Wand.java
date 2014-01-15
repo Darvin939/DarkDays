@@ -28,7 +28,7 @@ public class Wand implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		int wand = Nodes.wand_item.getInteger();
 		Player p = event.getPlayer();
-		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) && ItemAPI.get(p.getItemInHand().getType()).id() == wand && plg.hasPermissions(p, "wand")) {
+		if ((event.getAction() == Action.RIGHT_CLICK_BLOCK) && ItemAPI.get(p.getItemInHand().getType()).id() == wand && plg.hasPermission(p, "wand")) {
 			Block b = BlockAPI.getTargetBlock(p, 10);
 			if (b.getType() == Material.CHEST)
 				if (Config.getCC().getChestInfo(p, b.getLocation())) {

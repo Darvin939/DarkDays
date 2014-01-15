@@ -44,7 +44,7 @@ public class LootManager {
 
 	public static Material getMaterial(String stringMaterial) {
 		if (Util.isInteger(stringMaterial)) {
-			
+
 			return ItemAPI.get(Integer.parseInt(stringMaterial)).type();
 		}
 		return Material.getMaterial(stringMaterial.toUpperCase());
@@ -85,7 +85,7 @@ public class LootManager {
 				if (item != null && item.getType() != null && !item.getType().equals(Material.AIR)) {
 					for (String list : getItemList(Config.getCC().getLoot(block.getLocation()))) {
 						if (Util.isInteger(list)) {
-							
+
 							if (item.getType() == ItemAPI.get(Integer.valueOf(list)).type()) {
 								ret = false;
 								skip = true;

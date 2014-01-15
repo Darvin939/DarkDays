@@ -24,7 +24,7 @@ public class Tag extends Handler {
 		if (s instanceof Player) {
 			Player p = (Player) s;
 			if (args.length > 1) {
-				if (hasPermissions(p, "tag", true)) {
+				if (hasPermission(p, "tag", true)) {
 					if (args[1].equalsIgnoreCase("enable")) {
 						Util.PrintMSG(p, "tag_ends", "enabled");
 						ptag.remove(p);

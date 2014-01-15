@@ -1,7 +1,5 @@
 package darvin939.DarkDays.Listeners;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -27,7 +24,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -46,8 +42,6 @@ import darvin939.DeprecAPI.BlockAPI;
 
 public class PlayerListener implements Listener {
 	DarkDays plg;
-
-	private static ThreadGroup rootThreadGroup = null;
 
 	public PlayerListener(DarkDays plg) {
 		this.plg = plg;
@@ -88,11 +82,11 @@ public class PlayerListener implements Listener {
 		boolean death = (boolean) Config.getPC().getData(p, PlayerConfig.NOVICE);
 		if (novice || death) {
 			resetPlayer(p);
-			toSpawn(p);
+			Config.getSpawnCfg().getSpawnLoc(p);
 		}
 		if ((boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
-			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
-			Tasks.player_noise.put(p, 1);
+			Tasks.player_thirst.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
+			Tasks.player_noise.put(p, 1.0);
 			PlayerInfo.addPlayer(p);
 			p.teleport(PlayerConfig.fix(p));
 
@@ -131,11 +125,11 @@ public class PlayerListener implements Listener {
 		boolean death = (boolean) Config.getPC().getData(p, PlayerConfig.NOVICE);
 		if (novice || death) {
 			resetPlayer(p);
-			event.setRespawnLocation(toSpawn(p));
+			event.setRespawnLocation(Config.getSpawnCfg().getSpawnLoc(p));
 		}
 		if ((boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
-			Tasks.player_hunger.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
-			Tasks.player_noise.put(p, 1);
+			Tasks.player_thirst.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
+			Tasks.player_noise.put(p, 1.0);
 			PlayerInfo.addPlayer(p);
 			event.setRespawnLocation(PlayerConfig.fix(p));
 			return;
@@ -146,20 +140,6 @@ public class PlayerListener implements Listener {
 				TagAPIListener.refreshPlayer(op, p);
 			}
 		}
-	}
-
-	private Location toSpawn(Player p) {
-		int x, y, z;
-		if (plg.getConfig().isConfigurationSection("Spawns.Lobby")) {
-			ConfigurationSection section = plg.getConfig().getConfigurationSection("Spawns.Lobby");
-			x = section.getInt("x");
-			y = section.getInt("y");
-			z = section.getInt("z");
-			Location loc = new Location(p.getWorld(), x, y, z);
-			p.teleport(loc);
-			return loc;
-		}
-		return p.getWorld().getSpawnLocation();
 	}
 
 	// This method doesn't work with the plugin AdminCmd!
@@ -190,8 +170,8 @@ public class PlayerListener implements Listener {
 	}
 
 	private void onPlayerExit(Player p) {
-		if (Tasks.player_hunger.containsKey(p))
-			Config.getPC().setData(p, PlayerConfig.HUNGER, Tasks.player_hunger.get(p));
+		if (Tasks.player_thirst.containsKey(p))
+			Config.getPC().setData(p, PlayerConfig.HUNGER, Tasks.player_thirst.get(p));
 		else
 			Config.getPC().setData(p, PlayerConfig.HUNGER, 309999);
 		Config.getPC().saveAll();
@@ -274,96 +254,4 @@ public class PlayerListener implements Listener {
 		DarkDays.getEffectManager().cancelEffects(p);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerMove(PlayerMoveEvent event) {
-		if ((boolean) Config.getPC().getData(event.getPlayer(), PlayerConfig.SPAWNED)) {
-			Player p = event.getPlayer();
-			if (!event.getFrom().toVector().equals(event.getTo().toVector())) {
-				float lold = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * Tasks.maxExp);
-				int movX = event.getFrom().getBlockX() - event.getTo().getBlockX();
-				int movZ = event.getFrom().getBlockZ() - event.getTo().getBlockZ();
-				if (Math.abs(movX) > 0 || Math.abs(movZ) > 0) {
-					if (p.isSprinting() && p.getLocation().getY() > (int) p.getLocation().getY()) {
-						Tasks.updateThirst(p, 13);
-						Tasks.player_noise.put(p, 6);
-					} else if (p.getLocation().getY() > (int) p.getLocation().getY()) {
-						Tasks.updateThirst(p, 9);
-						Tasks.player_noise.put(p, 5);
-					} else if (p.isSprinting()) {
-						Tasks.updateThirst(p, 6);
-						Tasks.player_noise.put(p, 4);
-					} else if (p.isSneaking()) {
-						Tasks.updateThirst(p, 2);
-						Tasks.player_noise.put(p, 2);
-					} else if (Math.abs(movX) > 0 || Math.abs(movZ) > 0) {
-						Tasks.updateThirst(p, 4);
-						Tasks.player_noise.put(p, 3);
-					}
-					float lnew = (float) (((Tasks.player_noise.get(p)).intValue() - 1) * Tasks.maxExp);
-					if (lnew != lold) {
-						smoothExp(lold, lnew, p);
-						if (p.getExp() == lnew && getThread(p.getName()) != null)
-							PlayerListener.getThread(p.getName()).interrupt();
-					}
-				}
-			}
-		}
-	}
-
-	public static void smoothExp(final float lold, final float lnew, final Player p) {
-		new Thread(p.getName()) {
-			public void run() {
-				try {
-					float max = Math.max(lold, lnew);
-					float min = Math.min(lold, lnew);
-					float inc = (max - min) / 10;
-					if (lold < lnew)
-						for (int i = 1; i <= 10; i++, Thread.sleep(25)) {
-							p.setExp(min += inc);
-						}
-					else if (lold > lnew)
-						for (int i = 10; i >= 0; i--, Thread.sleep(25)) {
-							p.setExp(max -= inc);
-						}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}.start();
-	}
-
-	public static Thread getThread(final String name) {
-		if (name == null)
-			throw new NullPointerException("Null name");
-		final Thread[] threads = getAllThreads();
-		for (Thread thread : threads)
-			if (thread.getName().equals(name))
-				return thread;
-		return null;
-	}
-
-	private static Thread[] getAllThreads() {
-		final ThreadGroup root = getRootThreadGroup();
-		final ThreadMXBean thbean = ManagementFactory.getThreadMXBean();
-		int nAlloc = thbean.getThreadCount();
-		int n = 0;
-		Thread[] threads;
-		do {
-			nAlloc *= 2;
-			threads = new Thread[nAlloc];
-			n = root.enumerate(threads, true);
-		} while (n == nAlloc);
-		return java.util.Arrays.copyOf(threads, n);
-	}
-
-	private static ThreadGroup getRootThreadGroup() {
-		if (rootThreadGroup != null)
-			return rootThreadGroup;
-		ThreadGroup tg = Thread.currentThread().getThreadGroup();
-		ThreadGroup ptg;
-		while ((ptg = tg.getParent()) != null)
-			tg = ptg;
-		return tg;
-	}
 }

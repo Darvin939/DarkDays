@@ -34,24 +34,24 @@ public class Chests extends Handler {
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("add")) {
-					if (hasPermissions(p, "chest.add", true))
+					if (hasPermission(p, "chest.add", true))
 						add();
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("set")) {
-					if (hasPermissions(p, "chest.set", true))
+					if (hasPermission(p, "chest.set", true))
 						set();
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("remove")) {
-					if (hasPermissions(p, "chest.remove", true))
+					if (hasPermission(p, "chest.remove", true))
 						remove();
 					return true;
 				}
 				Util.unknownCmd(p, "chest", new String[] { args[1], "add", "set", "remove", "help" });
 				return true;
 			} else {
-				if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST && hasPermissions(p, "chest", false))
+				if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST && hasPermission(p, "chest", false))
 					if (!Config.getCC().getChestInfo(p, BlockAPI.getTargetBlock(p, 10).getLocation()))
 						Util.PrintMSGPx(p, "chest_normal");
 					else {

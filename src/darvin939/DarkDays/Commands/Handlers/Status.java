@@ -20,7 +20,7 @@ public class Status extends Handler {
 	public boolean perform(CommandSender s, String[] args) throws InvalidUsage {
 		if (s instanceof Player) {
 			Player p = (Player) s;
-			if (hasPermissions(p, "status", true))
+			if (hasPermission(p, "status", true))
 				if (PlayerInfo.isPlaying(p)) {
 					PlayerData pd = PlayerInfo.getPlayers().get(p.getUniqueId());
 					Util.Print(p, "&b================= &2Your Progress &b=================");

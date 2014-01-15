@@ -25,7 +25,7 @@ package darvin939.DarkDays.Utils;
  * Modified for plugin DarkDays by Darvin939 (Sergey)
  * Contact email: darvin212@gmail.com
  * 
- * */
+ */
 
 import java.io.File;
 import java.io.InputStream;
@@ -146,8 +146,6 @@ public abstract class FGUtilCore extends CipherUtil {
 		else
 			cmdlist = cmdlist + ", " + cmd;
 	}
-
-
 
 	public class Cmd {
 		String perm;

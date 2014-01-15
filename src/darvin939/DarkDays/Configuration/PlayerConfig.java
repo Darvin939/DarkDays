@@ -123,19 +123,6 @@ public class PlayerConfig {
 		}
 	}
 
-	public static Location getSpawnLoc(Player p) {
-		int x, y, z;
-		if (plg.getConfig().isConfigurationSection("Spawns.Lobby")) {
-			ConfigurationSection section = plg.getConfig().getConfigurationSection("Spawns.Lobby");
-			x = section.getInt("x");
-			y = section.getInt("y");
-			z = section.getInt("z");
-			Location loc = new Location(p.getWorld(), x, y, z);
-			return loc;
-		}
-		return p.getWorld().getSpawnLocation();
-	}
-
 	public void saveAll() {
 		if (Config.isSqlWrapper()) {
 			for (Player p : Bukkit.getOnlinePlayers()) {

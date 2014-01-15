@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import darvin939.DarkDays.Configuration.PlayerConfig;
+import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Players.Memory.PlayerLoadData;
 import darvin939.DarkDays.SQL.DBInitLite;
 
@@ -44,8 +44,10 @@ public class SQLPlayer extends DDPlayer {
 	}
 
 	public static void createTables() {
-		DBInitLite.query("CREATE TABLE IF NOT EXISTS `players_data` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`hunger` INT NOT NULL DEFAULT 309999 ,`death` VARCHAR(10) NOT NULL DEFAULT 0 ,`novice` VARCHAR(10) NOT NULL DEFAULT 1 ,`spawned` VARCHAR(10) NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`) );");
-		DBInitLite.query("CREATE TABLE IF NOT EXISTS `players` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`x` DOUBLE DEFAULT NULL ,`y` DOUBLE DEFAULT NULL ,`z` DOUBLE DEFAULT NULL ,`yaw` FLOAT DEFAULT NULL ,`pitch` FLOAT DEFAULT NULL ,`world` VARCHAR(45) DEFAULT NULL ,PRIMARY KEY (`id`) );");
+		DBInitLite
+				.query("CREATE TABLE IF NOT EXISTS `players_data` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`hunger` INT NOT NULL DEFAULT 309999 ,`death` VARCHAR(10) NOT NULL DEFAULT 0 ,`novice` VARCHAR(10) NOT NULL DEFAULT 1 ,`spawned` VARCHAR(10) NOT NULL DEFAULT 0 ,PRIMARY KEY (`id`) );");
+		DBInitLite
+				.query("CREATE TABLE IF NOT EXISTS `players` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`x` DOUBLE DEFAULT NULL ,`y` DOUBLE DEFAULT NULL ,`z` DOUBLE DEFAULT NULL ,`yaw` FLOAT DEFAULT NULL ,`pitch` FLOAT DEFAULT NULL ,`world` VARCHAR(45) DEFAULT NULL ,PRIMARY KEY (`id`) );");
 		DBInitLite.query("CREATE TABLE IF NOT EXISTS `players_effects` (`id` INT NOT NULL AUTO_INCREMENT ,`username` VARCHAR(45) NOT NULL ,`key` VARCHAR(45) NOT NULL ,PRIMARY KEY (`id`) );");
 	}
 
@@ -195,11 +197,11 @@ public class SQLPlayer extends DDPlayer {
 					UPDATE_PLAYER.setFloat(4, player.getLocation().getYaw());
 					UPDATE_PLAYER.setFloat(5, player.getLocation().getPitch());
 				} else {
-					UPDATE_PLAYER.setDouble(1, PlayerConfig.getSpawnLoc(player).getX());
-					UPDATE_PLAYER.setDouble(2, PlayerConfig.getSpawnLoc(player).getY());
-					UPDATE_PLAYER.setDouble(3, PlayerConfig.getSpawnLoc(player).getZ());
-					UPDATE_PLAYER.setFloat(4, PlayerConfig.getSpawnLoc(player).getYaw());
-					UPDATE_PLAYER.setFloat(5, PlayerConfig.getSpawnLoc(player).getPitch());
+					UPDATE_PLAYER.setDouble(1, Config.getSpawnCfg().getSpawnLoc(player).getX());
+					UPDATE_PLAYER.setDouble(2, Config.getSpawnCfg().getSpawnLoc(player).getY());
+					UPDATE_PLAYER.setDouble(3, Config.getSpawnCfg().getSpawnLoc(player).getZ());
+					UPDATE_PLAYER.setFloat(4, Config.getSpawnCfg().getSpawnLoc(player).getYaw());
+					UPDATE_PLAYER.setFloat(5, Config.getSpawnCfg().getSpawnLoc(player).getPitch());
 				}
 				UPDATE_PLAYER.setString(6, player.getWorld().getName());
 				UPDATE_PLAYER.setLong(7, id);
