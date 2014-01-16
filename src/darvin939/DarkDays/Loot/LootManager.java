@@ -172,7 +172,6 @@ public class LootManager {
 			String item = itemList.get(i);
 			if (cfg.isSet(list + ".items." + item + ".spawn") && !cfg.getString(list + ".items." + item + ".spawn").isEmpty()) {
 				Material material = getMaterial(item);
-
 				int[] amountRange = getItemAmount(list, item);
 				int min = amountRange[0];
 				int max = amountRange[1] - amountRange[0];

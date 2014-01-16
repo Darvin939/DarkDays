@@ -38,7 +38,6 @@ import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Utils.Util;
-import darvin939.DeprecAPI.BlockAPI;
 
 public class PlayerListener implements Listener {
 	DarkDays plg;
@@ -49,15 +48,14 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onInventoryCloseEvent(InventoryCloseEvent event) {
-		Player p = (Player) event.getPlayer();
 		if (event.getInventory().getHolder() instanceof Chest && event.getPlayer() instanceof Player) {
-			if (Config.getCC().isChest(p))
-				if (Nodes.chest_disappear.getBoolean() && Config.getCC().getLoot(BlockAPI.getTargetBlock(p, 10).getLocation()) != null) {
-					Chest chest = (Chest) event.getInventory().getHolder();
-					if (LootManager.isChestEmpty(BlockAPI.getTargetBlock(p, 10))) {
-						Block block = BlockAPI.getTargetBlock(p, 10);
+			Chest chest = (Chest) event.getInventory().getHolder();
+			Block b = chest.getBlock();
+			if (Config.getCC().isChest(b))
+				if (Nodes.chest_disappear.getBoolean() && Config.getCC().getLoot(b.getLocation()) != null) {
+					if (LootManager.isChestEmpty(b)) {
 						chest.getInventory().clear();
-						Location chestloc = new Location(block.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
+						Location chestloc = new Location(b.getWorld(), b.getLocation().getBlockX(), b.getLocation().getBlockY(), b.getLocation().getBlockZ());
 						chestloc.getBlock().setType(Material.AIR);
 					}
 				}

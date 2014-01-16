@@ -8,12 +8,15 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Commands.Handler;
 import darvin939.DarkDays.Commands.InvalidUsage;
 import darvin939.DarkDays.Configuration.Config;
+import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerInfo;
@@ -86,6 +89,9 @@ public class Spawn extends Handler {
 							Tasks.player_noise.put(p, 1.0);
 							PlayerInfo.addPlayer(p);
 							p.getInventory().clear();
+							
+							if (Nodes.spawn_withBlindness.getBoolean())
+								p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 50, 1));
 							// kit
 							if (Config.getLC().getCfg().isConfigurationSection("Kit"))
 								p.getInventory().addItem(LootManager.getContents("Kit"));

@@ -6,10 +6,11 @@ WandItem: 369
 ControlSItems: true
 ColouredTags: true
 EnableRegions: false
+SpawnWithBlindness: true
 Zombie:
   OnlyZombies: true
   Speed: 0.4
-  Smoothness: 5
+  Smoothness: 15
   AttackStrength: 4
   Health: 24
   PickUpPlayerArmor: true
@@ -19,6 +20,7 @@ Chest:
   IfOnlyEmpty: true
   RegenTime: 2
   Disappear: true
+  ClickToDestroy: true
 MySQL:
   Username: root
   Password: root

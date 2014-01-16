@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -131,6 +132,15 @@ public class ChestConfig {
 	public Boolean isChest(Player p) {
 		if (BlockAPI.getTargetBlock(p, 10).getType() == Material.CHEST) {
 			Location l = BlockAPI.getTargetBlock(p, 10).getLocation();
+			if (chests.containsKey(l))
+				return true;
+		}
+		return false;
+	}
+	
+	public Boolean isChest(Block b) {
+		if (b.getType() == Material.CHEST) {
+			Location l = b.getLocation();
 			if (chests.containsKey(l))
 				return true;
 		}

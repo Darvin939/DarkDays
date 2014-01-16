@@ -132,9 +132,21 @@ public class Loot extends Handler {
 				if (nargs.length == 3) {
 					try {
 						dur = Integer.parseInt(nargs[2]);
-						if (dur != 0 && dur > 0 && dur <= 100) {
-							data.getItem(LootManager.getMaterial(nargs[1])).setDurability(dur);
-							Util.PrintMSG(p, "loot_durability_set", nargs[1] + ";" + dur);
+						if (dur != 0 && dur > 0 && dur <= 99) {
+							String mn = LootManager.getMaterial(nargs[1]).toString();
+							int dur2 = dur;
+							if (mn.startsWith("WOOD_"))
+								dur2 = (int) Math.round(0.6 * dur);
+							if (mn.startsWith("IRON_"))
+								dur2 = (int) Math.round(2.51 * dur);
+							if (mn.startsWith("GOLD_"))
+								dur2 = (int) Math.round(0.33 * dur);
+							if (mn.startsWith("STONE_"))
+								dur2 = (int) Math.round(1.32 * dur);
+							if (mn.startsWith("DIAMOND_"))
+								dur2 = (int) Math.round(15.62 * dur);
+							data.getItem(LootManager.getMaterial(nargs[1])).setDurability(dur2);
+							Util.PrintMSG(p, "loot_durability_set", nargs[1] + ";" + dur2 + " (" + dur + "%)");
 							return;
 						}
 					} catch (NumberFormatException e) {
