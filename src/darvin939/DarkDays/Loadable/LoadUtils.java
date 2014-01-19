@@ -1,13 +1,11 @@
 package darvin939.DarkDays.Loadable;
 
-import java.util.Random;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Utils.Randomizer;
+import darvin939.DarkDays.Utils.Rnd;
 
 public class LoadUtils {
 	// For items
@@ -21,15 +19,7 @@ public class LoadUtils {
 
 	// For effects
 	public boolean isPercent(String effect) {
-		int percent;
-		percent = DarkDays.getEffectManager().getEffects().get(effect).getPercent();
-		if (Randomizer.isPercent(percent)) {
-			Integer[] i = Randomizer.getPeriod(percent);
-			int r = new Random().nextInt(i[1]) + i[0];
-			if (percent >= r) {
-				return true;
-			}
-		}
-		return false;
+		int percent = DarkDays.getEffectManager().getEffects().get(effect).getPercent();
+		return Rnd.get(percent);
 	}
 }

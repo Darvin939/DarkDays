@@ -9,8 +9,8 @@ EnableRegions: false
 SpawnWithBlindness: true
 Zombie:
   OnlyZombies: true
-  Speed: 0.4
-  Smoothness: 15
+  Speed: 4
+  Smoothness: 5
   AttackStrength: 4
   Health: 24
   PickUpPlayerArmor: true

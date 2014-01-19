@@ -2,27 +2,42 @@ package darvin939.DarkDays.Utils;
 
 import java.util.Random;
 
-public class Randomizer {
+public class Rnd {
 
 	private final static Integer a = 2;
-	private final static Integer b = a * 3;
+	private final static Integer b = 3;
 
-	public static boolean isPercent(Integer chance) {
+	public static boolean get(Integer percent) {
+		if (isPercent(percent)) {
+			System.out.println("1");
+			Integer[] i = getPeriod(percent);
+			int r = new Random().nextInt(i[1]) + i[0];
+			System.out.println(r);
+			if (percent >= r) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isPercent(Integer chance) {
 		int type = getType(chance);
 		Random r = new Random();
 		int summ = 0;
 		for (int i = 0; i < type; i++) {
 			int s = r.nextInt(b);
+			System.out.println(s);
 			if (s < a)
 				summ += 1;
 		}
+		System.out.println(summ+"|"+type);
 		if (summ == type) {
 			return true;
 		}
 		return false;
 	}
 
-	public static Integer getType(Integer chance) {
+	private static Integer getType(Integer chance) {
 		int type;
 		if (chance > 84)
 			type = 1;
@@ -41,7 +56,7 @@ public class Randomizer {
 		return type;
 	}
 
-	public static Integer[] getPeriod(Integer chance) {
+	private static Integer[] getPeriod(Integer chance) {
 		int type = getType(chance);
 		Integer[] out = new Integer[] { 0, 100 };
 		if (type == 1)

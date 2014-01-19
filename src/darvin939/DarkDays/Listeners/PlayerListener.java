@@ -223,7 +223,7 @@ public class PlayerListener implements Listener {
 					}
 				}
 
-				LivingEntity datZombie = (LivingEntity) loc.getWorld().spawnEntity(loc, EntityType.ZOMBIE);
+				LivingEntity datZombie = (LivingEntity) p.getWorld().spawnEntity(loc, EntityType.ZOMBIE);
 
 				if (Nodes.zombie_pickup.getBoolean()) {
 					datZombie.getEquipment().setHelmet(p.getEquipment().getHelmet());
