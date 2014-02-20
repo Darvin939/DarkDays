@@ -19,7 +19,7 @@ import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Loot.LootManager;
-import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 import darvin939.DarkDays.Utils.Util;
 
 public class Spawn extends Handler {
@@ -87,7 +87,7 @@ public class Spawn extends Handler {
 							Config.getPC().setData(p, PlayerConfig.HUNGER, 309999);
 							Tasks.player_thirst.put(p, 309999);
 							Tasks.player_noise.put(p, 1.0);
-							PlayerInfo.addPlayer(p);
+							PlayerData.addPlayer(p);
 							p.getInventory().clear();
 							
 							if (Nodes.spawn_withBlindness.getBoolean())
@@ -114,9 +114,9 @@ public class Spawn extends Handler {
 				getHelp(p, "spawn.set");
 			else if (Config.getSpawnCfg().removeSpawn(p.getWorld(), nargs[1])) {
 				formatConig();
-				Util.PrintMSG(p, "spawn_remove_success", Util.FCTU(nargs[1].toLowerCase()));
+				Util.PrintMSGPx(p, "spawn_remove_success", Util.FCTU(nargs[1].toLowerCase()));
 			} else
-				Util.PrintMSG(p, "spawn_remove_fail", Util.FCTU(nargs[1].toLowerCase()));
+				Util.PrintMSGPx(p, "spawn_remove_fail", Util.FCTU(nargs[1].toLowerCase()));
 
 		} else
 			getHelp(p, "spawn.remove");

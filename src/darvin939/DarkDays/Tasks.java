@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.server.v1_7_R1.EntityHuman;
@@ -34,7 +35,7 @@ import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.Noise.Noise;
 import darvin939.DarkDays.Loot.LootManager;
-import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 import darvin939.DarkDays.Utils.Util;
 
 public class Tasks {
@@ -48,6 +49,7 @@ public class Tasks {
 	public static List<UUID> speedZombies = new ArrayList<UUID>();
 	private DarkDays plg;
 	private Server server;
+	protected int r;
 
 	public Tasks(DarkDays plugin) {
 		plg = plugin;
@@ -71,29 +73,45 @@ public class Tasks {
 		}, Nodes.chest_regen.getInteger() * 200, Nodes.chest_regen.getInteger() * 200);
 
 		// save task
-		plg.getServer().getScheduler().runTaskTimer(plg, new Runnable() {
+		server.getScheduler().runTaskTimer(plg, new Runnable() {
 			public void run() {
 				Config.getPC().saveAll();
 				Config.getCC().saveAll();
 			}
 		}, 1000, 1000);
 
-		/*
-		 * plg.getServer().getScheduler().scheduleSyncRepeatingTask(plg, new
-		 * Runnable() { public void run() { SignListener.entityRespawnTask(); }
-		 * }, 200, 200);
-		 */
+		server.getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
+			public void run() {
+				randomMessage();
+			}
+		}, 300, 50);
+	}
 
+	private void randomMessage() {
+		for (Player p : server.getOnlinePlayers()) {
+			if (PlayerData.isPlaying(p)) {
+				Random r = new Random();
+				if (r.nextBoolean()) {
+					String prefix = Config.BiomeMessages(p.getWorld().getBiome(p.getLocation().getBlockX(), p.getLocation().getBlockZ()));
+					if (r.nextBoolean())
+						prefix = "";
+					if (!prefix.isEmpty())
+						Util.PrintMSG(p, "msg_" + prefix + (r.nextInt(Config.getBiomeMessageCount(prefix)) + 1));
+					else
+						Util.PrintMSG(p, "msg_standart_" + (r.nextInt(Config.getBiomeMessageCount("standart_")) + 1));
+				}
+			}
+		}
 	}
 
 	public static double getNoise(Player p) {
 		return ((player_noise.get(p)) - 1) * maxExp;
 	}
 
-	public void mainTask() {
+	private void mainTask() {
 		for (Player p : server.getOnlinePlayers())
 			if (player_thirst.containsKey(p)) {
-				if (!p.isDead() && PlayerInfo.isPlaying(p)) {
+				if (!p.isDead() && PlayerData.isPlaying(p)) {
 					updateThirst(p, 1);
 					p.setLevel(player_thirst.get(p) / 10000);
 					double original = getNoise(p);

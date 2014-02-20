@@ -71,7 +71,7 @@ public class DarkDays extends JavaPlugin {
 
 	private static final String consolePfx = "[DarkDays] ";
 	private static String chatPfx = "&b[DarkDays]&f ";
-	private static final String premPfx = "darkdays.";
+	private static final String premPfx = "darkdays";
 	private static final String cmdPfx = "/dd ";
 
 	public void onDisable() {
@@ -126,13 +126,13 @@ public class DarkDays extends JavaPlugin {
 		des = getDescription();
 		// LOGO
 		{
-			Util.SC("");
-			Util.SC("$$$$$    $$$$   $$$$$   $$  $$  $$$$$    $$$$   $$  $$   $$$$ ");
-			Util.SC("$$  $$  $$  $$  $$  $$  $$ $$   $$  $$  $$  $$   $$$$   $$    ");
-			Util.SC("$$  $$  $$$$$$  $$$$$   $$$$    $$  $$  $$$$$$    $$     $$$$ ");
-			Util.SC("$$  $$  $$  $$  $$  $$  $$ $$   $$  $$  $$  $$    $$        $$");
-			Util.SC("$$$$$   $$  $$  $$  $$  $$  $$  $$$$$   $$  $$    $$     $$$$ ");
-			Util.SC("");
+			Util.CS("");
+			Util.CS("$$$$$    $$$$   $$$$$   $$  $$  $$$$$    $$$$   $$  $$   $$$$ ");
+			Util.CS("$$  $$  $$  $$  $$  $$  $$ $$   $$  $$  $$  $$   $$$$   $$    ");
+			Util.CS("$$  $$  $$$$$$  $$$$$   $$$$    $$  $$  $$$$$$    $$     $$$$ ");
+			Util.CS("$$  $$  $$  $$  $$  $$  $$ $$   $$  $$  $$  $$    $$        $$");
+			Util.CS("$$$$$   $$  $$  $$  $$  $$  $$  $$$$$   $$  $$    $$     $$$$ ");
+			Util.CS("");
 		}
 
 		// getLogger().info("Plugin " + des.getName() + " v" + des.getVersion()
@@ -328,7 +328,7 @@ public class DarkDays extends JavaPlugin {
 		} else {
 
 			if (handler == null) {
-				Util.PrintMSG(sender, "cmd_unknown", getCmdPfx() + args[0]);
+				Util.PrintMSGPx(sender, "cmd_unknown", getCmdPfx() + args[0]);
 				Util.Print(sender, Config.FGU.MSG("hlp_commands") + " &2" + getCmdPfx() + "&7<" + Commands.getCommandsString() + "&7>");
 				return true;
 			}
@@ -356,7 +356,7 @@ public class DarkDays extends JavaPlugin {
 	}
 
 	public boolean hasPermission(Player p, String perm) {
-		return p.hasPermission(premPfx + perm);
+		return p.hasPermission(premPfx + "." + perm);
 	}
 
 	public void getHelp(Player p, String command) {

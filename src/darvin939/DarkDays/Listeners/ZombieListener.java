@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Tasks;
 import darvin939.DarkDays.Configuration.Config.Nodes;
-import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Regions.RegionManager;
 
@@ -56,24 +56,24 @@ public class ZombieListener implements Listener {
 			EntityDamageByEntityEvent damage = (EntityDamageByEntityEvent) entity.getLastDamageCause();
 			if (damage.getDamager().getType() == EntityType.PLAYER) {
 				Player killer = (Player) damage.getDamager();
-				PlayerInfo.addZombieKill(killer);
+				PlayerData.addZombieKill(killer);
 			}
 		}
 		UUID id = ((LivingEntity) entity).getUniqueId();
 		if (Tasks.speedZombies.contains(id))
 			Tasks.speedZombies.remove(id);
 	}
-	
-	//@EventHandler(priority = EventPriority.NORMAL)
-	//public void onEntityTarget(EntityTargetEvent event) {
-	//	Entity e = event.getEntity();
-	//	if (event.getTarget() instanceof Player) {
-	//		Player p = (Player) event.getTarget();
-	//		if (p.isDead() || p.getGameMode() == GameMode.CREATIVE) {
-	//			e.remove();
-	//		}
-	//	}
-	//}
+
+	// @EventHandler(priority = EventPriority.NORMAL)
+	// public void onEntityTarget(EntityTargetEvent event) {
+	// Entity e = event.getEntity();
+	// if (event.getTarget() instanceof Player) {
+	// Player p = (Player) event.getTarget();
+	// if (p.isDead() || p.getGameMode() == GameMode.CREATIVE) {
+	// e.remove();
+	// }
+	// }
+	// }
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerKill(EntityDamageByEntityEvent event) {
@@ -88,18 +88,15 @@ public class ZombieListener implements Listener {
 	public void onEntitySpawn(CreatureSpawnEvent event) {
 		Entity e = event.getEntity();
 		if (RegionManager.canSpawn(event)) {
-			if (Nodes.only_zombies.getBoolean()) {
-				if (!event.getEntityType().equals(EntityType.ZOMBIE)) {
-					if ((e instanceof Monster) || e instanceof Animals) {
-						e.getWorld().spawn(e.getLocation(), (Class<? extends Entity>)Zombie.class);
-						event.setCancelled(true);
-					} else {
-						event.setCancelled(true);
-					}
+			if (!event.getEntityType().equals(EntityType.ZOMBIE)) {
+				if ((e instanceof Monster) || e instanceof Animals) {
+					e.getWorld().spawn(e.getLocation(), (Class<? extends Entity>) Zombie.class);
+					event.setCancelled(true);
+				} else {
+					event.setCancelled(true);
 				}
 			}
-		} else
-			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

@@ -26,7 +26,7 @@ public class Tag extends Handler {
 			if (args.length > 1) {
 				if (hasPermission(p, "tag", true)) {
 					if (args[1].equalsIgnoreCase("enable")) {
-						Util.PrintMSG(p, "tag_ends", "enabled");
+						Util.PrintMSGPx(p, "tag_ends", "enabled");
 						ptag.remove(p);
 						for (Player op : plugin.getServer().getOnlinePlayers()) {
 							if (!op.equals(p)) {
@@ -36,7 +36,7 @@ public class Tag extends Handler {
 						return true;
 					}
 					if (args[1].equalsIgnoreCase("disable")) {
-						Util.PrintMSG(p, "tag_ends", "disabled");
+						Util.PrintMSGPx(p, "tag_ends", "disabled");
 						ptag.add(p);
 						for (Player op : plugin.getServer().getOnlinePlayers()) {
 							if (!op.equals(p)) {

@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 
 public class EntityListener implements Listener {
 
@@ -39,6 +39,6 @@ public class EntityListener implements Listener {
 	public void cancelAgroIfTargetIsNotPlaying(EntityTargetLivingEntityEvent event) {
 		Entity target = event.getTarget();
 		if (target.getType() == EntityType.PLAYER)
-			event.setCancelled(!PlayerInfo.isPlaying((Player) target));
+			event.setCancelled(!PlayerData.isPlaying((Player) target));
 	}
 }

@@ -12,7 +12,7 @@ import org.kitteh.tag.TagAPI;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config.Nodes;
-import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 
 public class TagAPIListener implements Listener {
 	public static ArrayList<Player> ptag = new ArrayList<Player>();
@@ -37,12 +37,12 @@ public class TagAPIListener implements Listener {
 		if (Nodes.coloured_tegs.getBoolean()) {
 			Player p = event.getNamedPlayer();
 			String name = p.getDisplayName();
-			if (PlayerInfo.getPlayerHeals(p) < PlayerInfo.getPlayerKills(p)) {
+			if (PlayerData.getPlayerHeals(p) < PlayerData.getPlayerKills(p)) {
 				event.setTag(ChatColor.RED.toString() + name);
-				p.sendMessage("RED" + PlayerInfo.getPlayerHeals(p) + " - " + PlayerInfo.getPlayerKills(p));
-			} else if (PlayerInfo.getPlayerHeals(p) > PlayerInfo.getPlayerKills(p)) {
+				p.sendMessage("RED" + PlayerData.getPlayerHeals(p) + " - " + PlayerData.getPlayerKills(p));
+			} else if (PlayerData.getPlayerHeals(p) > PlayerData.getPlayerKills(p)) {
 				event.setTag(ChatColor.GREEN.toString() + name);
-				p.sendMessage("GREEN" + PlayerInfo.getPlayerHeals(p) + " - " + PlayerInfo.getPlayerKills(p));
+				p.sendMessage("GREEN" + PlayerData.getPlayerHeals(p) + " - " + PlayerData.getPlayerKills(p));
 			} else
 				event.setTag(name);
 			for (Player op : plg.getServer().getOnlinePlayers()) {

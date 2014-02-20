@@ -33,7 +33,6 @@ import com.sk89q.worldedit.regions.Polygonal2DRegionSelector;
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Configuration.Config;
 import darvin939.DarkDays.Configuration.Config.Nodes;
-import darvin939.DarkDays.Regions.Memory.SignRegionData;
 import darvin939.DarkDays.Utils.CipherUtil;
 import darvin939.DarkDays.Utils.Util;
 import darvin939.DeprecAPI.ItemAPI;

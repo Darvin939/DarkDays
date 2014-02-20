@@ -103,9 +103,9 @@ public abstract class FGUtilCore extends CipherUtil {
 
 	public void UpdateMsg() {
 		if ((version_new > version_current) && version_check) {
-			Util.SC(des.getName() + " v" + version_current + " is outdated!");
-			Util.SC("Recommended version is v" + version_new);
-			Util.SC("&3" + version_check_url.replace("files.rss", ""));
+			Util.CSPx("v" + version_current + " is outdated!");
+			Util.CSPx("Recommended version is v" + version_new);
+			Util.CS("&3" + version_check_url.replace("files.rss", ""));
 		}
 	}
 
@@ -122,11 +122,10 @@ public abstract class FGUtilCore extends CipherUtil {
 				Element firstNameElement = (Element) firstElementTagName.item(0);
 				NodeList firstNodes = firstNameElement.getChildNodes();
 				version_new_str = firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim();
-
 				return Double.parseDouble(firstNodes.item(0).getNodeValue().replace("DarkDays v", "").replace("(JAR only)", "").trim());
 			}
 		} catch (Exception e) {
-			Util.SCPx("Failed to get updates");
+			Util.CSPx("Failed to get updates");
 		}
 		return currentVersion;
 	}
@@ -155,6 +154,10 @@ public abstract class FGUtilCore extends CipherUtil {
 			this.perm = perm;
 			this.desc = desc;
 		}
+	}
+	
+	public String getMsglist() {
+		return msglist;
 	}
 
 	public void addMSG(String key, String txt) {

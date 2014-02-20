@@ -1,4 +1,4 @@
-package darvin939.DarkDays.Regions.Memory;
+package darvin939.DarkDays.Regions;
 
 import java.util.Random;
 

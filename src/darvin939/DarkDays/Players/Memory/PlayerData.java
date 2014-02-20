@@ -1,67 +1,67 @@
 package darvin939.DarkDays.Players.Memory;
 
+import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
+
 public class PlayerData {
-	private UUID playerId;
-	private boolean novice;
-	private Integer zombieKills = 0;
-	private Integer playerKills = 0;
-	private Integer playerHeals = 0;
+	private static HashMap<UUID, PlayerStatus> players = new HashMap<UUID, PlayerStatus>();
 
-	public PlayerData(UUID playerId) {
-		this.playerId = playerId;
+	public static void addPlayer(Player player) {
+		players.put(player.getUniqueId(), new PlayerStatus(player.getUniqueId()));
 	}
 
-	public UUID getPlayerId() {
-		return playerId;
+	public static boolean isPlaying(Player player) {
+		return players.containsKey(player.getUniqueId());
 	}
 
-	public void setPlayerId(UUID playerId) {
-		this.playerId = playerId;
+	public static void removePlayer(Player player) {
+		players.remove(player.getUniqueId());
 	}
 
-	public boolean isNovice() {
-		return novice;
+	public static void addZombieKill(Player player) {
+		if (isPlaying(player)) {
+			PlayerStatus bean = (PlayerStatus) players.get(player.getUniqueId());
+			bean.addZombieKill();
+		}
 	}
 
-	public void setNovice(Boolean novice) {
-		this.novice = novice;
+	public static int getZombieKills(Player player) {
+		if (isPlaying(player)) {
+			PlayerStatus bean = (PlayerStatus) players.get(player.getUniqueId());
+			return bean.getZombieKills().intValue();
+		}
+		return 0;
 	}
 
-	public Integer getZombieKills() {
-		return zombieKills;
+	public static void addPlayerKill(Player player) {
+		if (isPlaying(player)) {
+			PlayerStatus bean = (PlayerStatus) players.get(player.getUniqueId());
+			bean.addPlayerKill();
+		}
 	}
 
-	public void setZombieKills(Integer zombieKills) {
-		this.zombieKills = zombieKills;
+	public static int getPlayerKills(Player player) {
+		if (isPlaying(player)) {
+			PlayerStatus bean = (PlayerStatus) players.get(player.getUniqueId());
+			return bean.getPlayerKills().intValue();
+		}
+		return 0;
 	}
 
-	public void addZombieKill() {
-		this.zombieKills = Integer.valueOf(zombieKills.intValue() + 1);
+	public static void addPlayerHeal(Player player) {
+		if (isPlaying(player)) {
+			PlayerStatus bean = (PlayerStatus) players.get(player.getUniqueId());
+			bean.addPlayerHeal();
+		}
 	}
 
-	public Integer getPlayerKills() {
-		return playerKills;
-	}
-
-	public void setPlayerKills(Integer playerKills) {
-		this.playerKills = playerKills;
-	}
-
-	public void addPlayerKill() {
-		this.playerKills = Integer.valueOf(playerKills.intValue() + 1);
-	}
-
-	public Integer getPlayerHeals() {
-		return playerHeals;
-	}
-
-	public void setPlayerHeals(Integer playerHeals) {
-		this.playerHeals = playerHeals;
-	}
-
-	public void addPlayerHeal() {
-		this.playerHeals = Integer.valueOf(playerHeals.intValue() + 1);
+	public static int getPlayerHeals(Player player) {
+		if (isPlaying(player)) {
+			PlayerStatus bean = (PlayerStatus) players.get(player.getUniqueId());
+			return bean.getPlayerHeals().intValue();
+		}
+		return 0;
 	}
 }

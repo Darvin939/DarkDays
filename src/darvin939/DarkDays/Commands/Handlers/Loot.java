@@ -106,7 +106,7 @@ public class Loot extends Handler {
 		for (Entry<Material, ItemData> s : data.getItems().entrySet()) {
 			ConfigurationSection sec = section.createSection(String.valueOf(ItemAPI.get(s.getKey()).id()));
 			if (s.getValue().getSpawn().isEmpty())
-				Util.PrintMSG(p, "loot_flag_spawnnf", "item " + ItemAPI.get(s.getKey()).id());
+				Util.PrintMSGPx(p, "loot_flag_spawnnf", "item " + ItemAPI.get(s.getKey()).id());
 			sec.set("spawn", s.getValue().getSpawn());
 			sec.set("durability", s.getValue().getDurability());
 			sec.set("effects", Arrays.asList(s.getValue().getEffect().split(";")));
@@ -118,8 +118,8 @@ public class Loot extends Handler {
 				sec.set("spawn", potion.getSpawn());
 				sec.set("effects", Arrays.asList(potion.getEffect().split(";")));
 			} else
-				Util.PrintMSG(p, "loot_flag_spawnnf", "Potion");
-		Util.PrintMSG(p, "loot_save", Util.FCTU(data.getName()));
+				Util.PrintMSGPx(p, "loot_flag_spawnnf", "Potion");
+		Util.PrintMSGPx(p, "loot_save", Util.FCTU(data.getName()));
 		Config.getLC().saveConfig();
 	}
 
@@ -146,7 +146,7 @@ public class Loot extends Handler {
 							if (mn.startsWith("DIAMOND_"))
 								dur2 = (int) Math.round(15.62 * dur);
 							data.getItem(LootManager.getMaterial(nargs[1])).setDurability(dur2);
-							Util.PrintMSG(p, "loot_durability_set", nargs[1] + ";" + dur2 + " (" + dur + "%)");
+							Util.PrintMSGPx(p, "loot_durability_set", nargs[1] + ";" + dur2 + " (" + dur + "%)");
 							return;
 						}
 					} catch (NumberFormatException e) {
@@ -192,7 +192,7 @@ public class Loot extends Handler {
 					data.setPotion("spawn", spawn);
 				if (!effects.isEmpty())
 					data.setPotion("effects", effects);
-				Util.PrintMSG(p, "loot_flag_set", "Potion");
+				Util.PrintMSGPx(p, "loot_flag_set", "Potion");
 				return;
 			}
 			if (LootManager.getMaterial(nargs[1]) != null && data.getItems().containsKey(LootManager.getMaterial(nargs[1]))) {
@@ -219,7 +219,7 @@ public class Loot extends Handler {
 						data.getItem(LootManager.getMaterial(nargs[1])).setSpawn(spawn);
 					if (!effects.isEmpty())
 						data.getItem(LootManager.getMaterial(nargs[1])).setEffect(effects);
-					Util.PrintMSG(p, "loot_flag_set", nargs[1]);
+					Util.PrintMSGPx(p, "loot_flag_set", nargs[1]);
 				}
 				return;
 			}
@@ -255,7 +255,7 @@ public class Loot extends Handler {
 		}
 		if (counter == effects.length)
 			return e;
-		Util.PrintMSG(p, "loot_parser", "Potion ffect");
+		Util.PrintMSGPx(p, "loot_parser", "Potion ffect");
 		return "";
 	}
 
@@ -289,7 +289,7 @@ public class Loot extends Handler {
 		}
 		if (counter == effects.length)
 			return e;
-		Util.PrintMSG(p, "loot_parser", "Item effect");
+		Util.PrintMSGPx(p, "loot_parser", "Item effect");
 		return "";
 	}
 
@@ -315,7 +315,7 @@ public class Loot extends Handler {
 		}
 		if (b1 && b2)
 			return s;
-		Util.PrintMSG(p, "loot_parser", "Spawn");
+		Util.PrintMSGPx(p, "loot_parser", "Spawn");
 		return "";
 	}
 
@@ -330,7 +330,7 @@ public class Loot extends Handler {
 					items = items.isEmpty() ? "&2" + item + "&f" : items + ", &2" + item + "&f";
 				}
 			}
-			Util.PrintMSG(p, "loot_item_add", items);
+			Util.PrintMSGPx(p, "loot_item_add", items);
 		} else
 			getHelp(p, "loot.item");
 	}
@@ -374,7 +374,7 @@ public class Loot extends Handler {
 				if (list.equalsIgnoreCase(nargs[1])) {
 					Config.getLC().getCfg().set(Util.FCTU(nargs[1].toLowerCase()), null);
 					Config.getLC().saveConfig();
-					Util.PrintMSG(p, "loot_remove", Util.FCTU(nargs[1].toLowerCase()));
+					Util.PrintMSGPx(p, "loot_remove", Util.FCTU(nargs[1].toLowerCase()));
 				}
 			}
 		} else
@@ -385,7 +385,7 @@ public class Loot extends Handler {
 		String[] nargs = Util.newArgs(args);
 		if (nargs.length > 1) {
 			nameOfLoot.put(p, new Data(nargs[1].toLowerCase()));
-			Util.PrintMSG(p, "loot_new", Util.FCTU(nargs[1].toLowerCase()) + ";" + nargs[1].toLowerCase());
+			Util.PrintMSGPx(p, "loot_new", Util.FCTU(nargs[1].toLowerCase()) + ";" + nargs[1].toLowerCase());
 		} else
 			getHelp(p, "loot.new");
 	}

@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lib.PatPeter.SQLibrary.Database;
 
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -29,41 +32,17 @@ public class Config extends FGUtilCore {
 	public Config(DarkDays plg, boolean vcheck, String lng, String devbukkitname, String px) {
 		super(plg, vcheck, lng, devbukkitname, px);
 		setupMessages();
+		setupRandomMessages();
 		SaveMSG();
 		FGU = this;
 	}
 
 	public static enum Nodes {
-		language("Language", "english"), 
-		verCheck("Version-check", true), 
-		prefix("Prefix", "DarkDays"), 
-		disable_health_regen("DisableHealthRegen", false),
-		wand_item("WandItem", 369), 
-		control_sitemst("ControlSItems", true), 
-		coloured_tegs("ColouredTags", true), 
-		enable_regions("EnableRegions", false), 
-		spawn_withBlindness("SpawnWithBlindness",true),
-		only_zombies("Zombie.OnlyZombies", true), 
-		zombie_speed("Zombie.Speed", 0.4), 
-		zombie_smoothness("Zombie.Smoothness", 15), 
-		attack_strength("Zombie.AttackStrength", 4), 
-		zombie_health("Zombie.Health", 24), 
-		zombie_pickup("Zombie.PickUpPlayerArmor", true), 
-		thirst_speed("Thirst.Speed", 2), 
-		chest_empty("Chest.IfOnlyEmpty", true), 
-		chest_regen("Chest.RegenTime", 2), 
-		chest_click("Chest.Destroy.ClickTo",true),
-		chest_disappear("Chest.Disappear", true), 
-		chest_spawnz("Chest.Destroy.SpawnZombie",true),
-		chest_spawnzperc("Chest.Destroy.ZombiePercent",50),
-		MYSQL_USER("MySQL.Username", "root"), 
-		MYSQL_PASS("MySQL.Password", "root"), 
-		MYSQL_HOST("MySQL.Hostname", "localhost"), 
-		MYSQL_PORT("MySQL.Port", 3306), 
-		MYSQL_DATABASE("MySQL.Database", "darkdays"), 
-		MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), 
-		noise_enable("Noise.EnableBlockData",true),
-		noise_multiplier("Noise.Multiplier",0.3);
+		language("Language", "english"), verCheck("Version-check", true), prefix("Prefix", "DarkDays"), disable_health_regen("DisableHealthRegen", false), wand_item("WandItem", 369), control_sitemst("ControlSItems", true), coloured_tegs("ColouredTags", true), enable_regions("EnableRegions", false), spawn_withBlindness(
+				"SpawnWithBlindness", true), only_zombies("Zombie.OnlyZombies", true), zombie_speed("Zombie.Speed", 0.4), zombie_smoothness("Zombie.Smoothness", 15), attack_strength("Zombie.AttackStrength", 4), zombie_health("Zombie.Health", 24), zombie_pickup("Zombie.PickUpPlayerArmor", true), thirst_speed(
+				"Thirst.Speed", 2), chest_empty("Chest.IfOnlyEmpty", true), chest_regen("Chest.RegenTime", 2), chest_click("Chest.Destroy.ClickTo", true), chest_disappear("Chest.Disappear", true), chest_spawnz("Chest.Destroy.SpawnZombie", true), chest_spawnzperc("Chest.Destroy.ZombiePercent", 50), MYSQL_USER(
+				"MySQL.Username", "root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname", "localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), noise_enable("Noise.EnableBlockData", true), noise_multiplier(
+				"Noise.Multiplier", 0.3);
 
 		String node;
 		Object value;
@@ -194,6 +173,156 @@ public class Config extends FGUtilCore {
 		addMSG("hlp_cmd_loot_flag", "Set the flags for the items in your loot");
 		addMSG("hlp_cmd_loot_save", "Save your loot");
 		addMSG("hlp_cmd_about", "Show information about the plugin");
+	}
+
+	private void setupRandomMessages() {
+		// Available prefixes
+		// standart_
+		addMSG("msg_standart_1", "Устал");
+		addMSG("msg_standart_2", "Увидел бабочку :)");
+		addMSG("msg_standart_3", "Услышал странные звуки");
+		addMSG("msg_standart_4", "Укусил комар =(");
+		addMSG("msg_standart_5", "Во рту пересохло");
+		// beach_
+		addMSG("msg_beach_1", "Можно и позагарать немного");
+		addMSG("msg_beach_2", "Пляжный сезон. Даже тень бросить негде");
+		// desert_
+		addMSG("msg_desert_1", "Залюбовавшись миражом, прозевал оазис");
+		addMSG("msg_desert_2", "Одиночество, это не один снаружи, это пустыня внутри");
+		addMSG("msg_desert_3", "Легче всего место под солнцем уступается в пустыне");
+		addMSG("msg_desert_4", "Если не можешь превратить пустыню в оазис, преврати ее в мираж");
+		// hill_
+		addMSG("msg_hill_1", "А тут высоко");
+		addMSG("msg_hill_2", "Дует сильный ветер");
+		addMSG("msg_hill_3", "Главное не оступиться");
+		addMSG("msg_hill_4", "Чуть не упал, фуух");
+		// extrimehill_
+		addMSG("msg_extrimehill_1", "Тебе мешают не те горы впереди, на которые ты должен взобраться, тебе мешает камушек в твоих ботинках");
+		addMSG("msg_extrimehill_2", "Где гора - там и долина");
+		// forest_
+		addMSG("msg_forest_1", "Что самое главное в лесу? — Туалетная бумага. Особенно в хвойном");
+		addMSG("msg_forest_2", "Чем больше дров, тем реже лес");
+		// frozen_
+		addMSG("msg_frozen_1", "Судя по нашим дорогам, закончилась не зима, а война");
+		addMSG("msg_frozen_2", "Зима настала, холодно стало");
+		// hell_
+		addMSG("msg_hell_1", "Жууть!");
+		addMSG("msg_hell_2", "Тут очень страшно");
+		addMSG("msg_hell_3", "Я бы не хотел здесь погибнуть");
+		// ice_
+		addMSG("msg_ice_1", "Холодновато что-то стало =(");
+		addMSG("msg_ice_2", "Чуть не поскользнулся");
+		addMSG("msg_ice_3", "Сейчас бы в снежки поиграть ;)");
+		addMSG("msg_ice_4", "Найти бы шубку получше");
+		// jungle_
+		addMSG("msg_jungle_1", "Каждому Маугли свои джунгли!");
+		addMSG("msg_jungle_2", "Ты нарушил закон джунглей?!");
+		addMSG("msg_jungle_3", "В джунглях законов расцветает закон джунглей");
+		addMSG("msg_jungle_4", "Интуиция - это компас в житейских джунглях");
+		// mushroom_
+		addMSG("msg_mushroom_1", "Хороший гриб нужно еще поискать, а вот поганка сама выставляет себя напоказ");
+		addMSG("msg_mushroom_2", "Желаете СОЛЁНЫХ грибов - посолИте...");
+		addMSG("msg_mushroom_3", "Грибы — они разные. Один тебя накормит, другой — кино покажет");
+		addMSG("msg_mushroom_4", "Глядя на грибы, думаешь: трудно остаться чистым, если не ядовит");
+		// ocean_
+		addMSG("msg_ocean_1", "Сейчас бы порыбачить...");
+		addMSG("msg_ocean_2", "Хочу стать таким же, как Джек Воробей");
+		addMSG("msg_ocean_3", "А акул всё же боюсь");
+		addMSG("msg_ocean_4", "Интересно, я умею плавать?");
+		// plains_
+		addMSG("msg_plains_1", "Что-то в этом есть");
+		addMSG("msg_plains_2", "Видел какие-то развалины. Можно было бы и сходить к ним");
+		addMSG("msg_plains_3", "Трава шелестит");
+		addMSG("msg_plains_4", "Услышал чей-то голос");
+		addMSG("msg_plains_5", "Хачется немного поесть");
+		// river_
+		addMSG("msg_river_1", "Там, где пересыхает источник радости, исчезает река счастья...");
+		addMSG("msg_river_2", "Жизнь — это поток, это река: её настроения постоянно меняются");
+		addMSG("msg_river_3", "Любовь, как река, в которую невозможно войти дважды…");
+		addMSG("msg_river_4", "В одну и ту же реку нельзя войти дважды, но можно не выходить из этой реки");
+		// sky_
+		addMSG("msg_sky_1", "Предел для меня — только небо");
+		addMSG("msg_sky_2", "А сейчас небо синее-синее, в нем пасутся овечки облаков, сделанные из сахарной ваты");
+		addMSG("msg_sky_3", "Пальцами небо трогать не стоит — остаются пятна");
+		addMSG("msg_sky_4", "Для некоторых только небо — предел. А кое-кого даже небо не остановит");
+		// smallmountain_
+		addMSG("msg_smallmountain_1", "Не так уж тут и высоко");
+		addMSG("msg_smallmountain_1", "А снизу казалось выше");
+		addMSG("msg_smallmountain_1", "Сделать бы тут пещерку");
+		addMSG("msg_smallmountain_1", "Надо идти дальше...");
+		// swampland_
+		addMSG("msg_swampland_1", "Цели нужно достигать, шагая по дороге, а не в обход по болотам и по уши в грязи");
+		addMSG("msg_swampland_2", "В тишине, да не в болоте.");
+		addMSG("msg_swampland_3", "Тишь, да гладь");
+		addMSG("msg_swampland_4", "Плыть по течению можно… Если только ты не в болоте");
+		// taiga_
+		addMSG("msg_taiga_1", "Эта тайга бесконечна =(");
+		addMSG("msg_taiga_1", "Главное не заблудиться");
+		addMSG("msg_taiga_1", "Видел оленя, но он быстро скрылся из виду");
+
+	}
+
+	public static Integer getBiomeMessageCount(String prefix) {
+		String list = FGU.getMsglist();
+		Pattern p = Pattern.compile(prefix);
+		Matcher m = p.matcher(list);
+		int count = 0;
+		while (m.find()) {
+			count += 1;
+		}
+		return count;
+	}
+
+	public static String BiomeMessages(Biome b) {
+		switch (b.toString()) {
+		case "BEACH":
+			return "beach_";
+		case "DESERT":
+			return "desert_";
+		case "DESERT_HILLS":
+			return "hill_";
+		case "EXTREME_HILLS":
+			return "extrimehill_";
+		case "FOREST":
+			return "forest_";
+		case "FOREST_HILLS":
+			return "hill_";
+		case "FROZEN_OCEAN":
+			return "frozen_";
+		case "FROZEN_RIVER":
+			return "frozen_";
+		case "HELL":
+			return "hell_";
+		case "ICE_MOUNTAINS":
+			return "ice_";
+		case "ICE_PLAINS":
+			return "ice_";
+		case "JUNGLE":
+			return "jungle_";
+		case "JUNGLE_HILLS":
+			return "hill_";
+		case "MUSHROOM_ISLAND":
+			return "mushroom_";
+		case "MUSHROOM_SHORE":
+			return "mushroom_";
+		case "OCEAN":
+			return "ocean_";
+		case "PLAINS":
+			return "plains_";
+		case "RIVER":
+			return "river_";
+		case "SKY":
+			return "sky_";
+		case "SMALL_MOUNTAINS":
+			return "smallmountain_";
+		case "SWAMPLAND":
+			return "swampland_";
+		case "TAIGA":
+			return "taiga_";
+		case "TAIGA_HILLS":
+			return "hill_";
+		}
+		return "";
 	}
 
 	public void init() {

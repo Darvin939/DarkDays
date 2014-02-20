@@ -35,7 +35,7 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Configuration.PlayerConfig;
 import darvin939.DarkDays.Loadable.Effect;
 import darvin939.DarkDays.Loot.LootManager;
-import darvin939.DarkDays.Players.Memory.PlayerInfo;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 import darvin939.DarkDays.Players.Memory.PlayerZombie;
 import darvin939.DarkDays.Utils.Util;
 
@@ -85,7 +85,7 @@ public class PlayerListener implements Listener {
 		if ((boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
 			Tasks.player_thirst.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
 			Tasks.player_noise.put(p, 1.0);
-			PlayerInfo.addPlayer(p);
+			PlayerData.addPlayer(p);
 			p.teleport(PlayerConfig.fix(p));
 
 			setupEffects(p);
@@ -128,7 +128,7 @@ public class PlayerListener implements Listener {
 		if ((boolean) Config.getPC().getData(p, PlayerConfig.SPAWNED)) {
 			Tasks.player_thirst.put(p, (int) Config.getPC().getData(p, PlayerConfig.HUNGER));
 			Tasks.player_noise.put(p, 1.0);
-			PlayerInfo.addPlayer(p);
+			PlayerData.addPlayer(p);
 			event.setRespawnLocation(PlayerConfig.fix(p));
 			return;
 		}
@@ -185,7 +185,7 @@ public class PlayerListener implements Listener {
 				if ((event.getEntity() instanceof Player)) {
 					Player h = (Player) event.getEntity();
 					if (event.getDamage() > h.getHealth()) {
-						PlayerInfo.addPlayerKill(d);
+						PlayerData.addPlayerKill(d);
 						TagAPIListener.refreshPlayer(d);
 						Util.Print(d, "You killed " + h.getName() + "!");
 					}
@@ -200,9 +200,9 @@ public class PlayerListener implements Listener {
 		if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent dEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
-			if (dEvent.getDamager() instanceof Player && PlayerInfo.isPlaying(p)) {
+			if (dEvent.getDamager() instanceof Player && PlayerData.isPlaying(p)) {
 				Player d = (Player) dEvent.getDamager();
-				PlayerInfo.addPlayerKill(d);
+				PlayerData.addPlayerKill(d);
 				TagAPIListener.refreshPlayer(d);
 				Util.Print(d, "You killed " + p.getName() + "!");
 			}
@@ -247,7 +247,7 @@ public class PlayerListener implements Listener {
 			}
 
 		}
-		PlayerInfo.removePlayer(p);
+		PlayerData.removePlayer(p);
 		event.getDrops().clear();
 		DarkDays.getEffectManager().cancelEffects(p);
 	}

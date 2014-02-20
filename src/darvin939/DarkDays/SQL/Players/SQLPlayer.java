@@ -10,7 +10,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import darvin939.DarkDays.Configuration.Config;
-import darvin939.DarkDays.Players.Memory.PlayerLoadData;
+import darvin939.DarkDays.Players.Memory.GameStatus;
 import darvin939.DarkDays.SQL.DBInitLite;
 
 public class SQLPlayer extends DDPlayer {
@@ -28,7 +28,7 @@ public class SQLPlayer extends DDPlayer {
 	private static PreparedStatement UPDATE_PLAYER;
 	private Location playerloc = null;
 	private String effects = "";
-	private PlayerLoadData data = null;
+	private GameStatus data = null;
 	private Long id;
 
 	public SQLPlayer(String name, Long id) {
@@ -115,9 +115,9 @@ public class SQLPlayer extends DDPlayer {
 					rs = GET_DATA.executeQuery();
 				}
 				if (rs.next()) {
-					data = new PlayerLoadData(rs.getInt("hunger"), Boolean.parseBoolean(rs.getString("death")), Boolean.parseBoolean(rs.getString("novice")), Boolean.parseBoolean(rs.getString("spawned")));
+					data = new GameStatus(rs.getInt("hunger"), Boolean.parseBoolean(rs.getString("death")), Boolean.parseBoolean(rs.getString("novice")), Boolean.parseBoolean(rs.getString("spawned")));
 				} else
-					data = new PlayerLoadData(309999, false, true, false);
+					data = new GameStatus(309999, false, true, false);
 			} catch (final SQLException e) {
 
 			}
@@ -143,7 +143,7 @@ public class SQLPlayer extends DDPlayer {
 		return playerloc;
 	}
 
-	public PlayerLoadData getData() {
+	public GameStatus getData() {
 		return data;
 	}
 
@@ -229,7 +229,7 @@ public class SQLPlayer extends DDPlayer {
 		}
 	}
 
-	public void addData(PlayerLoadData data) {
+	public void addData(GameStatus data) {
 		synchronized (GET_DATA) {
 			try {
 				GET_DATA.clearParameters();

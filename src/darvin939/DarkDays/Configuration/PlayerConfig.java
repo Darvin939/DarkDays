@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Players.Memory.PlayerLoadData;
+import darvin939.DarkDays.Players.Memory.GameStatus;
 import darvin939.DarkDays.SQL.Players.DDPlayer;
 import darvin939.DarkDays.SQL.Players.PlayerManager;
 
@@ -23,7 +23,7 @@ public class PlayerConfig {
 	private File cfgPlayersFile;
 
 	private HashMap<Player, String> effects = new HashMap<Player, String>();
-	private HashMap<Player, PlayerLoadData> data = new HashMap<Player, PlayerLoadData>();
+	private HashMap<Player, GameStatus> data = new HashMap<Player, GameStatus>();
 	private static DarkDays plg;
 	// constants
 	public static final String DEATH = "death";
@@ -136,7 +136,7 @@ public class PlayerConfig {
 				if (!cfgPlayers.isConfigurationSection(p.getName()))
 					cfgPlayers.createSection(p.getName());
 				ConfigurationSection section = cfgPlayers.getConfigurationSection(p.getName());
-				PlayerLoadData PLD = data.get(p);
+				GameStatus PLD = data.get(p);
 				section.set(HUNGER, PLD.getHunger());
 				section.set(DEATH, PLD.isDeath());
 				section.set(NOVICE, PLD.isNovice());
@@ -166,7 +166,7 @@ public class PlayerConfig {
 				saveConfig();
 			}
 			ConfigurationSection s = cfgPlayers.getConfigurationSection(p.getName());
-			data.put(p, new PlayerLoadData(s.getInt(HUNGER), s.getBoolean(DEATH), s.getBoolean(NOVICE), s.getBoolean(SPAWNED)));
+			data.put(p, new GameStatus(s.getInt(HUNGER), s.getBoolean(DEATH), s.getBoolean(NOVICE), s.getBoolean(SPAWNED)));
 			effects.put(p, s.getString(EFFECTS));
 			// PlayerInfo.setNovice(p, true);}
 		}

@@ -2,13 +2,13 @@ package darvin939.DarkDays.Players.Memory;
 
 import darvin939.DarkDays.Configuration.PlayerConfig;
 
-public class PlayerLoadData {
+public class GameStatus {
 	private Integer hunger;
 	private Boolean death;
 	private Boolean novice;
 	private Boolean spawned;
 
-	public PlayerLoadData(Integer hunger, Boolean death, Boolean novice, Boolean spawned) {
+	public GameStatus(Integer hunger, Boolean death, Boolean novice, Boolean spawned) {
 		this.hunger = hunger;
 		this.death = death;
 		this.novice = novice;

@@ -10,12 +10,12 @@ import darvin939.DarkDays.Configuration.Config;
 
 public class Util {
 
-	// вывести сообщение без префикса
-	public static void Print(Player p, String message) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-	}
-
+	// вывести сообщение
 	public static void Print(CommandSender cs, String message) {
+		if (cs instanceof Player) {
+			cs.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+			return;
+		}
 		cs.sendMessage(ChatColor.translateAlternateColorCodes('&', message.replace(String.valueOf(ChatColor.COLOR_CHAR) + "f", "&7").replace("&f", "&f")));
 	}
 
@@ -24,22 +24,14 @@ public class Util {
 		Print(p, DarkDays.getChatPfx() + Config.FGU.MSG(message));
 	}
 
-	public static void PrintMSGPx(CommandSender cs, String message) {
-		Print(cs, DarkDays.getChatPfx() + Config.FGU.MSG(message));
-	}
-
 	// вывести сообщение MSG с ключами с изменяемым префиксом
-	public static void PrintMSG(Player p, String message, String keys) {
-		Print(p, DarkDays.getChatPfx() + Config.FGU.MSG(message, keys));
-	}
-
-	public static void PrintMSG(CommandSender cs, String message, String keys) {
+	public static void PrintMSGPx(CommandSender cs, String message, String keys) {
 		Print(cs, DarkDays.getChatPfx() + Config.FGU.MSG(message, keys));
 	}
 
-	// вывести сообщение со стандартным префиксом
-	public static void PrintSysPx(Player p, String message) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', DarkDays.getConsolePfx() + message));
+	// вывести сообщение MSG
+	public static void PrintMSG(Player p, String message) {
+		Print(p, Config.FGU.MSG(message));
 	}
 
 	public static String FCTU(String s) {
@@ -77,11 +69,11 @@ public class Util {
 		return false;
 	}
 
-	public static void SC(String msg) {
-		Bukkit.getServer().getConsoleSender().sendMessage(msg);
+	public static void CS(String msg) {
+		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', msg.replace(String.valueOf(ChatColor.COLOR_CHAR) + "f", "&7").replace("&f", "&f")));
 	}
 
-	public static void SCPx(String msg) {
-		Bukkit.getServer().getConsoleSender().sendMessage(DarkDays.getConsolePfx() + msg);
+	public static void CSPx(String msg) {
+		CS(DarkDays.getConsolePfx() + msg);
 	}
 }

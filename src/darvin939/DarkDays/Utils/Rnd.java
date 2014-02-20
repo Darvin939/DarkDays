@@ -9,10 +9,8 @@ public class Rnd {
 
 	public static boolean get(Integer percent) {
 		if (isPercent(percent)) {
-			System.out.println("1");
 			Integer[] i = getPeriod(percent);
 			int r = new Random().nextInt(i[1]) + i[0];
-			System.out.println(r);
 			if (percent >= r) {
 				return true;
 			}
@@ -26,11 +24,9 @@ public class Rnd {
 		int summ = 0;
 		for (int i = 0; i < type; i++) {
 			int s = r.nextInt(b);
-			System.out.println(s);
 			if (s < a)
 				summ += 1;
 		}
-		System.out.println(summ+"|"+type);
 		if (summ == type) {
 			return true;
 		}

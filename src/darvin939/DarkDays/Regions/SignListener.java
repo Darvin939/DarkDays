@@ -20,7 +20,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import darvin939.DarkDays.DarkDays;
-import darvin939.DarkDays.Regions.Memory.SignRegionData;
 import darvin939.DarkDays.Utils.Util;
 
 public class SignListener extends RegionManager implements Listener {

@@ -135,7 +135,7 @@ public class LootManager {
 			if (block.getState() instanceof Chest) {
 				Config.getCC().setLoot(block.getLocation(), list);
 				fillChest((Chest) block.getState(), list);
-				Util.PrintMSG(p, "loot_set", list);
+				Util.PrintMSGPx(p, "loot_set", list);
 			}
 		} else
 			Util.PrintMSGPx(p, "loot_error");
