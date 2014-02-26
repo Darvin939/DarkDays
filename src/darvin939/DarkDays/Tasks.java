@@ -84,7 +84,7 @@ public class Tasks {
 			public void run() {
 				randomMessage();
 			}
-		}, 300, 50);
+		}, 300, new Random().nextInt(300) + 300);
 	}
 
 	private void randomMessage() {

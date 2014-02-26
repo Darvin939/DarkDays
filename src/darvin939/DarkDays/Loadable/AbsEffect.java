@@ -1,5 +1,7 @@
 package darvin939.DarkDays.Loadable;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 public abstract interface AbsEffect {
@@ -18,9 +20,9 @@ public abstract interface AbsEffect {
 
 	public abstract String getName();
 
-	public abstract String getMessage();
-
 	public abstract void setMessage(String key, String msg);
 
 	public abstract void sendMessage(Player p);
+
+	public abstract void setMessage(String key, List<?> list);
 }

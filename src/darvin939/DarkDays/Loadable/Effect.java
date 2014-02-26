@@ -1,17 +1,23 @@
 package darvin939.DarkDays.Loadable;
 
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.entity.Player;
 
 import darvin939.DarkDays.DarkDays;
+import darvin939.DarkDays.Players.Memory.PlayerData;
 import darvin939.DarkDays.Utils.Util;
 
 public class Effect extends LoadUtils implements AbsEffect {
 	protected final String name;
 	private int percent;
 	protected final DarkDays plugin;
-	private String message;
 	private int delay;
 	private int power;
+	private List<?> list;
+	private String msg;
+	private String msgR;
 
 	public Effect(DarkDays plugin, String name) {
 		this.name = name;
@@ -69,18 +75,40 @@ public class Effect extends LoadUtils implements AbsEffect {
 
 	@Override
 	public void setMessage(String key, String msg) {
-		this.message = key;
+		this.msg = key;
 		plugin.getConfiguration().addMSG(key, msg);
 	}
 
 	@Override
-	public String getMessage() {
-		return message;
+	public void setMessage(String key, List<?> list) {
+		int count = 0;
+		this.list = list;
+		this.msgR = key + "_";
+		for (Object s : list) {
+			count++;
+			plugin.getConfiguration().addMSG(key + "_" + count, String.valueOf(s));
+		}
 	}
-	
-	
+
+	public String getMessage() {
+		return msg;
+	}
+
+	public String getMessageR() {
+		return msgR;
+	}
+
 	@Override
 	public void sendMessage(Player p) {
-		Util.PrintMSGPx(p, message);
+		Util.PrintMSGPx(p, msg);
+	}
+
+	public void randomMessage(Player p) {
+		if (PlayerData.isPlaying(p)) {
+			Random r = new Random();
+			if (r.nextBoolean()) {
+				Util.PrintMSG(p, msgR + (r.nextInt(list.size() - 1) + 1));
+			}
+		}
 	}
 }

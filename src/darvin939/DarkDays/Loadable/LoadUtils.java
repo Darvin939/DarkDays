@@ -22,4 +22,6 @@ public class LoadUtils {
 		int percent = DarkDays.getEffectManager().getEffects().get(effect).getPercent();
 		return Rnd.get(percent);
 	}
+	
+
 }
