@@ -1,10 +1,13 @@
 package darvin939.DarkDays.Regions;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
 public class SignRegionData {
 
@@ -17,9 +20,8 @@ public class SignRegionData {
 	private final Integer radius;
 	private final double rs;
 	private final double ds;
-
-	private int mobCount = 0;
-
+	private ArrayList<UUID> mobs;
+	
 	public SignRegionData(Location loc, int ri, int mi, boolean sb) {
 		this.loc = loc;
 		this.max = mi;
@@ -31,19 +33,29 @@ public class SignRegionData {
 
 		rs = (radius * radius);
 		ds = Math.sqrt(0.5 * rs);
+		mobs = new ArrayList<UUID>();;
 	}
 
 	public Integer getRadius() {
 		return radius;
 	}
 
-	public void addMod() {
-		if (this.mobCount < this.max)
-			this.mobCount += 1;
+	public void addMob(Entity e) {
+		if (mobs.size() < this.max)
+			mobs.add(e.getUniqueId());
+	}
+
+	public void removeMob(UUID uuid) {
+		if (mobs.contains(uuid))
+			mobs.remove(uuid);
+	}
+	
+	public ArrayList<UUID> getMobsUUID() {
+		return mobs;
 	}
 
 	public boolean isMaxMobCount() {
-		return this.max == this.mobCount;
+		return mobs.size() == this.max;
 	}
 
 	public Integer getMax() {
@@ -89,17 +101,8 @@ public class SignRegionData {
 		Random rnd = new Random();
 		double x = 0, z = 0;
 
-		if (signX < 0) {
-			x = rnd.nextInt((int) (radius * 2)) - signX - radius;
-		} else {
-			x = rnd.nextInt((int) (radius * 2)) + signX - radius;
-		}
-
-		if (signZ < 0) {
-			z = rnd.nextInt((int) (radius * 2)) - signZ - radius;
-		} else {
-			z = rnd.nextInt((int) (radius * 2)) + signZ - radius;
-		}
+		x = rnd.nextInt((int) (radius * 2)) + signX - radius;
+		z = rnd.nextInt((int) (radius * 2)) + signZ - radius;
 
 		if (isInside(x, z))
 			return new Double[] { x, z };

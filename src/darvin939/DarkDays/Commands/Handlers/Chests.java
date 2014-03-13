@@ -86,6 +86,7 @@ public class Chests extends Handler {
 		}
 	}
 
+	// есть баг с присвоением лута
 	private void add() {
 		String[] nargs = Util.newArgs(args);
 		Location chestloc = BlockAPI.getTargetBlock(p, 10).getLocation();

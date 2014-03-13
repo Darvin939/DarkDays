@@ -39,9 +39,9 @@ public class Config extends FGUtilCore {
 
 	public static enum Nodes {
 		language("Language", "english"), verCheck("Version-check", true), prefix("Prefix", "DarkDays"), disable_health_regen("DisableHealthRegen", false), wand_item("WandItem", 369), control_sitemst("ControlSItems", true), coloured_tegs("ColouredTags", true), enable_regions("EnableRegions", false), spawn_withBlindness(
-				"SpawnWithBlindness", true), only_zombies("Zombie.OnlyZombies", true), zombie_speed("Zombie.Speed", 0.4), zombie_smoothness("Zombie.Smoothness", 15), attack_strength("Zombie.AttackStrength", 4), zombie_health("Zombie.Health", 24), zombie_pickup("Zombie.PickUpPlayerArmor", true), thirst_speed(
-				"Thirst.Speed", 2), chest_empty("Chest.IfOnlyEmpty", true), chest_regen("Chest.RegenTime", 2), chest_click("Chest.Destroy.ClickTo", true), chest_disappear("Chest.Disappear", true), chest_spawnz("Chest.Destroy.SpawnZombie", true), chest_spawnzperc("Chest.Destroy.ZombiePercent", 50), MYSQL_USER(
-				"MySQL.Username", "root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname", "localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), noise_enable("Noise.EnableBlockData", true), noise_multiplier(
+				"SpawnWithBlindness", true), zombie_speed("Zombie.Speed", 0.4), zombie_smoothness("Zombie.Smoothness", 15), attack_strength("Zombie.AttackStrength", 4), zombie_health("Zombie.Health", 24), zombie_pickup("Zombie.PickUpPlayerArmor", true), thirst_speed("Thirst.Speed", 2), chest_empty(
+				"Chest.IfOnlyEmpty", true), chest_regen("Chest.RegenTime", 2), chest_click("Chest.Destroy.ClickTo", true), chest_disappear("Chest.Disappear", true), chest_spawnz("Chest.Destroy.SpawnZombie", true), chest_spawnzperc("Chest.Destroy.ZombiePercent", 50), MYSQL_USER("MySQL.Username",
+				"root"), MYSQL_PASS("MySQL.Password", "root"), MYSQL_HOST("MySQL.Hostname", "localhost"), MYSQL_PORT("MySQL.Port", 3306), MYSQL_DATABASE("MySQL.Database", "darkdays"), MYSQL_DBWRAPPER("MySQL.DataWrapper", "none"), noise_enable("Noise.EnableBlockData", true), noise_multiplier(
 				"Noise.Multiplier", 0.3);
 
 		String node;

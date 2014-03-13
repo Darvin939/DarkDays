@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import darvin939.DarkDays.DarkDays;
 import darvin939.DarkDays.Tasks;
@@ -226,7 +227,11 @@ public class PlayerListener implements Listener {
 				LivingEntity datZombie = (LivingEntity) p.getWorld().spawnEntity(loc, EntityType.ZOMBIE);
 
 				if (Nodes.zombie_pickup.getBoolean()) {
-					datZombie.getEquipment().setHelmet(p.getEquipment().getHelmet());
+					ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+					SkullMeta sm = (SkullMeta) is.getItemMeta();
+					sm.setOwner(p.getName());
+					is.setItemMeta(sm);
+					datZombie.getEquipment().setHelmet(is);
 					datZombie.getEquipment().setChestplate(p.getEquipment().getChestplate());
 					datZombie.getEquipment().setBoots(p.getEquipment().getBoots());
 					datZombie.getEquipment().setLeggings(p.getEquipment().getLeggings());

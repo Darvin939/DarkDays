@@ -2,6 +2,8 @@ package darvin939.DarkDays.Regions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,8 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,20 +26,41 @@ import darvin939.DarkDays.Utils.Util;
 
 public class SignListener extends RegionManager implements Listener {
 
+	private static int counter = 0;
+
 	public SignListener(DarkDays plg) {
 		super(plg);
+
 	}
 
 	public static void entityRespawnTask() {
 		for (SignRegionData srd : sData.values()) {
 			if (srd.isChunkLoaded()) {
+
+				if (counter == 3) {
+					checkMobs(srd);
+				}
+				if (counter > 2)
+					counter = 0;
+				else
+					counter++;
 				if (!srd.isMaxMobCount()) {
 					Double[] randomXZ = srd.getRandomPoint();
 					if (randomXZ != null) {
-						srd.getWorld().spawn(new Location(srd.getWorld(), randomXZ[0], srd.getHighestBlock().getY() + 1, randomXZ[1]), (Class<? extends Entity>) Zombie.class);
-						srd.addMod();
+						Entity datZombie = srd.getWorld().spawnEntity(new Location(srd.getWorld(), randomXZ[0], srd.getHighestBlock().getY() + 1, randomXZ[1]), EntityType.ZOMBIE);
+						srd.addMob(datZombie);
 					}
 				}
+			}
+		}
+	}
+
+	private static void checkMobs(SignRegionData srd) {
+		ArrayList<UUID> e = getNearbyEntities(srd.getLocation(), srd.getRadius() + 2);
+		ArrayList<UUID> uuid = srd.getMobsUUID();
+		for (int i = 0; i < uuid.size(); i++) {
+			if (!e.contains(uuid.get(i))) {
+				srd.removeMob(uuid.get(i));
 			}
 		}
 	}
@@ -106,10 +129,7 @@ public class SignListener extends RegionManager implements Listener {
 				} else {
 					clearParamLines(event);
 					setLine(event, 1, "Radius=&6" + ri);
-					if (!sb)
-						setLine(event, 2, "Spawn=&6" + sb);
-					else
-						setLine(event, 2, "Spawn=&6" + sb);
+					setLine(event, 2, "Spawn=&6" + sb);
 					if (sb)
 						setLine(event, 3, "MaxZmbs=&6" + mi);
 

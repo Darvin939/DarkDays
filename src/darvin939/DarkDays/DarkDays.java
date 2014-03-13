@@ -58,7 +58,7 @@ public class DarkDays extends JavaPlugin {
 	private Wand wlis = new Wand(this);
 	private ZombieListener zlis = new ZombieListener(this);
 	private TagAPIListener tlis = new TagAPIListener(this);
-	// private SignListener slis = new SignListener(this);
+	//private SignListener slis = new SignListener(this);
 
 	public Parser Commands = new Parser();
 	private Config cfg;

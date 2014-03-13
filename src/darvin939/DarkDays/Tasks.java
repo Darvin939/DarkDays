@@ -36,6 +36,7 @@ import darvin939.DarkDays.Configuration.Config.Nodes;
 import darvin939.DarkDays.Listeners.Noise.Noise;
 import darvin939.DarkDays.Loot.LootManager;
 import darvin939.DarkDays.Players.Memory.PlayerData;
+import darvin939.DarkDays.Regions.SignListener;
 import darvin939.DarkDays.Utils.Util;
 
 public class Tasks {
@@ -80,6 +81,12 @@ public class Tasks {
 			}
 		}, 1000, 1000);
 
+		server.getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
+			public void run() {
+				SignListener.entityRespawnTask();
+			}
+		}, 100, new Random().nextInt(500) + 200);
+		
 		server.getScheduler().scheduleSyncRepeatingTask(plg, new Runnable() {
 			public void run() {
 				randomMessage();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -68,6 +69,21 @@ public class RegionManager {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	public static ArrayList<UUID> getNearbyEntities(Location l, int radius) {
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
+		ArrayList<UUID> radiusEntities = new ArrayList<UUID>();
+		for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+				int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
+				for (Entity e : new Location(l.getWorld(), x + (chX * 16), y, z + (chZ * 16)).getChunk().getEntities()) {
+					if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock())
+						radiusEntities.add(e.getUniqueId());
+				}
+			}
+		}
+		return radiusEntities;
 	}
 
 	public static WorldEditPlugin getWorldEdit() {
@@ -154,7 +170,7 @@ public class RegionManager {
 					for (String section : Config.getRC().getCfg().getConfigurationSection(wName).getKeys(false)) {
 						if (new Location(l.getWorld(), l.getX(), 0, l.getZ()).getBlock().getType() == ItemAPI.get(matID).type() && Boolean.valueOf(((String) Config.getRC().getParam(wName + "." + section, "SpawnZombie")).replace("[", "").replace("]", ""))) {
 							int min = 0, max = e.getWorld().getMaxHeight();
-							for (Points point : getPoints().get(wName + "." + section)) {  
+							for (Points point : getPoints().get(wName + "." + section)) {
 								if (point.max != null && point.min != null) {
 									max = Integer.parseInt(point.max);
 									min = Integer.parseInt(point.min);
