@@ -3,56 +3,58 @@ package darvin939.DarkDays.Players.Memory;
 import java.util.UUID;
 
 public class PlayerStatus {
-	private UUID playerId;
-	private Integer zombieKills = 0;
-	private Integer playerKills = 0;
-	private Integer playerHeals = 0;
 
-	public PlayerStatus(UUID playerId) {
-		this.playerId = playerId;
-	}
+   private UUID playerId;
+   private Integer zombieKills = Integer.valueOf(0);
+   private Integer playerKills = Integer.valueOf(0);
+   private Integer playerHeals = Integer.valueOf(0);
 
-	public UUID getPlayerId() {
-		return playerId;
-	}
 
-	public void setPlayerId(UUID playerId) {
-		this.playerId = playerId;
-	}
+   public PlayerStatus(UUID playerId) {
+      this.playerId = playerId;
+   }
 
-	public Integer getZombieKills() {
-		return zombieKills;
-	}
+   public UUID getPlayerId() {
+      return this.playerId;
+   }
 
-	public void setZombieKills(Integer zombieKills) {
-		this.zombieKills = zombieKills;
-	}
+   public void setPlayerId(UUID playerId) {
+      this.playerId = playerId;
+   }
 
-	public void addZombieKill() {
-		this.zombieKills = Integer.valueOf(zombieKills.intValue() + 1);
-	}
+   public Integer getZombieKills() {
+      return this.zombieKills;
+   }
 
-	public Integer getPlayerKills() {
-		return playerKills;
-	}
+   public void setZombieKills(Integer zombieKills) {
+      this.zombieKills = zombieKills;
+   }
 
-	public void setPlayerKills(Integer playerKills) {
-		this.playerKills = playerKills;
-	}
+   public void addZombieKill() {
+      this.zombieKills = Integer.valueOf(this.zombieKills.intValue() + 1);
+   }
 
-	public void addPlayerKill() {
-		this.playerKills = Integer.valueOf(playerKills.intValue() + 1);
-	}
+   public Integer getPlayerKills() {
+      return this.playerKills;
+   }
 
-	public Integer getPlayerHeals() {
-		return playerHeals;
-	}
+   public void setPlayerKills(Integer playerKills) {
+      this.playerKills = playerKills;
+   }
 
-	public void setPlayerHeals(Integer playerHeals) {
-		this.playerHeals = playerHeals;
-	}
+   public void addPlayerKill() {
+      this.playerKills = Integer.valueOf(this.playerKills.intValue() + 1);
+   }
 
-	public void addPlayerHeal() {
-		this.playerHeals = Integer.valueOf(playerHeals.intValue() + 1);
-	}
+   public Integer getPlayerHeals() {
+      return this.playerHeals;
+   }
+
+   public void setPlayerHeals(Integer playerHeals) {
+      this.playerHeals = playerHeals;
+   }
+
+   public void addPlayerHeal() {
+      this.playerHeals = Integer.valueOf(this.playerHeals.intValue() + 1);
+   }
 }

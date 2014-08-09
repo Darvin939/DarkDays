@@ -8,7 +8,7 @@ ColouredTags: true
 EnableRegions: false
 SpawnWithBlindness: true
 Zombie:
-  Speed: 4
+  Speed: 12
   Smoothness: 5
   AttackStrength: 4
   Health: 24
@@ -30,3 +30,5 @@ MySQL:
 Noise:
   EnableBlockData: true
   Multiplier: 0.3
+  L1: 1,2,3
+  L2: 4,5,6

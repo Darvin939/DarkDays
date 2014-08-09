@@ -1,58 +1,36 @@
 package darvin939.DarkDays.SQL.Players;
 
-import org.bukkit.Bukkit;
+import darvin939.DarkDays.Players.Memory.GameStatus;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import darvin939.DarkDays.Players.Memory.GameStatus;
-
 public abstract class DDPlayer {
-	protected final String name;
-	protected Player player = null;
-	private final int hashCode;
 
-	protected DDPlayer(Player player) {
-		this.name = player.getName();
-		this.player = player;
-		int result = 7;
-		result = 41 * result + (name == null ? 0 : name.hashCode());
+   protected final UUID uuid;
+   protected Player player = null;
 
-		hashCode = result;
-	}
 
-	protected DDPlayer(String name) {
-		this.name = name;
-		this.player = Bukkit.getServer().getPlayer(name);
-		int result = 7;
-		result = 41 * result + (this.name == null ? 0 : this.name.hashCode());
+   protected DDPlayer(Player player) {
+      this.uuid = player.getUniqueId();
+      this.player = player;
+   }
 
-		hashCode = result;
-	}
+   public abstract Location getLoc();
 
-	public abstract Location getLoc();
+   public abstract GameStatus getData();
 
-	public abstract GameStatus getData();
+   public abstract String getEffects();
 
-	public abstract String getEffects();
+   public abstract void addPlayer();
 
-	public abstract void addPlayer();
+   public abstract void removePlayer();
 
-	public abstract void removePlayer();
+   public abstract void addData(GameStatus var1);
 
-	public abstract void addData(GameStatus data);
-	
-	public abstract void removeData();
+   public abstract void removeData();
 
-	public abstract void addEffects(String data);
+   public abstract void addEffects(String var1);
 
-	public abstract void removeEffects();
-
-	public String getName() {	
-		return name;
-	}
-
-	public int hashCode() {
-		return hashCode;
-	}
-
+   public abstract void removeEffects();
 }

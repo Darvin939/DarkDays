@@ -4,34 +4,34 @@ import org.bukkit.Location;
 
 public abstract class DDChest {
 
-	protected Location loc;
-	private int hashCode;
+   protected Location loc;
+   private int hashCode;
 
-	protected DDChest(Location loc) {
-		this.loc = loc;
-		int result = 7;
-		result = 41 * result + (loc == null ? 0 : loc.hashCode());
 
-		hashCode = result;
-	}
-	
-	public abstract Location getLoc();
+   protected DDChest(Location loc) {
+      this.loc = loc;
+      byte result = 7;
+      int result1 = 41 * result + (loc == null?0:loc.hashCode());
+      this.hashCode = result1;
+   }
 
-	public abstract String getLoot();
+   public abstract Location getLoc();
 
-	public abstract void addChest(String data);
+   public abstract String getLoot();
 
-	public abstract void addChest();
+   public abstract void addChest(String var1);
 
-	public abstract void removeChest();
+   public abstract void addChest();
 
-	public abstract void addLoot(String data);
-	
-	public String getName() {	
-		return "Chest-" + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
-	}
-	
-	public int hashCode() {
-		return hashCode;
-	}
+   public abstract void removeChest();
+
+   public abstract void addLoot(String var1);
+
+   public String getName() {
+      return "Chest-" + this.loc.getWorld().getName() + "," + this.loc.getBlockX() + "," + this.loc.getBlockY() + "," + this.loc.getBlockZ();
+   }
+
+   public int hashCode() {
+      return this.hashCode;
+   }
 }

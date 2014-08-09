@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.Material;
 
 public class Data {
+
 	Map<Material, ItemData> items = new HashMap<Material, ItemData>();
 	PotionData potion = null;
 	String name;
@@ -15,7 +16,7 @@ public class Data {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public Map<Material, ItemData> getItems() {
@@ -23,9 +24,7 @@ public class Data {
 	}
 
 	public ItemData getItem(Material item) {
-		if (items.containsKey(item))
-			return items.get(item);
-		return null;
+		return this.items.containsKey(item) ? (ItemData) this.items.get(item) : null;
 	}
 
 	public void setName(String name) {
@@ -33,16 +32,22 @@ public class Data {
 	}
 
 	public PotionData getPotion() {
-		return potion;
+		return this.potion;
 	}
 
 	public void setPotion(String type, String value) {
-		if (this.potion == null)
+		if (this.potion == null) {
 			this.potion = new PotionData("", "");
-		if (type.equalsIgnoreCase("spawn"))
+		}
+
+		if (type.equalsIgnoreCase("spawn")) {
 			this.potion.spawn = value;
-		if (type.equalsIgnoreCase("effects"))
+		}
+
+		if (type.equalsIgnoreCase("effects")) {
 			this.potion.effects = value;
+		}
+
 	}
 
 	public void addItem(Material item, ItemData data) {

@@ -28,11 +28,9 @@ package darvin939.DarkDays.Utils;
  */
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -155,7 +153,7 @@ public abstract class FGUtilCore extends CipherUtil {
 			this.desc = desc;
 		}
 	}
-	
+
 	public String getMsglist() {
 		return msglist;
 	}
@@ -173,12 +171,13 @@ public abstract class FGUtilCore extends CipherUtil {
 		try {
 			Map<String, String> map = readMap(plg.getDataFolder() + File.separator + "locales", language + ".ddlang");
 			lng = new YamlConfiguration();
-			if (map.isEmpty())
+			if (map.isEmpty()) {
 				plg.getLogger().info("Language file not found. Making new...");
-			else
+			} else {
 				plg.getLogger().info("Initialize language file..");
-			for (Entry<String, String> e : map.entrySet()) {
-				lng.set(e.getKey(), e.getValue());
+			}
+			for (Map.Entry<String, String> e : map.entrySet()) {
+				lng.set((String) e.getKey(), e.getValue());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,9 +193,10 @@ public abstract class FGUtilCore extends CipherUtil {
 				lng.load(f);
 			} else {
 				plg.getLogger().info("Language file not found. Making new...");
-				InputStream is = plg.getClass().getResourceAsStream("/language/" + language + ".lng");
-				if (is != null)
-					lng.load(is);
+				URL url = plg.getClass().getResource("/language/" + language + ".lng");
+				if (!url.getFile().isEmpty()) {
+					lng.load(url.getFile());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -110,7 +110,7 @@ public class ZombieListener implements Listener {
 			if (zombie_damage.get(e) <= 20) {
 				if (zombie_damage.get(e) <= 0) {
 					((Zombie) e).setHealth(0);
-					net.minecraft.server.v1_7_R1.Entity entity = ((CraftLivingEntity) e).getHandle();
+					net.minecraft.server.v1_7_R3.Entity entity = ((CraftLivingEntity) e).getHandle();
 					entity.die();
 					zombie_damage.remove(e);
 				} else

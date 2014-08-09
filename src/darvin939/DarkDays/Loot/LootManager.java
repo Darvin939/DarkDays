@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +16,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
@@ -27,9 +26,10 @@ import darvin939.DeprecAPI.BlockAPI;
 import darvin939.DeprecAPI.ItemAPI;
 
 public class LootManager {
+
 	private static FileConfiguration cfg = Config.getLC().getCfg();
 
-	{
+	public LootManager() {
 		cfg = Config.getLC().getCfg();
 	}
 
@@ -43,37 +43,40 @@ public class LootManager {
 	}
 
 	public static Material getMaterial(String stringMaterial) {
-		if (Util.isInteger(stringMaterial)) {
-
-			return ItemAPI.get(Integer.parseInt(stringMaterial)).type();
-		}
-		return Material.getMaterial(stringMaterial.toUpperCase());
+		return Util.isInteger(stringMaterial) ? ItemAPI.get(Integer.parseInt(stringMaterial)).type() : Material.getMaterial(stringMaterial.toUpperCase());
 	}
 
 	private static ItemStack[] shuffleItems(Chest chest, ItemStack[] items) {
 		ItemStack[] storableItems = new ItemStack[chest.getInventory().getSize()];
 		int slot = 0;
-		for (int i = 0; i < items.length; i++) {
-			if ((items[i] != null) && (slot < storableItems.length)) {
+
+		for (int i = 0; i < items.length; ++i) {
+			if (items[i] != null && slot < storableItems.length) {
 				storableItems[slot] = items[i];
-				slot++;
+				++slot;
 			}
 		}
+
 		Collections.shuffle(Arrays.asList(storableItems));
 		return storableItems;
 	}
 
 	public static void delChestOtherItems(Chest chest, ItemStack item) {
 		int id = 0;
-		for (ItemStack i : chest.getInventory().getContents()) {
-			if (i != null && i.getType() != null && !i.getType().equals(Material.AIR)) {
-				if (i.getType() == item.getType()) {
-					chest.getInventory().setItem(id, new ItemStack(Material.AIR));
-				}
+		ItemStack[] var6;
+		int var5 = (var6 = chest.getInventory().getContents()).length;
+
+		for (int var4 = 0; var4 < var5; ++var4) {
+			ItemStack i = var6[var4];
+			if (i != null && i.getType() != null && !i.getType().equals(Material.AIR) && i.getType() == item.getType()) {
+				chest.getInventory().setItem(id, new ItemStack(Material.AIR));
 			}
-			if (id < chest.getInventory().getContents().length - 1)
-				id++;
+
+			if (id < chest.getInventory().getContents().length - 1) {
+				++id;
+			}
 		}
+
 	}
 
 	public static boolean isChestEmpty(Block block) {
@@ -137,8 +140,10 @@ public class LootManager {
 				fillChest((Chest) block.getState(), list);
 				Util.PrintMSGPx(p, "loot_set", list);
 			}
-		} else
+		} else {
 			Util.PrintMSGPx(p, "loot_error");
+		}
+
 	}
 
 	private static void fillChest(Chest chest, String list) {
@@ -149,9 +154,11 @@ public class LootManager {
 		String[] properties = cfg.getString(list + ".items." + item + ".spawn").split(",");
 		String[] stringAmount = properties[1].split("-");
 		int[] amount = new int[stringAmount.length];
-		for (int i = 0; i < amount.length; i++) {
+
+		for (int i = 0; i < amount.length; ++i) {
 			amount[i] = Integer.parseInt(stringAmount[i]);
 		}
+
 		return amount;
 	}
 

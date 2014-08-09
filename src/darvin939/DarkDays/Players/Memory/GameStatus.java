@@ -1,84 +1,101 @@
 package darvin939.DarkDays.Players.Memory;
 
-import darvin939.DarkDays.Configuration.PlayerConfig;
 
 public class GameStatus {
-	private Integer hunger;
-	private Boolean death;
-	private Boolean novice;
-	private Boolean spawned;
 
-	public GameStatus(Integer hunger, Boolean death, Boolean novice, Boolean spawned) {
-		this.hunger = hunger;
-		this.death = death;
-		this.novice = novice;
-		this.spawned = spawned;
-	}
+   private Integer hunger;
+   private Boolean death;
+   private Boolean novice;
+   private Boolean spawned;
 
-	public Integer getHunger() {
-		return hunger;
-	}
 
-	public Boolean isDeath() {
-		return death;
-	}
+   public GameStatus(Integer hunger, Boolean death, Boolean novice, Boolean spawned) {
+      this.hunger = hunger;
+      this.death = death;
+      this.novice = novice;
+      this.spawned = spawned;
+   }
 
-	public Boolean isNovice() {
-		return novice;
-	}
+   public Integer getHunger() {
+      return this.hunger;
+   }
 
-	public Boolean isSpawned() {
-		return spawned;
-	}
+   public Boolean isDeath() {
+      return this.death;
+   }
 
-	public void setHunger(Integer value) {
-		this.hunger = value;
-	}
+   public Boolean isNovice() {
+      return this.novice;
+   }
 
-	public void setDeath(Boolean value) {
-		this.death = value;
-	}
+   public Boolean isSpawned() {
+      return this.spawned;
+   }
 
-	public void setNovice(Boolean value) {
-		this.novice = value;
-	}
+   public void setHunger(Integer value) {
+      this.hunger = value;
+   }
 
-	public void setSpawned(Boolean value) {
-		this.spawned = value;
-	}
+   public void setDeath(Boolean value) {
+      this.death = value;
+   }
 
-	public Object get(String data) {
-		switch (data) {
-		case PlayerConfig.DEATH:
-			return death;
-		case PlayerConfig.SPAWNED:
-			return spawned;
-		case PlayerConfig.NOVICE:
-			return novice;
-		case PlayerConfig.HUNGER:
-			return hunger;
-		}
-		return null;
-	}
+   public void setNovice(Boolean value) {
+      this.novice = value;
+   }
 
-	public void set(String data, Object value) {
-		switch (data) {
-		case PlayerConfig.DEATH: {
-			this.death = (Boolean) value;
-			break;
-		}
-		case PlayerConfig.SPAWNED: {
-			this.spawned = (Boolean) value;
-			break;
-		}
-		case PlayerConfig.NOVICE: {
-			this.novice = (Boolean) value;
-			break;
-		}
-		case PlayerConfig.HUNGER: {
-			this.hunger = (Integer) value;
-			break;
-		}
-		}
-	}
+   public void setSpawned(Boolean value) {
+      this.spawned = value;
+   }
+
+   public Object get(String data) {
+      switch(data.hashCode()) {
+      case -2011558566:
+         if(data.equals("spawned")) {
+            return this.spawned;
+         }
+         break;
+      case -1206104397:
+         if(data.equals("hunger")) {
+            return this.hunger;
+         }
+         break;
+      case -1039630442:
+         if(data.equals("novice")) {
+            return this.novice;
+         }
+         break;
+      case 95457908:
+         if(data.equals("death")) {
+            return this.death;
+         }
+      }
+
+      return null;
+   }
+
+   public void set(String data, Object value) {
+      switch(data.hashCode()) {
+      case -2011558566:
+         if(data.equals("spawned")) {
+            this.spawned = (Boolean)value;
+         }
+         break;
+      case -1206104397:
+         if(data.equals("hunger")) {
+            this.hunger = (Integer)value;
+         }
+         break;
+      case -1039630442:
+         if(data.equals("novice")) {
+            this.novice = (Boolean)value;
+         }
+         break;
+      case 95457908:
+         if(data.equals("death")) {
+            this.death = (Boolean)value;
+         }
+      }
+
+   }
 }
